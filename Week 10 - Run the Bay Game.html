@@ -742,9 +742,18 @@
     </div>
   </div>
 
-  <div id="roleCardArea"></div>
+  <!-- ROLE PICKER -->
+  <div id="rolePickerArea" style="margin-top:24px;">
+    <div style="background:var(--valv-blue); color:white; border-radius:12px; padding:20px 24px; margin-bottom:16px;">
+      <h2 style="font-size:20px; font-weight:800; margin-bottom:4px;">Choose Your Role</h2>
+      <p style="opacity:0.8; font-size:14px;">Each person at your table picks a different role. Coordinate — no duplicates!</p>
+    </div>
+    <div id="roleButtons" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div>
+  </div>
 
-  <div class="begin-btn-wrap">
+  <div id="roleCardArea" style="display:none;"></div>
+
+  <div class="begin-btn-wrap" id="beginBtnWrap" style="display:none;">
     <button class="btn btn-primary" style="max-width:400px;" onclick="startLevers()">Begin: Design Your Service →</button>
   </div>
 </div>
@@ -954,15 +963,32 @@ function checkJoinReady() {
 
 function joinGame() {
   state.name = document.getElementById('playerName').value.trim();
-
-  // Assign role based on name + table — different name = different role
-  // Simple hash: sum of character codes mod 4
-  const nameHash = (state.name.toLowerCase() + state.table).split('')
-    .reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
-  const roleIndex = nameHash % 4;
-  state.role = ROLES[roleIndex];
-
   showScreen('readingScreen');
+  renderRolePicker();
+}
+
+function renderRolePicker() {
+  const grid = document.getElementById('roleButtons');
+  grid.innerHTML = ROLES.map((r, i) => `
+    <button onclick="pickRole(${i})" style="
+      background: white; border: 3px solid ${r.color}; border-radius:12px; padding:16px;
+      cursor:pointer; text-align:left; transition: all 0.2s;
+    " onmouseover="this.style.background='${r.color}15'" onmouseout="this.style.background='white'">
+      <div style="font-size:24px; margin-bottom:6px;">${r.icon}</div>
+      <div style="font-weight:800; font-size:16px; color:${r.color}; margin-bottom:4px;">${r.title}</div>
+      <div style="font-weight:600; font-size:13px; color:var(--text); margin-bottom:8px;">${r.name}</div>
+      <div style="font-size:12px; color:var(--muted); line-height:1.4;">
+        <strong>Cares about:</strong> ${r.careMost}
+      </div>
+    </button>
+  `).join('');
+}
+
+function pickRole(index) {
+  state.role = ROLES[index];
+  document.getElementById('rolePickerArea').style.display = 'none';
+  document.getElementById('roleCardArea').style.display = 'block';
+  document.getElementById('beginBtnWrap').style.display = 'block';
   renderRoleCard();
   updateHeader();
 }
