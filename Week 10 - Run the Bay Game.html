@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Run the Bay — MKTG 2080 · Week 10</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --valv-blue: #003B6F;
+    --valv-red: #C8102E;
+    --valv-gold: #F2A900;
+    --valv-light: #EAF0F6;
+    --valv-dark: #1A1A2E;
+    --text: #1E293B;
+    --muted: #64748B;
+    --card-bg: #FFFFFF;
+    --success: #059669;
+    --warning: #D97706;
+    --danger: #DC2626;
+    --border: #CBD5E1;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--valv-light);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--valv-blue);
+    color: white;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header h1 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    opacity: 0.8;
+  }
+
+  .badge {
+    background: var(--valv-gold);
+    color: var(--valv-dark);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .budget-display {
+    background: rgba(255,255,255,0.15);
+    border: 2px solid var(--valv-gold);
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 18px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .budget-display .pts-used { color: var(--valv-gold); }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  /* ---- SCREENS ---- */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ---- JOIN SCREEN ---- */
+  .join-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 480px;
+    margin: 60px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+
+  .join-card h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--valv-blue);
+    margin-bottom: 8px;
+  }
+
+  .join-card .subtitle {
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-size: 15px;
+  }
+
+  .input-group {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+
+  .input-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .input-group input, .input-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+
+  .input-group input:focus, .input-group select:focus {
+    outline: none;
+    border-color: var(--valv-blue);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--valv-blue);
+    color: white;
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .btn-primary:hover { background: #002a52; }
+
+  .btn-primary:disabled {
+    background: var(--border);
+    cursor: not-allowed;
+  }
+
+  .btn-gold {
+    background: var(--valv-gold);
+    color: var(--valv-dark);
+  }
+
+  .btn-danger {
+    background: var(--valv-red);
+    color: white;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--valv-blue);
+    color: var(--valv-blue);
+  }
+
+  /* ---- READING SCREEN ---- */
+  .reading-section {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .reading-section h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--valv-blue);
+    margin-bottom: 16px;
+  }
+
+  .case-quote {
+    border-left: 4px solid var(--valv-gold);
+    padding: 16px 20px;
+    background: #FFFBEB;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-style: italic;
+    color: #92400E;
+    line-height: 1.7;
+  }
+
+  .case-quote .attribution {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .role-card-display {
+    background: linear-gradient(135deg, var(--valv-blue) 0%, #1a5276 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 28px;
+    margin: 24px 0;
+  }
+
+  .role-card-display .role-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--valv-gold);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .role-card-display h3 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+
+  .role-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .role-detail div {
+    background: rgba(255,255,255,0.1);
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .role-detail .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--valv-gold);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .begin-btn-wrap {
+    text-align: center;
+    margin-top: 24px;
+  }
+
+  /* ---- LEVER SCREEN ---- */
+  .lever-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .lever-card.over-budget {
+    border-color: var(--danger);
+  }
+
+  .lever-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .lever-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .lever-concept-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: var(--valv-light);
+    color: var(--valv-blue);
+    display: none;
+  }
+
+  .lever-concept-tag.visible { display: inline-block; }
+
+  .lever-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--valv-blue);
+    margin-bottom: 4px;
+  }
+
+  .lever-question {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  .option-btn {
+    position: relative;
+    padding: 16px 12px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+
+  .option-btn:hover {
+    border-color: var(--valv-blue);
+    background: var(--valv-light);
+  }
+
+  .option-btn.selected {
+    border-color: var(--valv-blue);
+    background: var(--valv-light);
+    box-shadow: 0 0 0 2px var(--valv-blue);
+  }
+
+  .option-btn .option-cost {
+    display: inline-block;
+    background: var(--valv-gold);
+    color: var(--valv-dark);
+    font-weight: 800;
+    font-size: 13px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+
+  .option-btn .option-label {
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .option-btn .option-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ---- SCRATCHPAD ---- */
+  .scratchpad {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .scratchpad h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .scratchpad textarea {
+    width: 100%;
+    height: 80px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+  }
+
+  .scratchpad textarea:focus {
+    outline: none;
+    border-color: var(--valv-blue);
+  }
+
+  .scratchpad .note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ---- SUBMIT / RESULTS ---- */
+  .submit-bar {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 2px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+    z-index: 50;
+  }
+
+  .budget-warning {
+    color: var(--danger);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .results-card {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .results-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--valv-blue);
+    margin-bottom: 16px;
+  }
+
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #F1F5F9;
+  }
+
+  .result-row:last-child { border-bottom: none; }
+
+  .result-lever { font-weight: 600; }
+
+  .result-choice {
+    font-weight: 700;
+    color: var(--valv-blue);
+  }
+
+  .result-concept {
+    font-size: 12px;
+    background: var(--valv-light);
+    padding: 4px 10px;
+    border-radius: 8px;
+    color: var(--valv-blue);
+    font-weight: 600;
+  }
+
+  .discussion-prompt {
+    background: #FFFBEB;
+    border: 2px solid var(--valv-gold);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+
+  .discussion-prompt h3 {
+    color: #92400E;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .discussion-prompt p {
+    color: #78350F;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* ---- DAY 2 CUT MODE ---- */
+  .cut-banner {
+    background: linear-gradient(135deg, var(--valv-red) 0%, #991b1b 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .cut-banner h2 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .cut-banner p {
+    font-size: 15px;
+    opacity: 0.9;
+  }
+
+  .lever-card.downgraded {
+    border-color: var(--valv-red);
+    background: #FEF2F2;
+  }
+
+  .lever-card.locked {
+    border-color: var(--success);
+    background: #F0FDF4;
+  }
+
+  .protect-input {
+    background: #F0FDF4;
+    border: 2px solid var(--success);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0;
+  }
+
+  .protect-input label {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--success);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .protect-input select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+  /* ---- MODE TOGGLE ---- */
+  .mode-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    background: white;
+    padding: 6px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .mode-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .mode-btn.active {
+    background: var(--valv-blue);
+    color: white;
+  }
+
+  .mode-btn.active-cut {
+    background: var(--valv-red);
+    color: white;
+  }
+
+  /* ---- TABLE JOIN ---- */
+  .table-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .table-option {
+    padding: 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-family: inherit;
+    background: white;
+    transition: all 0.2s;
+  }
+
+  .table-option:hover {
+    border-color: var(--valv-blue);
+  }
+
+  .table-option.selected {
+    border-color: var(--valv-blue);
+    background: var(--valv-light);
+    box-shadow: 0 0 0 2px var(--valv-blue);
+  }
+
+  .table-option .table-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--valv-blue);
+  }
+
+  .table-option .table-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .table-option .seat-count {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 640px) {
+    .options-grid { grid-template-columns: 1fr; }
+    .role-detail { grid-template-columns: 1fr; }
+    .table-grid { grid-template-columns: repeat(2, 1fr); }
+    .header h1 { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div>
+      <h1>RUN THE BAY</h1>
+      <div class="header-sub">MKTG 2080 · Week 10 · Ch. 13: Services</div>
+    </div>
+  </div>
+  <div id="headerRight"></div>
+</div>
+
+<!-- ==================== SCREEN 1: JOIN ==================== -->
+<div class="screen active" id="joinScreen">
+  <div class="join-card">
+    <h2>Run the Bay</h2>
+    <p class="subtitle">Valvoline Instant Oil Change · Service Design Game</p>
+
+    <div class="input-group">
+      <label>Your Name</label>
+      <input type="text" id="playerName" placeholder="Enter your first name" autocomplete="off">
+    </div>
+
+    <div class="input-group">
+      <label>Your Table</label>
+      <div class="table-grid" id="tableGrid"></div>
+    </div>
+
+    <button class="btn btn-primary" id="joinBtn" disabled onclick="joinGame()">Join Table</button>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 2: READING + ROLE ==================== -->
+<div class="screen" id="readingScreen">
+  <div class="reading-section">
+    <h2>The Scenario</h2>
+    <p style="margin-bottom:16px;">You are part of the leadership team at a <strong>new Valvoline Instant Oil Change franchise</strong> opening in three weeks. Your team must decide how to design the service experience — from staffing to training to what the customer sees and hears.</p>
+    <p style="margin-bottom:16px;">But you don't have unlimited resources. Your service design budget is <strong>10 points</strong>, and every decision costs something.</p>
+
+    <div class="case-quote">
+      "I pulled into the Valvoline Instant Oil Change because I was overdue and didn't want to think about it. The dashboard light had been on for a week. The dealership would take half a day. The independent shop near my house required an appointment I didn't have. At Valvoline, I didn't get out of the car."
+      <div class="attribution">— From the Case: "What Is the Product Worth?"</div>
+    </div>
+
+    <div class="case-quote">
+      "As the service began, voices moved around the car in a call-and-response rhythm. Oil type confirmed. Drain plug removed. Filter checked. Each step was announced out loud, repeated, and acknowledged by someone else."
+      <div class="attribution">— From the Case</div>
+    </div>
+
+    <div class="case-quote">
+      "The price was higher than I expected. Higher than the independent shop. Higher than doing it myself. But I drove away without second-guessing whether anything had been missed. That feeling was the part I hadn't anticipated paying for."
+      <div class="attribution">— From the Case</div>
+    </div>
+  </div>
+
+  <div class="reading-section">
+    <h2>What You Need to Know</h2>
+    <p style="margin-bottom:12px;">Services are different from products in four fundamental ways:</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+      <div style="background:var(--valv-light); padding:14px; border-radius:8px;">
+        <strong style="color:var(--valv-blue);">Intangible</strong><br>
+        <span style="font-size:13px; color:var(--muted);">You can't see, touch, or test the service before buying it. The customer can't inspect an oil change before it happens.</span>
+      </div>
+      <div style="background:var(--valv-light); padding:14px; border-radius:8px;">
+        <strong style="color:var(--valv-blue);">Inseparable</strong><br>
+        <span style="font-size:13px; color:var(--muted);">The service is produced and consumed at the same time. The technician's behavior IS the product.</span>
+      </div>
+      <div style="background:var(--valv-light); padding:14px; border-radius:8px;">
+        <strong style="color:var(--valv-blue);">Variable</strong><br>
+        <span style="font-size:13px; color:var(--muted);">Quality changes depending on who delivers it, when, and how. Different tech = different experience.</span>
+      </div>
+      <div style="background:var(--valv-light); padding:14px; border-radius:8px;">
+        <strong style="color:var(--valv-blue);">Perishable</strong><br>
+        <span style="font-size:13px; color:var(--muted);">Services can't be stored. An empty bay at 2pm can't be sold at 5pm. Unused capacity is gone forever.</span>
+      </div>
+    </div>
+
+    <p style="margin-bottom:12px;">When designing a service, firms also face <strong>service gaps</strong> — mismatches between what should happen and what actually happens:</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="background:#FEF3C7; padding:14px; border-radius:8px;">
+        <strong style="color:#92400E;">Standards Gap</strong><br>
+        <span style="font-size:13px; color:#78350F;">The difference between what the company intends and what its employees actually do.</span>
+      </div>
+      <div style="background:#FEF3C7; padding:14px; border-radius:8px;">
+        <strong style="color:#92400E;">Communication Gap</strong><br>
+        <span style="font-size:13px; color:#78350F;">The difference between what you promise in marketing and what you actually deliver.</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="roleCardArea"></div>
+
+  <div class="begin-btn-wrap">
+    <button class="btn btn-primary" style="max-width:400px;" onclick="startLevers()">Begin: Design Your Service →</button>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 3: LEVERS (DAY 1) ==================== -->
+<div class="screen" id="leverScreen">
+  <div style="margin-bottom:20px;">
+    <div class="mode-toggle" id="modeToggle">
+      <button class="mode-btn active" id="modeBuild" onclick="switchMode('build')">Day 1: Build</button>
+      <button class="mode-btn" id="modeCut" onclick="promptUnlockCut()" style="display:none;">Day 2: Cut</button>
+    </div>
+    <!-- Small link to reveal unlock prompt -->
+    <div id="unlockTrigger" style="text-align:center; margin-top:8px;">
+      <a href="#" onclick="event.preventDefault(); showUnlockPrompt(); this.parentElement.style.display='none';" style="font-size:12px; color:var(--muted); text-decoration:underline;">Have an instructor code?</a>
+    </div>
+    <!-- Unlock input area -->
+    <div id="unlockArea" style="display:none; margin-top:12px; text-align:center;">
+      <div style="display:inline-flex; align-items:center; gap:8px; background:white; border:2px solid var(--border); border-radius:8px; padding:8px 16px;">
+        <span style="font-size:14px; color:var(--muted);">Instructor Code:</span>
+        <input type="text" id="unlockInput" placeholder="Enter code" style="border:1px solid var(--border); border-radius:4px; padding:6px 12px; font-size:14px; width:140px; font-family:inherit;" onkeydown="if(event.key==='Enter') attemptUnlock();">
+        <button class="btn btn-outline" style="padding:6px 16px; font-size:13px;" onclick="attemptUnlock()">Unlock</button>
+      </div>
+      <div id="unlockError" style="color:var(--danger); font-size:12px; margin-top:6px; display:none;">Incorrect code. Ask your instructor.</div>
+    </div>
+  </div>
+
+  <div id="cutBannerArea"></div>
+  <div id="protectArea"></div>
+  <div id="leverArea"></div>
+
+  <div class="scratchpad">
+    <h3>📝 Your Notes</h3>
+    <textarea id="scratchpad" placeholder="Use this space to jot down your thinking. Why are you choosing what you're choosing? These notes are not saved or submitted."></textarea>
+    <div class="note">Nothing here is saved or shared. This is just for you.</div>
+  </div>
+
+  <div class="submit-bar" id="submitBar">
+    <div>
+      <span id="budgetStatus"></span>
+    </div>
+    <button class="btn btn-primary" id="submitBtn" onclick="submitChoices()" style="width:auto;">Submit Configuration →</button>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 4: RESULTS ==================== -->
+<div class="screen" id="resultsScreen">
+  <div id="resultsArea"></div>
+</div>
+
+<script>
+// ===================== GAME DATA =====================
+const ROLES = [
+  {
+    id: 'manager',
+    title: 'Store Manager',
+    name: 'Maria Hernandez',
+    icon: '🏪',
+    careMost: 'Every customer leaving feeling the same way — confident and unhurried',
+    judgedOn: 'Customer satisfaction scores and repeat visit rate',
+    avoid: 'Complaints that say "it felt different this time"',
+    blame: '"She can\'t keep her team consistent"',
+    color: '#7C3AED'
+  },
+  {
+    id: 'regional',
+    title: 'Regional VP',
+    name: 'David Liu',
+    icon: '📊',
+    careMost: 'Cars per hour and labor cost as a percentage of revenue',
+    judgedOn: 'Store margins and throughput across the region',
+    avoid: 'A location that delivers great service but loses money',
+    blame: '"He let costs get out of control"',
+    color: '#0891B2'
+  },
+  {
+    id: 'tech',
+    title: 'Lead Technician',
+    name: 'James',
+    icon: '🔧',
+    careMost: 'Having enough time and support to do the job safely',
+    judgedOn: 'Service time per car, upsell rate, and zero safety incidents',
+    avoid: 'Getting blamed when a shortcut leads to a mistake',
+    blame: '"His crew isn\'t trained well enough"',
+    color: '#059669'
+  },
+  {
+    id: 'customer',
+    title: 'Customer Advocate',
+    name: 'Voice of the Customer',
+    icon: '👤',
+    careMost: 'Whether the customer trusts the work was actually done right',
+    judgedOn: 'Online review scores and complaint rate',
+    avoid: 'Customers who leave quietly and never come back',
+    blame: '"Nobody is listening to the customer"',
+    color: '#DC2626'
+  }
+];
+
+const LEVERS = [
+  {
+    id: 'staffing',
+    num: 'Lever 1',
+    title: 'Staffing Per Bay',
+    question: 'How many people does it take to deliver the service?',
+    concept: 'Inseparability',
+    conceptDesc: 'The employee IS the product — produced and consumed at the same time.',
+    options: [
+      { label: '1 tech solo', cost: 1, desc: 'One technician handles the entire service alone. Faster to staff, but no backup and no one to talk to the customer during the process.' },
+      { label: '2 techs per bay', cost: 2, desc: 'Two technicians work together — one below, one at the window. Enables the call-and-response rhythm. Doubles labor cost per bay.' },
+      { label: '2 techs + greeter', cost: 3, desc: 'Dedicated greeter welcomes the customer and explains the process. Techs focus on execution. Premium feel, highest labor cost.' }
+    ]
+  },
+  {
+    id: 'training',
+    num: 'Lever 2',
+    title: 'Training Program',
+    question: 'How do you ensure consistent quality across different employees?',
+    concept: 'Variability',
+    conceptDesc: 'Quality changes depending on who delivers it. Training is how you reduce that variance.',
+    options: [
+      { label: '1-day shadow', cost: 1, desc: 'New hires shadow a senior tech for one shift, then work solo. Fast and cheap — but every tech develops their own habits.' },
+      { label: '1-week structured', cost: 2, desc: 'Five days of structured training: mechanical skills, customer scripts, safety protocols. Ride-alongs with top performers.' },
+      { label: '2-week certified', cost: 3, desc: 'Two weeks with a written and practical certification test before any solo work. Slowest to staff, most consistent output.' }
+    ]
+  },
+  {
+    id: 'script',
+    num: 'Lever 3',
+    title: 'Service Script',
+    question: 'How tightly do you control what the tech says and does?',
+    concept: 'Standards Gap',
+    conceptDesc: 'The gap between what the company intends to happen and what actually happens in the bay.',
+    options: [
+      { label: 'No script', cost: 1, desc: 'Techs use their own judgment on what to say and when. Flexible, but every visit sounds and feels different.' },
+      { label: 'Key checkpoints', cost: 2, desc: 'Scripted greeting, vehicle confirmation, and findings summary. The middle is up to the tech. Structure without rigidity.' },
+      { label: 'Full choreography', cost: 3, desc: 'Every step announced, repeated, and confirmed out loud. The call-and-response rhythm from the case. Hardest to train, most consistent.' }
+    ]
+  },
+  {
+    id: 'transparency',
+    num: 'Lever 4',
+    title: 'Customer Transparency',
+    question: 'How much of the service does the customer actually see?',
+    concept: 'Intangibility',
+    conceptDesc: 'Customers can\'t verify an oil change was done correctly. Visible cues replace proof.',
+    options: [
+      { label: 'Lobby waiting', cost: 1, desc: 'Customer waits inside. Can\'t see the work. Gets called when it\'s done. Lowest cost, lowest trust signal.' },
+      { label: 'Stay in the car', cost: 2, desc: 'Customer stays in the vehicle and can watch through the window. Sees the work happening but doesn\'t hear explanations.' },
+      { label: 'Watch + walkthrough', cost: 3, desc: 'Customer stays in the car. Tech explains every step verbally, shows the dipstick, points out the filter. Full visibility.' }
+    ]
+  },
+  {
+    id: 'promise',
+    num: 'Lever 5',
+    title: 'Marketing Promise',
+    question: 'What do you tell customers to expect before they arrive?',
+    concept: 'Communication Gap',
+    conceptDesc: 'The gap between what you advertise and what you actually deliver. Over-promise = broken trust.',
+    options: [
+      { label: '"Fast oil change"', cost: 1, desc: 'Simple, low commitment. Competes on speed and convenience. Doesn\'t differentiate from Jiffy Lube or any other shop.' },
+      { label: '"Expert care, no surprises"', cost: 2, desc: 'Promises competence and transparency. Sets an expectation the service must deliver on — or risk disappointment.' },
+      { label: '"The most thorough service in the industry"', cost: 3, desc: 'Bold, premium claim. Justifies higher prices IF the experience matches. If it doesn\'t, this becomes the biggest liability.' }
+    ]
+  }
+];
+
+// ===================== STATE =====================
+let state = {
+  name: '',
+  table: null,
+  role: null,
+  mode: 'build',
+  buildChoices: [null, null, null, null, null],
+  cutChoices: null,
+  protectLever: null,
+  submitted: false
+};
+
+// Table seat tracking (local only — no server)
+let tableSeatCounters = {};
+
+// ===================== INIT =====================
+function init() {
+  const grid = document.getElementById('tableGrid');
+  for (let i = 1; i <= 8; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'table-option';
+    btn.innerHTML = `<div class="table-num">${i}</div><div class="table-label">Table ${i}</div>`;
+    btn.onclick = () => selectTable(i, btn);
+    grid.appendChild(btn);
+  }
+
+  document.getElementById('playerName').addEventListener('input', checkJoinReady);
+}
+
+function selectTable(num, btn) {
+  document.querySelectorAll('.table-option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.table = num;
+  checkJoinReady();
+}
+
+function checkJoinReady() {
+  const name = document.getElementById('playerName').value.trim();
+  document.getElementById('joinBtn').disabled = !(name && state.table);
+}
+
+function joinGame() {
+  state.name = document.getElementById('playerName').value.trim();
+
+  // Assign role based on join order within table
+  if (!tableSeatCounters[state.table]) tableSeatCounters[state.table] = 0;
+  const seatIndex = tableSeatCounters[state.table] % 4;
+  tableSeatCounters[state.table]++;
+  state.role = ROLES[seatIndex];
+
+  showScreen('readingScreen');
+  renderRoleCard();
+  updateHeader();
+}
+
+// ===================== SCREENS =====================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function updateHeader() {
+  const right = document.getElementById('headerRight');
+  if (state.role) {
+    right.innerHTML = `
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-size:13px; opacity:0.8;">${state.name} · Table ${state.table}</span>
+        <span class="badge">${state.role.icon} ${state.role.title}</span>
+      </div>`;
+  }
+}
+
+function renderRoleCard() {
+  const r = state.role;
+  document.getElementById('roleCardArea').innerHTML = `
+    <div class="role-card-display" style="border-left: 6px solid ${r.color};">
+      <div class="role-title">Your Role</div>
+      <h3>${r.icon} ${r.name} — ${r.title}</h3>
+      <div class="role-detail">
+        <div><div class="label">I care most about</div>${r.careMost}</div>
+        <div><div class="label">I am judged on</div>${r.judgedOn}</div>
+        <div><div class="label">What I want to avoid</div>${r.avoid}</div>
+        <div><div class="label">If something goes wrong, people say</div>"${r.blame}"</div>
+      </div>
+    </div>
+    <div class="reading-section" style="margin-top:16px;">
+      <h2 style="font-size:16px;">💡 Your Job in the Negotiation</h2>
+      <p style="font-size:14px; color:var(--muted);">When your team debates where to spend points, <strong>advocate from your role's perspective</strong>. Your character has real stakes — fight for what matters to them. At the end, your group must submit ONE shared configuration. But everyone brings a different priority to the table.</p>
+    </div>`;
+}
+
+// ===================== LEVER SCREEN =====================
+function startLevers() {
+  showScreen('leverScreen');
+  renderLevers();
+  updateBudget();
+}
+
+// ===================== CUT MODE LOCK =====================
+const UNLOCK_CODE = 'CUTCOSTS';
+let cutUnlocked = false;
+
+function showUnlockPrompt() {
+  document.getElementById('unlockArea').style.display = 'block';
+  document.getElementById('unlockInput').focus();
+}
+
+function attemptUnlock() {
+  const input = document.getElementById('unlockInput').value.trim().toUpperCase();
+  if (input === UNLOCK_CODE) {
+    cutUnlocked = true;
+    document.getElementById('unlockArea').style.display = 'none';
+    document.getElementById('modeCut').style.display = '';
+    document.getElementById('unlockError').style.display = 'none';
+    switchMode('cut');
+  } else {
+    document.getElementById('unlockError').style.display = 'block';
+    document.getElementById('unlockInput').value = '';
+    document.getElementById('unlockInput').focus();
+  }
+}
+
+function promptUnlockCut() {
+  // Already unlocked — just switch
+  switchMode('cut');
+}
+
+function switchMode(mode) {
+  state.mode = mode;
+  document.getElementById('modeBuild').className = 'mode-btn' + (mode === 'build' ? ' active' : '');
+  document.getElementById('modeCut').className = 'mode-btn' + (mode === 'cut' ? ' active-cut' : '');
+
+  if (mode === 'cut' && !state.cutChoices) {
+    // Pre-load Day 2 with a "standard" configuration (the B-across-the-board baseline)
+    state.cutChoices = [1, 1, 1, 1, 1]; // index of selected option (0-2)
+    // Default: all set to option B (index 1) = 2+2+2+2+2 = 10 pts
+  }
+
+  state.submitted = false;
+  renderLevers();
+  updateBudget();
+  renderCutBanner();
+  renderProtectArea();
+  window.scrollTo(0, 0);
+}
+
+function renderCutBanner() {
+  const area = document.getElementById('cutBannerArea');
+  if (state.mode === 'cut') {
+    area.innerHTML = `
+      <div class="cut-banner">
+        <h2>⚠️ Corporate Memo: Cut Costs</h2>
+        <p>"Margins are below target. Your service budget drops from <strong>10 to 7 points</strong>.<br>Downgrade at least two levers. Submit your revised configuration."</p>
+      </div>`;
+  } else {
+    area.innerHTML = '';
+  }
+}
+
+function renderProtectArea() {
+  const area = document.getElementById('protectArea');
+  if (state.mode === 'cut') {
+    area.innerHTML = `
+      <div class="protect-input">
+        <label>🛡️ As ${state.role.name} (${state.role.title}), the ONE lever I will NOT allow to be cut is:</label>
+        <select id="protectSelect" onchange="state.protectLever = this.value;">
+          <option value="">— Choose your protected lever —</option>
+          ${LEVERS.map(l => `<option value="${l.id}">${l.title}</option>`).join('')}
+        </select>
+        <div style="font-size:12px; color:var(--muted); margin-top:8px; font-style:italic;">
+          Write your reason in the scratchpad below. You'll need to defend this to your group.
+        </div>
+      </div>`;
+  } else {
+    area.innerHTML = '';
+  }
+}
+
+function renderLevers() {
+  const area = document.getElementById('leverArea');
+  const choices = state.mode === 'build' ? state.buildChoices : state.cutChoices;
+  const budget = state.mode === 'build' ? 10 : 7;
+
+  area.innerHTML = LEVERS.map((lever, li) => `
+    <div class="lever-card" id="lever-${li}">
+      <div class="lever-header">
+        <div class="lever-num">${lever.num}</div>
+        <div class="lever-concept-tag" id="concept-${li}">${lever.concept}</div>
+      </div>
+      <div class="lever-title">${lever.title}</div>
+      <div class="lever-question">${lever.question}</div>
+      <div class="options-grid">
+        ${lever.options.map((opt, oi) => `
+          <button class="option-btn ${choices[li] === oi ? 'selected' : ''}" onclick="selectOption(${li}, ${oi})">
+            <div class="option-cost">${opt.cost} pt${opt.cost > 1 ? 's' : ''}</div>
+            <div class="option-label">${opt.label}</div>
+            <div class="option-desc">${opt.desc}</div>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectOption(leverIndex, optionIndex) {
+  if (state.submitted) return;
+  const choices = state.mode === 'build' ? state.buildChoices : state.cutChoices;
+  choices[leverIndex] = optionIndex;
+  renderLevers();
+  updateBudget();
+}
+
+function updateBudget() {
+  const choices = state.mode === 'build' ? state.buildChoices : state.cutChoices;
+  const budget = state.mode === 'build' ? 10 : 7;
+  let used = 0;
+  let allSelected = true;
+
+  choices.forEach((choice, i) => {
+    if (choice !== null) {
+      used += LEVERS[i].options[choice].cost;
+    } else {
+      allSelected = false;
+    }
+  });
+
+  const remaining = budget - used;
+  const over = remaining < 0;
+
+  // Update header budget display
+  document.getElementById('headerRight').innerHTML = `
+    <div style="display:flex; align-items:center; gap:16px;">
+      <span style="font-size:13px; opacity:0.8;">${state.name} · ${state.role.icon} ${state.role.title}</span>
+      <div class="budget-display">
+        <span class="pts-used">${used}</span>
+        <span style="opacity:0.6;">/</span>
+        <span>${budget}</span>
+        <span style="font-size:12px; opacity:0.7;">pts</span>
+      </div>
+    </div>`;
+
+  // Update submit bar
+  const statusEl = document.getElementById('budgetStatus');
+  const submitBtn = document.getElementById('submitBtn');
+
+  if (over) {
+    statusEl.innerHTML = `<span class="budget-warning">⚠️ Over budget by ${Math.abs(remaining)} point${Math.abs(remaining) > 1 ? 's' : ''}! Reduce your selections.</span>`;
+    submitBtn.disabled = true;
+  } else if (!allSelected) {
+    statusEl.innerHTML = `<span style="color:var(--muted);">Select an option for each lever. ${remaining} point${remaining !== 1 ? 's' : ''} remaining.</span>`;
+    submitBtn.disabled = true;
+  } else {
+    statusEl.innerHTML = `<span style="color:var(--success); font-weight:600;">✓ All levers set. ${remaining} point${remaining !== 1 ? 's' : ''} unspent.</span>`;
+    submitBtn.disabled = false;
+  }
+
+  if (state.mode === 'cut') {
+    submitBtn.className = 'btn btn-danger';
+    submitBtn.textContent = 'Submit Revised Configuration →';
+  } else {
+    submitBtn.className = 'btn btn-primary';
+    submitBtn.textContent = 'Submit Configuration →';
+  }
+}
+
+// ===================== SUBMIT & RESULTS =====================
+function submitChoices() {
+  state.submitted = true;
+  showScreen('resultsScreen');
+
+  const choices = state.mode === 'build' ? state.buildChoices : state.cutChoices;
+  const budget = state.mode === 'build' ? 10 : 7;
+  let totalUsed = 0;
+
+  const rows = LEVERS.map((lever, i) => {
+    const opt = lever.options[choices[i]];
+    totalUsed += opt.cost;
+    return `
+      <div class="result-row">
+        <div>
+          <div class="result-lever">${lever.title}</div>
+          <div style="font-size:12px; color:var(--muted);">${lever.question}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="result-choice">${opt.label} (${opt.cost}pt${opt.cost > 1 ? 's' : ''})</div>
+          <div class="result-concept">${lever.concept}: ${lever.conceptDesc}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const discussionDay1 = `
+    <div style="background:var(--valv-blue); color:white; border-radius:12px; padding:28px 32px; margin-top:24px;">
+      <h2 style="font-size:22px; margin-bottom:4px; font-weight:800;">Group Discussion — Day 1</h2>
+      <p style="opacity:0.8; font-size:14px; margin-bottom:20px;">Compare your individual picks with your tablemates. Each of you has a different role — you SHOULD disagree.</p>
+
+      <div style="background:rgba(255,255,255,0.12); border-radius:8px; padding:16px 20px; margin-bottom:16px;">
+        <p style="font-weight:700; font-size:15px; margin-bottom:4px;">⏱️ Your Task (10 minutes)</p>
+        <p style="font-size:14px; opacity:0.9;">Agree on <strong>ONE shared configuration</strong> that stays within 10 points. Everyone at the table must be able to defend it.</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; margin-bottom:12px;">
+        <p style="font-weight:700; color:var(--valv-gold); margin-bottom:8px;">Step 1: Share Your Picks</p>
+        <p style="font-size:14px; margin-bottom:6px;">1. Go around the table. Each person: say your <strong>role title</strong> and which lever you set the highest. Why did your role push you there?</p>
+        <p style="font-size:14px;">2. Where do you disagree the most? That lever is where the real trade-off lives.</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; margin-bottom:12px;">
+        <p style="font-weight:700; color:var(--valv-gold); margin-bottom:8px;">Step 2: Make the Hard Calls</p>
+        <p style="font-size:14px; margin-bottom:6px;">3. Max everything = 15 pts. You have 10. What did you sacrifice, and what does that sacrifice <em>cost the customer</em>?</p>
+        <p style="font-size:14px; margin-bottom:6px;">4. If a Yelp reviewer visited your bay tomorrow, what's the one-star complaint? Which lever caused it?</p>
+        <p style="font-size:14px;">5. The case says Valvoline's model <em>"makes the invisible visible."</em> Which of your choices does that? Which doesn't?</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px;">
+        <p style="font-weight:700; color:var(--valv-gold); margin-bottom:8px;">Step 3: Connect to Ch. 13</p>
+        <p style="font-size:14px; margin-bottom:6px;">6. Look at the concept tag on each lever. Pick ONE concept and explain it to your group <strong>using your configuration as the example</strong>.</p>
+        <p style="font-size:14px;">7. If Valvoline's competitor copied your exact configuration but spent 2 more points on marketing — what breaks? (Hint: think about the gap between promise and delivery.)</p>
+      </div>
+    </div>`;
+
+  const discussionDay2 = `
+    <div style="background:var(--valv-red); color:white; border-radius:12px; padding:28px 32px; margin-top:24px;">
+      <h2 style="font-size:22px; margin-bottom:4px; font-weight:800;">Group Negotiation — Day 2</h2>
+      <p style="opacity:0.8; font-size:14px; margin-bottom:20px;">You each protected one lever. Now corporate says cut to 7. Someone's protection is about to get overruled.</p>
+
+      <div style="background:rgba(255,255,255,0.12); border-radius:8px; padding:16px 20px; margin-bottom:16px;">
+        <p style="font-weight:700; font-size:15px; margin-bottom:4px;">⏱️ Your Task (10 minutes)</p>
+        <p style="font-size:14px; opacity:0.9;">Agree on a revised configuration within <strong>7 points</strong>. At least two levers must be downgraded. One person's protected lever <em>will</em> get cut.</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; margin-bottom:12px;">
+        <p style="font-weight:700; color:var(--valv-gold); margin-bottom:8px;">Step 1: Reveal & Defend</p>
+        <p style="font-size:14px; margin-bottom:6px;">1. Go around the table. Each person: name the lever you protected and <strong>make your case</strong> for why it can't be cut — from your role's perspective.</p>
+        <p style="font-size:14px;">2. Who has the strongest argument? Who has the weakest? Be honest.</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; margin-bottom:12px;">
+        <p style="font-weight:700; color:var(--valv-gold); margin-bottom:8px;">Step 2: Cut & Justify</p>
+        <p style="font-size:14px; margin-bottom:6px;">3. Whose protected lever got cut anyway? What was the argument that overruled them?</p>
+        <p style="font-size:14px; margin-bottom:6px;">4. After the cuts, would a customer still pay the same price? Why or why not?</p>
+        <p style="font-size:14px;">5. The case says: <em>"Customers noticed when the process felt quieter."</em> Which of your cuts would make it quieter?</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px;">
+        <p style="font-weight:700; color:var(--valv-gold); margin-bottom:8px;">Step 3: The Bigger Lesson</p>
+        <p style="font-size:14px; margin-bottom:6px;">6. Your config just got worse. What should Valvoline do when a customer has a bad experience at your cheaper bay? (This is called <strong>Service Recovery</strong> — we'll cover it next.)</p>
+        <p style="font-size:14px;">7. Is there a version of Valvoline that works at 7 points and still feels premium? Or did the budget kill the brand?</p>
+      </div>
+    </div>`;
+
+  document.getElementById('resultsArea').innerHTML = `
+    <div class="results-card">
+      <h3>${state.mode === 'build' ? '🏗️ Your Service Configuration' : '✂️ Your Revised Configuration'}</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:12px; background:var(--valv-light); border-radius:8px;">
+        <span><strong>${state.name}</strong> · ${state.role.icon} ${state.role.title} · Table ${state.table}</span>
+        <span style="font-weight:800; font-size:18px; color:${totalUsed <= budget ? 'var(--success)' : 'var(--danger)'};">${totalUsed} / ${budget} pts</span>
+      </div>
+      ${rows}
+    </div>
+    ${state.mode === 'build' ? discussionDay1 : discussionDay2}
+    <div class="results-card">
+      <h3>📝 What You're Taking Away</h3>
+      <p style="color:var(--muted); margin-bottom:16px;">Each lever in this game maps to a core concept from Chapter 13. These are the ideas you'll be tested on.</p>
+      ${LEVERS.map(l => `
+        <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:12px; padding:12px; background:var(--valv-light); border-radius:8px;">
+          <div style="min-width:120px;"><strong style="color:var(--valv-blue);">${l.concept}</strong></div>
+          <div style="font-size:13px; color:var(--muted);">${l.conceptDesc} <em>(${l.title})</em></div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="text-align:center; padding:32px;">
+      <button class="btn btn-outline" onclick="resetToLevers()">← Back to Edit</button>
+    </div>`;
+}
+
+function resetToLevers() {
+  state.submitted = false;
+  showScreen('leverScreen');
+  renderLevers();
+  updateBudget();
+}
+
+// ===================== START =====================
+init();
+</script>
+
+</body>
+</html>
