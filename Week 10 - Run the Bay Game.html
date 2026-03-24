@@ -955,20 +955,12 @@ function checkJoinReady() {
 function joinGame() {
   state.name = document.getElementById('playerName').value.trim();
 
-  // Assign role — shuffle order per table so roles are unpredictable
-  if (!tableSeatCounters[state.table]) {
-    // Create a shuffled role order for this table
-    const shuffled = [0, 1, 2, 3];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    tableSeatCounters[state.table] = { count: 0, order: shuffled };
-  }
-  const tc = tableSeatCounters[state.table];
-  const seatIndex = tc.order[tc.count % 4];
-  tc.count++;
-  state.role = ROLES[seatIndex];
+  // Assign role based on name + table — different name = different role
+  // Simple hash: sum of character codes mod 4
+  const nameHash = (state.name.toLowerCase() + state.table).split('')
+    .reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  const roleIndex = nameHash % 4;
+  state.role = ROLES[roleIndex];
 
   showScreen('readingScreen');
   renderRoleCard();
