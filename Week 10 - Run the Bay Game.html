@@ -689,7 +689,7 @@
   <div class="reading-section">
     <h2>The Scenario</h2>
     <p style="margin-bottom:16px;">You are part of the leadership team at a <strong>new Valvoline Instant Oil Change franchise</strong> opening in three weeks. Your team must decide how to design the service experience — from staffing to training to what the customer sees and hears.</p>
-    <p style="margin-bottom:16px;">But you don't have unlimited resources. Your service design budget is <strong>10 points</strong>, and every decision costs something.</p>
+    <p style="margin-bottom:16px;">But you don't have unlimited resources. Your service design budget is <strong>15 points</strong>, and every decision costs something. Max everything = 25 points. You can't have it all.</p>
 
     <div class="case-quote">
       "I pulled into the Valvoline Instant Oil Change because I was overdue and didn't want to think about it. The dashboard light had been on for a week. The dealership would take half a day. The independent shop near my house required an appointment I didn't have. At Valvoline, I didn't get out of the car."
@@ -758,30 +758,8 @@
   </div>
 </div>
 
-<!-- ==================== SCREEN 3: LEVERS (DAY 1) ==================== -->
+<!-- ==================== SCREEN 3: LEVERS ==================== -->
 <div class="screen" id="leverScreen">
-  <div style="margin-bottom:20px;">
-    <div class="mode-toggle" id="modeToggle">
-      <button class="mode-btn active" id="modeBuild" onclick="switchMode('build')">Day 1: Build</button>
-      <button class="mode-btn" id="modeCut" onclick="promptUnlockCut()" style="display:none;">Day 2: Cut</button>
-    </div>
-    <!-- Small link to reveal unlock prompt -->
-    <div id="unlockTrigger" style="text-align:center; margin-top:8px;">
-      <a href="#" onclick="event.preventDefault(); showUnlockPrompt(); this.parentElement.style.display='none';" style="font-size:12px; color:var(--muted); text-decoration:underline;">Have an instructor code?</a>
-    </div>
-    <!-- Unlock input area -->
-    <div id="unlockArea" style="display:none; margin-top:12px; text-align:center;">
-      <div style="display:inline-flex; align-items:center; gap:8px; background:white; border:2px solid var(--border); border-radius:8px; padding:8px 16px;">
-        <span style="font-size:14px; color:var(--muted);">Instructor Code:</span>
-        <input type="text" id="unlockInput" placeholder="Enter code" style="border:1px solid var(--border); border-radius:4px; padding:6px 12px; font-size:14px; width:140px; font-family:inherit;" onkeydown="if(event.key==='Enter') attemptUnlock();">
-        <button class="btn btn-outline" style="padding:6px 16px; font-size:13px;" onclick="attemptUnlock()">Unlock</button>
-      </div>
-      <div id="unlockError" style="color:var(--danger); font-size:12px; margin-top:6px; display:none;">Incorrect code. Ask your instructor.</div>
-    </div>
-  </div>
-
-  <div id="cutBannerArea"></div>
-  <div id="protectArea"></div>
   <div id="leverArea"></div>
 
   <div class="scratchpad">
@@ -798,7 +776,22 @@
   </div>
 </div>
 
-<!-- ==================== SCREEN 4: RESULTS ==================== -->
+<!-- ==================== SCREEN 4: CONNECT (forced typed answers) ==================== -->
+<div class="screen" id="connectScreen">
+  <div class="container" style="max-width:900px; margin:0 auto; padding:24px 16px;">
+    <div style="background:var(--valv-blue); color:white; border-radius:12px; padding:24px 28px; margin-bottom:24px; text-align:center;">
+      <h2 style="font-size:22px; font-weight:800; margin-bottom:4px;">Connect to Chapter 13</h2>
+      <p style="opacity:0.8; font-size:14px;">Answer each question before group discussion. Min. 30 characters each. All fields required.</p>
+    </div>
+    <div id="connectArea"></div>
+    <div style="text-align:center; margin-top:20px;">
+      <button class="btn btn-primary" id="connectSubmitBtn" style="max-width:400px;" disabled onclick="submitConnect()">Continue to Discussion →</button>
+      <div id="connectError" style="color:var(--danger); font-size:13px; margin-top:8px; display:none;">Please answer all questions (minimum 30 characters each).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 5: RESULTS ==================== -->
 <div class="screen" id="resultsScreen">
   <div id="resultsArea"></div>
 </div>
@@ -862,8 +855,8 @@ const LEVERS = [
     conceptDesc: 'The employee IS the product — produced and consumed at the same time.',
     options: [
       { label: '1 tech solo', cost: 1, desc: 'One technician handles the entire service alone. Faster to staff, but no backup and no one to talk to the customer during the process.' },
-      { label: '2 techs per bay', cost: 2, desc: 'Two technicians work together — one below, one at the window. Enables the call-and-response rhythm. Doubles labor cost per bay.' },
-      { label: '2 techs + greeter', cost: 3, desc: 'Dedicated greeter welcomes the customer and explains the process. Techs focus on execution. Premium feel, highest labor cost.' }
+      { label: '2 techs per bay', cost: 3, desc: 'Two technicians work together — one below, one at the window. Enables the call-and-response rhythm. Doubles labor cost per bay.' },
+      { label: '2 techs + greeter', cost: 5, desc: 'Dedicated greeter welcomes the customer and explains the process. Techs focus on execution. Premium feel, highest labor cost.' }
     ]
   },
   {
@@ -875,8 +868,8 @@ const LEVERS = [
     conceptDesc: 'Quality changes depending on who delivers it. Training is how you reduce that variance.',
     options: [
       { label: '1-day shadow', cost: 1, desc: 'New hires shadow a senior tech for one shift, then work solo. Fast and cheap — but every tech develops their own habits.' },
-      { label: '1-week structured', cost: 2, desc: 'Five days of structured training: mechanical skills, customer scripts, safety protocols. Ride-alongs with top performers.' },
-      { label: '2-week certified', cost: 3, desc: 'Two weeks with a written and practical certification test before any solo work. Slowest to staff, most consistent output.' }
+      { label: '1-week structured', cost: 3, desc: 'Five days of structured training: mechanical skills, customer scripts, safety protocols. Ride-alongs with top performers.' },
+      { label: '2-week certified', cost: 5, desc: 'Two weeks with a written and practical certification test before any solo work. Slowest to staff, most consistent output.' }
     ]
   },
   {
@@ -888,8 +881,8 @@ const LEVERS = [
     conceptDesc: 'The gap between what the company intends to happen and what actually happens in the bay.',
     options: [
       { label: 'No script', cost: 1, desc: 'Techs use their own judgment on what to say and when. Flexible, but every visit sounds and feels different.' },
-      { label: 'Key checkpoints', cost: 2, desc: 'Scripted greeting, vehicle confirmation, and findings summary. The middle is up to the tech. Structure without rigidity.' },
-      { label: 'Full choreography', cost: 3, desc: 'Every step announced, repeated, and confirmed out loud. The call-and-response rhythm from the case. Hardest to train, most consistent.' }
+      { label: 'Key checkpoints', cost: 3, desc: 'Scripted greeting, vehicle confirmation, and findings summary. The middle is up to the tech. Structure without rigidity.' },
+      { label: 'Full choreography', cost: 5, desc: 'Every step announced, repeated, and confirmed out loud. The call-and-response rhythm from the case. Hardest to train, most consistent.' }
     ]
   },
   {
@@ -901,8 +894,8 @@ const LEVERS = [
     conceptDesc: 'Customers can\'t verify an oil change was done correctly. Visible cues replace proof.',
     options: [
       { label: 'Lobby waiting', cost: 1, desc: 'Customer waits inside. Can\'t see the work. Gets called when it\'s done. Lowest cost, lowest trust signal.' },
-      { label: 'Stay in the car', cost: 2, desc: 'Customer stays in the vehicle and can watch through the window. Sees the work happening but doesn\'t hear explanations.' },
-      { label: 'Watch + walkthrough', cost: 3, desc: 'Customer stays in the car. Tech explains every step verbally, shows the dipstick, points out the filter. Full visibility.' }
+      { label: 'Stay in the car', cost: 3, desc: 'Customer stays in the vehicle and can watch through the window. Sees the work happening but doesn\'t hear explanations.' },
+      { label: 'Watch + walkthrough', cost: 5, desc: 'Customer stays in the car. Tech explains every step verbally, shows the dipstick, points out the filter. Full visibility.' }
     ]
   },
   {
@@ -914,8 +907,8 @@ const LEVERS = [
     conceptDesc: 'The gap between what you advertise and what you actually deliver. Over-promise = broken trust.',
     options: [
       { label: '"Fast oil change"', cost: 1, desc: 'Simple, low commitment. Competes on speed and convenience. Doesn\'t differentiate from Jiffy Lube or any other shop.' },
-      { label: '"Expert care, no surprises"', cost: 2, desc: 'Promises competence and transparency. Sets an expectation the service must deliver on — or risk disappointment.' },
-      { label: '"The most thorough service in the industry"', cost: 3, desc: 'Bold, premium claim. Justifies higher prices IF the experience matches. If it doesn\'t, this becomes the biggest liability.' }
+      { label: '"Expert care, no surprises"', cost: 3, desc: 'Promises competence and transparency. Sets an expectation the service must deliver on — or risk disappointment.' },
+      { label: '"The most thorough service in the industry"', cost: 5, desc: 'Bold, premium claim. Justifies higher prices IF the experience matches. If it doesn\'t, this becomes the biggest liability.' }
     ]
   }
 ];
@@ -925,10 +918,7 @@ let state = {
   name: '',
   table: null,
   role: null,
-  mode: 'build',
-  buildChoices: [null, null, null, null, null],
-  cutChoices: null,
-  protectLever: null,
+  choices: [null, null, null, null, null],
   submitted: false
 };
 
@@ -1037,90 +1027,12 @@ function startLevers() {
   updateBudget();
 }
 
-// ===================== CUT MODE LOCK =====================
-const UNLOCK_CODE = 'CUTCOSTS';
-let cutUnlocked = false;
-
-function showUnlockPrompt() {
-  document.getElementById('unlockArea').style.display = 'block';
-  document.getElementById('unlockInput').focus();
-}
-
-function attemptUnlock() {
-  const input = document.getElementById('unlockInput').value.trim().toUpperCase();
-  if (input === UNLOCK_CODE) {
-    cutUnlocked = true;
-    document.getElementById('unlockArea').style.display = 'none';
-    document.getElementById('modeCut').style.display = '';
-    document.getElementById('unlockError').style.display = 'none';
-    switchMode('cut');
-  } else {
-    document.getElementById('unlockError').style.display = 'block';
-    document.getElementById('unlockInput').value = '';
-    document.getElementById('unlockInput').focus();
-  }
-}
-
-function promptUnlockCut() {
-  // Already unlocked — just switch
-  switchMode('cut');
-}
-
-function switchMode(mode) {
-  state.mode = mode;
-  document.getElementById('modeBuild').className = 'mode-btn' + (mode === 'build' ? ' active' : '');
-  document.getElementById('modeCut').className = 'mode-btn' + (mode === 'cut' ? ' active-cut' : '');
-
-  if (mode === 'cut' && !state.cutChoices) {
-    // Pre-load Day 2 with a "standard" configuration (the B-across-the-board baseline)
-    state.cutChoices = [1, 1, 1, 1, 1]; // index of selected option (0-2)
-    // Default: all set to option B (index 1) = 2+2+2+2+2 = 10 pts
-  }
-
-  state.submitted = false;
-  renderLevers();
-  updateBudget();
-  renderCutBanner();
-  renderProtectArea();
-  window.scrollTo(0, 0);
-}
-
-function renderCutBanner() {
-  const area = document.getElementById('cutBannerArea');
-  if (state.mode === 'cut') {
-    area.innerHTML = `
-      <div class="cut-banner">
-        <h2>⚠️ Corporate Memo: Cut Costs</h2>
-        <p>"Margins are below target. Your service budget drops from <strong>10 to 7 points</strong>.<br>Downgrade at least two levers. Submit your revised configuration."</p>
-      </div>`;
-  } else {
-    area.innerHTML = '';
-  }
-}
-
-function renderProtectArea() {
-  const area = document.getElementById('protectArea');
-  if (state.mode === 'cut') {
-    area.innerHTML = `
-      <div class="protect-input">
-        <label>🛡️ As ${state.role.name} (${state.role.title}), the ONE lever I will NOT allow to be cut is:</label>
-        <select id="protectSelect" onchange="state.protectLever = this.value;">
-          <option value="">— Choose your protected lever —</option>
-          ${LEVERS.map(l => `<option value="${l.id}">${l.title}</option>`).join('')}
-        </select>
-        <div style="font-size:12px; color:var(--muted); margin-top:8px; font-style:italic;">
-          Write your reason in the scratchpad below. You'll need to defend this to your group.
-        </div>
-      </div>`;
-  } else {
-    area.innerHTML = '';
-  }
-}
+// (Cut mode removed — Tuesday-only game)
 
 function renderLevers() {
   const area = document.getElementById('leverArea');
-  const choices = state.mode === 'build' ? state.buildChoices : state.cutChoices;
-  const budget = state.mode === 'build' ? 10 : 7;
+  const choices = state.choices;
+  const budget = 15;
 
   area.innerHTML = LEVERS.map((lever, li) => `
     <div class="lever-card" id="lever-${li}">
@@ -1145,15 +1057,15 @@ function renderLevers() {
 
 function selectOption(leverIndex, optionIndex) {
   if (state.submitted) return;
-  const choices = state.mode === 'build' ? state.buildChoices : state.cutChoices;
+  const choices = state.choices;
   choices[leverIndex] = optionIndex;
   renderLevers();
   updateBudget();
 }
 
 function updateBudget() {
-  const choices = state.mode === 'build' ? state.buildChoices : state.cutChoices;
-  const budget = state.mode === 'build' ? 10 : 7;
+  const choices = state.choices;
+  const budget = 15;
   let used = 0;
   let allSelected = true;
 
@@ -1195,22 +1107,79 @@ function updateBudget() {
     submitBtn.disabled = false;
   }
 
-  if (state.mode === 'cut') {
-    submitBtn.className = 'btn btn-danger';
-    submitBtn.textContent = 'Submit Revised Configuration →';
-  } else {
-    submitBtn.className = 'btn btn-primary';
-    submitBtn.textContent = 'Submit Configuration →';
-  }
+
 }
 
 // ===================== SUBMIT & RESULTS =====================
+// ===================== CONNECT QUESTIONS =====================
+const CONNECT_QUESTIONS = [
+  {
+    id: 'cq1',
+    label: 'Look at the lever where you spent the MOST points. Which Ch. 13 concept does it connect to? Explain why you prioritized it from your role\'s perspective.',
+    placeholder: 'e.g., "I spent 5 on Transparency because as the Customer Advocate, Intangibility means..."'
+  },
+  {
+    id: 'cq2',
+    label: 'Which lever did you set to the LOWEST option? What service risk does that create? Name the specific concept (Inseparability, Variability, Standards Gap, Intangibility, or Communication Gap).',
+    placeholder: 'e.g., "We went with 1-day shadow training, which creates a Variability risk because..."'
+  },
+  {
+    id: 'cq3',
+    label: 'If a competitor copied your exact configuration but spent 4 more points on Marketing Promise — what breaks? Explain using the Communication Gap.',
+    placeholder: 'Think about the gap between what you promise and what you actually deliver...'
+  }
+];
+
+let connectAnswers = {};
+
+function renderConnect() {
+  const area = document.getElementById('connectArea');
+  area.innerHTML = CONNECT_QUESTIONS.map((q, i) => `
+    <div style="background:white; border-radius:12px; padding:24px; margin-bottom:16px; box-shadow:0 2px 12px rgba(0,0,0,0.06); border-left:4px solid var(--valv-blue);">
+      <label style="display:block; font-weight:700; font-size:14px; margin-bottom:10px; color:var(--text);">Question ${i + 1}: ${q.label}</label>
+      <textarea id="cq_${q.id}" placeholder="${q.placeholder}" oninput="updateConnectAnswer('${q.id}', this)"
+        style="width:100%; height:80px; border:2px solid var(--border); border-radius:8px; padding:10px 12px; font-family:inherit; font-size:14px; resize:vertical;">${connectAnswers[q.id] || ''}</textarea>
+      <div id="cc_${q.id}" style="font-size:11px; color:var(--muted); margin-top:4px; text-align:right;">
+        ${(connectAnswers[q.id] || '').length}/30 characters minimum
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateConnectAnswer(qid, el) {
+  connectAnswers[qid] = el.value;
+  const count = el.value.length;
+  const countEl = document.getElementById('cc_' + qid);
+  countEl.textContent = count + '/30 characters minimum';
+  countEl.style.color = count >= 30 ? 'var(--success)' : 'var(--muted)';
+  checkConnectReady();
+}
+
+function checkConnectReady() {
+  const allDone = CONNECT_QUESTIONS.every(q => (connectAnswers[q.id] || '').length >= 30);
+  document.getElementById('connectSubmitBtn').disabled = !allDone;
+  document.getElementById('connectError').style.display = 'none';
+}
+
+function submitConnect() {
+  const allDone = CONNECT_QUESTIONS.every(q => (connectAnswers[q.id] || '').length >= 30);
+  if (!allDone) {
+    document.getElementById('connectError').style.display = 'block';
+    return;
+  }
+  showScreen('resultsScreen');
+  renderResults();
+}
+
 function submitChoices() {
   state.submitted = true;
-  showScreen('resultsScreen');
+  showScreen('connectScreen');
+  renderConnect();
+}
 
-  const choices = state.mode === 'build' ? state.buildChoices : state.cutChoices;
-  const budget = state.mode === 'build' ? 10 : 7;
+function renderResults() {
+  const choices = state.choices;
+  const budget = 15;
   let totalUsed = 0;
 
   const rows = LEVERS.map((lever, i) => {
@@ -1231,12 +1200,12 @@ function submitChoices() {
 
   const discussionDay1 = `
     <div style="background:var(--valv-blue); color:white; border-radius:12px; padding:28px 32px; margin-top:24px;">
-      <h2 style="font-size:22px; margin-bottom:4px; font-weight:800;">Group Discussion — Day 1</h2>
+      <h2 style="font-size:22px; margin-bottom:4px; font-weight:800;">Group Discussion</h2>
       <p style="opacity:0.8; font-size:14px; margin-bottom:20px;">Compare your individual picks with your tablemates. Each of you has a different role — you SHOULD disagree.</p>
 
       <div style="background:rgba(255,255,255,0.12); border-radius:8px; padding:16px 20px; margin-bottom:16px;">
         <p style="font-weight:700; font-size:15px; margin-bottom:4px;">⏱️ Your Task (10 minutes)</p>
-        <p style="font-size:14px; opacity:0.9;">Agree on <strong>ONE shared configuration</strong> that stays within 10 points. Everyone at the table must be able to defend it.</p>
+        <p style="font-size:14px; opacity:0.9;">Agree on <strong>ONE shared configuration</strong> that stays within 15 points. Everyone at the table must be able to defend it.</p>
       </div>
 
       <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; margin-bottom:12px;">
@@ -1247,7 +1216,7 @@ function submitChoices() {
 
       <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; margin-bottom:12px;">
         <p style="font-weight:700; color:var(--valv-gold); margin-bottom:8px;">Step 2: Make the Hard Calls</p>
-        <p style="font-size:14px; margin-bottom:6px;">3. Max everything = 15 pts. You have 10. What did you sacrifice, and what does that sacrifice <em>cost the customer</em>?</p>
+        <p style="font-size:14px; margin-bottom:6px;">3. Max everything = 25 pts. You have 15. What did you sacrifice, and what does that sacrifice <em>cost the customer</em>?</p>
         <p style="font-size:14px; margin-bottom:6px;">4. If a Yelp reviewer visited your bay tomorrow, what's the one-star complaint? Which lever caused it?</p>
         <p style="font-size:14px;">5. The case says Valvoline's model <em>"makes the invisible visible."</em> Which of your choices does that? Which doesn't?</p>
       </div>
@@ -1261,12 +1230,12 @@ function submitChoices() {
 
   const discussionDay2 = `
     <div style="background:var(--valv-red); color:white; border-radius:12px; padding:28px 32px; margin-top:24px;">
-      <h2 style="font-size:22px; margin-bottom:4px; font-weight:800;">Group Negotiation — Day 2</h2>
+      <h2 style="font-size:22px; margin-bottom:4px; font-weight:800;"></h2>
       <p style="opacity:0.8; font-size:14px; margin-bottom:20px;">You each protected one lever. Now corporate says cut to 7. Someone's protection is about to get overruled.</p>
 
       <div style="background:rgba(255,255,255,0.12); border-radius:8px; padding:16px 20px; margin-bottom:16px;">
         <p style="font-weight:700; font-size:15px; margin-bottom:4px;">⏱️ Your Task (10 minutes)</p>
-        <p style="font-size:14px; opacity:0.9;">Agree on a revised configuration within <strong>7 points</strong>. At least two levers must be downgraded. One person's protected lever <em>will</em> get cut.</p>
+        <p style="font-size:14px; opacity:0.9;">Agree on a revised configuration within <strong>11 points</strong>. At least two levers must be downgraded. One person's protected lever <em>will</em> get cut.</p>
       </div>
 
       <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; margin-bottom:12px;">
@@ -1291,14 +1260,14 @@ function submitChoices() {
 
   document.getElementById('resultsArea').innerHTML = `
     <div class="results-card">
-      <h3>${state.mode === 'build' ? '🏗️ Your Service Configuration' : '✂️ Your Revised Configuration'}</h3>
+      <h3>🏗️ Your Service Configuration</h3>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:12px; background:var(--valv-light); border-radius:8px;">
         <span><strong>${state.name}</strong> · ${state.role.icon} ${state.role.title} · Table ${state.table}</span>
         <span style="font-weight:800; font-size:18px; color:${totalUsed <= budget ? 'var(--success)' : 'var(--danger)'};">${totalUsed} / ${budget} pts</span>
       </div>
       ${rows}
     </div>
-    ${state.mode === 'build' ? discussionDay1 : discussionDay2}
+    ${discussionDay1}
     <div class="results-card">
       <h3>📝 What You're Taking Away</h3>
       <p style="color:var(--muted); margin-bottom:16px;">Each lever in this game maps to a core concept from Chapter 13. These are the ideas you'll be tested on.</p>
