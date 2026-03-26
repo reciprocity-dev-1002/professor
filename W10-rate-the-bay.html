@@ -458,10 +458,11 @@
       <p style="color:var(--muted); font-size:15px;">Before group discussion, answer these questions individually. All fields required (min. 30 characters each).</p>
     </div>
     <div id="connectArea"></div>
-    <div style="text-align:center; margin-top:16px;">
-      <button class="btn btn-primary" style="max-width:400px;" id="connectSubmitBtn" disabled onclick="submitConnect()">Submit Answers</button>
-      <div id="connectError" style="color:var(--danger); font-size:13px; margin-top:8px; display:none;">Please answer all questions (minimum 30 characters each).</div>
+    <div style="display:flex; justify-content:space-between; align-items:center; max-width:600px; margin:16px auto 0;">
+      <button class="btn" style="background:var(--border); color:var(--text);" onclick="goBackToEncounters()">← Back to Encounters</button>
+      <button class="btn btn-primary" style="width:auto; padding:14px 40px;" id="connectSubmitBtn" disabled onclick="submitConnect()">Submit Answers →</button>
     </div>
+    <div id="connectError" style="color:var(--danger); font-size:13px; margin-top:8px; display:none; text-align:center;">Please answer all questions (minimum 30 characters each).</div>
   </div>
 </div>
 
@@ -682,7 +683,7 @@ function renderEncounter() {
 
   // Progress
   document.getElementById('progressText').textContent = `Encounter ${idx + 1} of ${ENCOUNTERS.length}`;
-  document.getElementById('progressBadge').textContent = enc.conceptTarget;
+  document.getElementById('progressBadge').textContent = `Part 2 of 5`;
   document.getElementById('progressFill').style.width = `${((idx + 1) / ENCOUNTERS.length) * 100}%`;
 
   const area = document.getElementById('encounterArea');
@@ -791,6 +792,12 @@ function prevEncounter() {
     renderEncounter();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+}
+
+function goBackToEncounters() {
+  state.currentEncounter = ENCOUNTERS.length - 1; // go to last encounter
+  showScreen('encounterScreen');
+  renderEncounter();
 }
 
 // ===================== CONNECT TO CH. 13 =====================
