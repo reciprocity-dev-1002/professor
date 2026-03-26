@@ -362,10 +362,55 @@
 
 <!-- ==================== SCREEN 2: BRIEFING ==================== -->
 <div class="screen" id="briefingScreen">
+
+  <!-- VALVOLINE CONTEXT -->
+  <div class="section-card" style="border-left:5px solid var(--valv-red);">
+    <h2 style="color:var(--valv-red);">Know the Company</h2>
+    <p style="margin-bottom:16px;">Before you rate Valvoline as a customer, you need to understand what they're <em>trying</em> to deliver. Read this carefully — it's the benchmark you'll judge every encounter against.</p>
+
+    <div style="background:var(--valv-dark); color:white; border-radius:10px; padding:24px; margin-bottom:20px;">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--valv-gold); margin-bottom:8px;">Value Proposition</div>
+      <p style="font-size:16px; font-weight:600; line-height:1.6; margin-bottom:12px;">Valvoline is not selling oil. Valvoline is selling <span style="color:var(--valv-gold);">certainty, transparency, speed with reassurance, and risk reduction at the moment of service.</span></p>
+      <p style="font-size:13px; opacity:0.8; line-height:1.6;">Premium pricing is defensible only because those elements are delivered simultaneously, in real time, and in front of the customer. The price is not justified by what goes into the engine — it's justified by what goes into the customer's mind.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
+      <div style="background:var(--valv-light); border-radius:10px; padding:16px;">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--valv-blue); margin-bottom:6px;">Target Customer</div>
+        <p style="font-size:14px; line-height:1.5;">People who are overdue, time-pressed, and don't want to think about car maintenance. The dashboard light has been on for a week. The dealership takes half a day. The independent shop requires an appointment they don't have.</p>
+      </div>
+      <div style="background:var(--valv-light); border-radius:10px; padding:16px;">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--valv-blue); margin-bottom:6px;">Positioning</div>
+        <p style="font-size:14px; line-height:1.5;">Stay-in-your-car, no-appointment oil change where you can <strong>see everything happening</strong>. Competitors can match speed. They struggle to match simultaneous speed + trust + visibility.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE EXCERPTS -->
+  <div class="section-card" style="border-left:5px solid var(--valv-blue);">
+    <h2 style="color:var(--valv-blue);">From the Case: What "Good" Looks Like</h2>
+    <p style="margin-bottom:16px; font-size:14px; color:var(--muted);">These details from the Valvoline case describe how the service is <em>designed</em> to work. Keep them in mind — the encounters you're about to rate may or may not match.</p>
+
+    <div style="display:grid; gap:12px;">
+      <div style="background:#FFF7ED; border-left:4px solid var(--valv-gold); padding:14px 18px; border-radius:0 8px 8px 0;">
+        <div style="font-weight:700; font-size:13px; color:#92400E; margin-bottom:4px;">The Choreography</div>
+        <p style="font-size:14px; color:#92400E; line-height:1.6; font-style:italic;">A technician waved me forward, guided my tires into position. Another appeared at my window, introduced himself by name, confirmed my vehicle, and explained what they would check. As the service began, voices moved in a call-and-response rhythm. Each step was announced, repeated, and acknowledged.</p>
+      </div>
+      <div style="background:#FFF7ED; border-left:4px solid var(--valv-gold); padding:14px 18px; border-radius:0 8px 8px 0;">
+        <div style="font-weight:700; font-size:13px; color:#92400E; margin-bottom:4px;">The Transparency</div>
+        <p style="font-size:14px; color:#92400E; line-height:1.6; font-style:italic;">I could see the pit below through the windshield. At one point, the technician pointed out my air filter, explained its condition, and gave me the option to replace it. I declined. He didn't push.</p>
+      </div>
+      <div style="background:#FFF7ED; border-left:4px solid var(--valv-gold); padding:14px 18px; border-radius:0 8px 8px 0;">
+        <div style="font-weight:700; font-size:13px; color:#92400E; margin-bottom:4px;">The Tension</div>
+        <p style="font-size:14px; color:#92400E; line-height:1.6; font-style:italic;">The price was higher than expected. Higher than the independent shop. Higher than doing it myself. But I drove away without second-guessing whether anything had been missed. That feeling was the part I hadn't anticipated paying for.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE TASK -->
   <div class="section-card">
-    <h2>The Setup</h2>
-    <p style="margin-bottom:16px;">On Tuesday, you <strong>designed</strong> a Valvoline location. Today you <strong>experience</strong> one as a customer.</p>
-    <p style="margin-bottom:16px;">You'll walk through <strong>5 real service encounters</strong> at a Valvoline Instant Oil Change. For each one, you'll:</p>
+    <h2>Your Task</h2>
+    <p style="margin-bottom:16px;">You'll walk through <strong>3 service encounters</strong> at a Valvoline location. For each one, you'll:</p>
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px;">
       <div style="background:var(--valv-light); padding:16px; border-radius:10px; text-align:center;">
         <div style="font-size:28px; margin-bottom:8px;">1</div>
@@ -383,8 +428,10 @@
         <div style="font-size:12px; color:var(--muted); margin-top:4px;">Type your reasoning — required</div>
       </div>
     </div>
+    <p style="font-size:14px; color:var(--muted);">The question isn't just "was this good or bad?" — it's <strong>how does this compare to what Valvoline promises?</strong></p>
   </div>
 
+  <!-- RATER REFERENCE -->
   <div class="section-card">
     <h2>Quick Reference: RATER</h2>
     <p style="margin-bottom:16px; font-size:14px; color:var(--muted);">Five dimensions customers use to judge service quality:</p>
@@ -412,6 +459,7 @@
     </div>
   </div>
 
+  <!-- ZONE OF TOLERANCE -->
   <div class="section-card" style="text-align:center;">
     <h2>Zone of Tolerance</h2>
     <p style="margin-bottom:16px; font-size:14px; color:var(--muted);">Every customer has a range of acceptable service — not perfect, but good enough. That's the <strong>Zone of Tolerance</strong>.</p>
@@ -499,74 +547,54 @@ const ENCOUNTERS = [
     id: 1,
     title: 'The Arrival',
     conceptTarget: 'Standards Gap',
-    scenario: 'You pull in at 4:30 PM after work. The website said "no appointment needed." There are two bays open. A technician in a stained uniform waves you into a bay without making eye contact. No greeting. No name. He walks to the front of the car and pops the hood without saying anything. Another tech is leaning against the wall, scrolling his phone.',
-    instructorNote: 'Standards Gap — the company intends a scripted greeting and professional presentation, but the employees aren\'t following it. The gap between intended standards and actual delivery.',
+    scenario: 'You pull into the Valvoline at 4:30 PM after work. Your dashboard light has been on since last Tuesday. The website said "no appointment needed — 15 minutes, stay in your car."\n\nTwo bays are open. A technician in a stained polo waves you forward without looking up. No greeting. No name. He doesn\'t guide your tires into position — you have to guess. He walks to the hood and pops it without a word.\n\nFrom the driver\'s seat, you can hear tools but can\'t see anyone working below. Another tech is leaning against the far wall, scrolling his phone. A third walks past your car carrying a fast-food bag.\n\nFive minutes in, a different employee appears at your window. He doesn\'t introduce himself. He says: "What oil you want?" You ask what they recommend for your car. He shrugs: "Most people just get the regular." You pick the regular.\n\nNo one explains what they\'re checking. No one narrates the process. At one point you hear something metal drop and someone laughs. Twelve minutes later, the first tech reappears and says: "You\'re good." He hands you a receipt through the window. The total is $52. You pull out without anyone saying goodbye.',
+    instructorNote: 'Standards Gap — Valvoline\'s designed experience includes a scripted greeting, name introduction, tire guide-in, process narration, and professional presentation. None of that happened. The gap isn\'t between Valvoline and its competitors — it\'s between what Valvoline intends and what this crew actually delivered. Every missing step is a standard the company set that the frontline ignored.',
     idealZone: 'below',
     raterFocus: 'T',
-    raterExplain: 'Tangibles: stained uniform, no greeting protocol, phone scrolling = visible gap between what the company promises and what the employee delivers.'
+    raterExplain: 'Tangibles collapse first: stained uniform, phone scrolling, fast-food bag, no guide-in, no narration. But this also hits Assurance (no expertise shown), Empathy (no personal connection), and Reliability (were the steps even completed?). The visible cues that justify Valvoline\'s premium are entirely absent.'
   },
   {
     id: 2,
-    title: 'The Upsell',
+    title: 'The Inspection',
     conceptTarget: 'Communication Gap',
-    scenario: 'Halfway through, a different employee comes to your window and says: "So your air filter is pretty dirty. We recommend replacing it today — it\'s only $45." You just replaced the air filter yourself three weeks ago. When you tell him, he pauses, then says: "Well, the system flagged it." He walks away without acknowledging the mistake.',
-    instructorNote: 'Communication Gap — the company communicates (via upsell scripts) a promise of expertise and honesty, but the delivery reveals a scripted push that doesn\'t match reality. Trust breaks when what you say ≠ what you do.',
+    scenario: 'Same visit, a few minutes later. A second employee appears at your window holding your air filter. It\'s dusty but not visibly damaged. He says: "Your air filter is pretty far gone. We can swap it right now for $49. I\'d recommend it — you don\'t want to put extra stress on your engine."\n\nYou replaced your air filter yourself three weeks ago. You tell him that.\n\nHe pauses. Then: "Well, the system flagged it based on your mileage." He doesn\'t look at the filter again. He doesn\'t acknowledge that his visual assessment was wrong. He just walks away.\n\nNow you\'re sitting in the car wondering: Did they actually check the other things on the inspection? The tire pressure? The transmission fluid? Or did they just check boxes on a screen?\n\nYou look at the courtesy inspection form he left on your dashboard. Every item is marked "Good." All twelve of them. It took them four minutes to "inspect" everything. You didn\'t see anyone check your tires.',
+    instructorNote: 'Communication Gap — Valvoline communicates expertise, honesty, and thoroughness through its inspection process and customer-facing reports. But the delivery reveals a scripted upsell disconnected from reality, a fabricated inspection report, and zero acknowledgment when caught. The gap is between what Valvoline says it does (transparent, trustworthy recommendations) and what the customer actually experienced (a sales script). This is the most dangerous gap because it destroys Assurance — and once trust breaks, every other element of the service becomes suspect.',
     idealZone: 'below',
     raterFocus: 'A',
-    raterExplain: 'Assurance collapses: the employee\'s credibility is destroyed. If they\'re wrong about the air filter, what else might they be wrong about?'
+    raterExplain: 'Assurance is destroyed: the tech recommended replacing a filter you just replaced, couldn\'t explain why, and walked away. The pre-checked inspection form makes it worse — it\'s evidence that the "transparency" is performative. If they lied about the filter and faked the inspection, what else was wrong? Assurance is the hardest RATER dimension to rebuild once broken.'
   },
   {
     id: 3,
-    title: 'The Rhythm',
-    conceptTarget: 'Knowledge Gap',
-    scenario: 'A third technician takes over. He calls out each step — "Drain plug removed." The tech below responds: "Drain plug confirmed." Oil type is announced, repeated. Filter swap is narrated. You can see everything from your driver\'s seat. He shows you the dipstick — "Full and clean." It takes 18 minutes total. He shakes your hand before you pull out.',
-    instructorNote: 'This encounter shows what happens when there is NO Knowledge Gap — the company understands what customers actually want (visibility, narration, confidence) and designed the process to deliver it. The call-and-response rhythm IS the service.',
-    idealZone: 'above',
-    raterFocus: 'R',
-    raterExplain: 'Reliability shines: every step was narrated, confirmed, and visible. The customer can verify the work was done correctly — exactly as promised.'
-  },
-  {
-    id: 4,
-    title: 'The Empty Bay',
-    conceptTarget: 'Perishability',
-    scenario: 'It\'s 2:15 PM on a Tuesday. You arrive and the place is empty — three bays, zero cars. Two techs are standing around. You\'re in and out in 12 minutes. Now imagine it\'s 5:30 PM on a Friday. Same location. Cars are lined up to the street. A sign says "45 minute wait." A customer in line ahead of you gives up and drives away. The techs are working as fast as they can — same team, same skills, same service.',
-    instructorNote: 'Perishability — the empty 2:15 PM bays cannot be "saved" for the 5:30 PM rush. Unused capacity vanishes. This is THE core challenge of services: you can\'t inventory an oil change. The customer who drove away? That revenue is gone forever.',
-    idealZone: 'within',
-    raterFocus: 'R2',
-    raterExplain: 'Responsiveness is tested by capacity constraints. The 5:30 service isn\'t worse because people are less skilled — it\'s worse because services can\'t be stored.'
-  },
-  {
-    id: 5,
-    title: 'The Recovery',
+    title: 'The Callback',
     conceptTarget: 'Delivery Gap + Service Recovery',
-    scenario: 'A week later you notice a small oil spot on your driveway. You call the location. The manager answers immediately: "I\'m sorry — bring it in right now and we\'ll take care of it. No charge, no wait." When you arrive, she meets you at the bay, personally oversees the repair, and hands you a card for a free next visit. She says: "This isn\'t the experience we want you to have. I want to make sure you come back."',
-    instructorNote: 'Delivery Gap initially — the actual service didn\'t match what should have happened (oil leak). But the Service Recovery is textbook: speed, ownership, compensation, and personal connection. Research shows effective recovery can create MORE loyalty than if the failure never happened (the Recovery Paradox).',
+    scenario: 'A week after your visit, you notice a small oil spot on your driveway. It wasn\'t there before. You check under your car — there\'s a slow drip near the oil pan.\n\nYou call the Valvoline location. The manager, Maria, answers on the second ring. You explain the situation. She says: "That should not have happened, and I\'m sorry. Can you bring it in today? I\'ll clear a bay for you right now. No charge, no wait."\n\nWhen you arrive, Maria is standing at the bay entrance. She introduces herself by name, shakes your hand, and walks you through exactly what they\'re going to check. She says: "I want you to be able to see everything we do."\n\nThe technician who works on your car narrates every step — drain plug torque, gasket check, oil level verification. Maria stays for the entire service. She explains that the drain plug wasn\'t torqued properly on your first visit and shows you the fixed seal.\n\nBefore you leave, she hands you a card for two free visits. She says: "I don\'t want you to wonder whether we did it right this time. Come back in 1,000 miles and we\'ll re-check it for free — so you can see for yourself." She asks if there\'s anything else she can do.\n\nThe whole visit takes 20 minutes. You drive away feeling more confident in this location than you did before the oil leak happened.',
+    instructorNote: 'Delivery Gap initially — the first visit produced a tangible failure (oil leak from improper drain plug torque). But the recovery is what this encounter is really about. Maria\'s response hits every element of Valvoline\'s value proposition: speed (immediate bay clearance), transparency (narrated every step, showed the fix), certainty (two free follow-up visits so the customer can verify), and empathy (personal ownership, stayed for the whole service). The teaching moment is the Recovery Paradox: research shows effective recovery can create MORE loyalty than if the failure never happened. Maria didn\'t just fix the car — she demonstrated everything the first visit should have been.',
     idealZone: 'above',
     raterFocus: 'E',
-    raterExplain: 'Empathy: the manager treats this as a personal relationship, not a transaction. She takes ownership and shows she cares about the customer\'s trust, not just the car.'
+    raterExplain: 'Empathy drives the recovery: Maria treated this as a personal relationship, not a damage-control transaction. She introduced herself, stayed through the service, explained what went wrong, and built in a reason to come back. But notice that every RATER dimension improved — Reliability (narrated process), Assurance (showed the fix), Tangibles (manager at the bay), and Responsiveness (immediate action). Great recovery lifts everything.'
   }
 ];
 
 const CONNECT_QUESTIONS = [
   {
     id: 'q1',
-    label: 'Which encounter had the WORST service gap? Name the specific gap (Knowledge, Standards, Delivery, or Communication) and explain what caused it.',
-    placeholder: 'e.g., "Encounter 2 showed a Communication Gap because..."'
+    label: 'Compare Encounter 1 to what you read in the case excerpts. List at least THREE specific things Valvoline\'s service was designed to include that were missing from your experience. What type of service gap does this represent?',
+    placeholder: 'Think about what the case described vs. what actually happened...'
   },
   {
     id: 'q2',
-    label: 'Look at Encounter 4 (The Empty Bay). Why can\'t Valvoline just "make more" oil changes at 5:30 PM the way a factory could make more products? Explain using the concept of Perishability.',
-    placeholder: 'Think about why services are different from products here...'
+    label: 'In Encounter 2, the technician recommended replacing an air filter you just replaced. How does this single moment affect your perception of EVERYTHING ELSE Valvoline did during the visit? Connect this to a specific RATER dimension.',
+    placeholder: 'One lie changes how you see the whole service...'
   },
   {
     id: 'q3',
-    label: 'Compare your RATER scores for Encounter 1 vs. Encounter 3. What changed? Connect this to one of the 4 service characteristics (intangible, inseparable, variable, perishable).',
-    placeholder: 'The same company, different experience — why?'
+    label: 'Look at your RATER scores for Encounter 1 vs. Encounter 3. Same company, same service, completely different experience. What does this tell you about Variability as a characteristic of services? Why is this a bigger problem for services than for products?',
+    placeholder: 'A factory produces the same widget every time. Valvoline can\'t...'
   },
   {
     id: 'q4',
-    label: 'In Encounter 5, the manager turned a failure into loyalty. Connect this to the Recovery Paradox. Would you actually trust Valvoline MORE after this recovery? Why or why not?',
-    placeholder: 'Be honest — does recovery really work?'
+    label: 'In Encounter 3, the manager turned a failure into loyalty. Would you actually trust Valvoline MORE after the callback than if the oil leak never happened? Why or why not? Connect your answer to the Recovery Paradox.',
+    placeholder: 'Be honest — does great recovery really build more trust than no failure?'
   }
 ];
 
@@ -585,17 +613,6 @@ const RECOVERY_SCENARIOS = [
   },
   {
     id: 2,
-    title: 'The Scratch',
-    scenario: 'A customer pulls out of the bay, parks, and walks back in. They point to a small scratch on their hood that wasn\'t there before. They\'re calm but firm: "This happened in your bay." You\'re the manager on duty.',
-    options: [
-      { letter: 'A', text: '"I hear you, and I\'m sorry. Let me take a photo right now, file a damage report, and we\'ll cover the repair through our insurance. Can I get your contact info so I can follow up today?"', best: true, pillars: { listen: true, fair: true, quick: true }, why: 'All 3 pillars: took the complaint seriously (Listen), offered a real fix through the proper channel (Fair Solution), and started the process immediately with same-day follow-up (Resolve Quickly).' },
-      { letter: 'B', text: '"I\'m sorry about that. I don\'t want you to have to deal with insurance paperwork. Let me give you $200 cash from the register right now to get it buffed out, and your next three oil changes are free."', best: false, pillars: { listen: true, fair: false, quick: true }, why: 'Listens and acts fast \u2014 but the solution isn\'t truly fair. A manager handing out cash bypasses the proper process, may not cover the real repair cost, and sets a precedent that could be exploited. Fair means matching the fix to the problem through the right channel.' },
-      { letter: 'C', text: '"I take this seriously. Let me review the bay camera footage with you right now so we can see exactly what happened, and then we\'ll file the claim together based on what we find."', best: false, pillars: { listen: true, fair: true, quick: false }, why: 'Great listening and fair intent \u2014 but reviewing camera footage together turns the recovery into an investigation. The customer came in to get help, not to prove their case. This adds friction when what they need is action.' },
-      { letter: 'D', text: '"Our techs don\'t touch the hood exterior, so it\'s unlikely it happened here \u2014 but I understand why you\'d think that. Let me give you a free oil change for the trouble."', best: false, pillars: { listen: false, fair: false, quick: true }, why: 'Fast, but starts with a denial disguised as empathy. "I understand why you\'d think that" is condescending. And a free oil change doesn\'t fix a scratch \u2014 the solution doesn\'t match the problem.' }
-    ]
-  },
-  {
-    id: 3,
     title: 'The Long Wait',
     scenario: 'A customer was told 15 minutes. It\'s been 45 and they\'re still in their car, waiting. You can see them checking their phone and sighing. They haven\'t complained yet, but they\'re clearly frustrated. You\'re the manager.',
     options: [
@@ -606,7 +623,7 @@ const RECOVERY_SCENARIOS = [
     ]
   },
   {
-    id: 4,
+    id: 3,
     title: 'The Missed Check',
     scenario: 'A customer calls two days after their visit. They got a flat tire and checked their courtesy inspection report \u2014 it says tire pressure was checked and "all good." But one tire was at 18 PSI (should be 35). They\'re stranded on the side of the road.',
     options: [
@@ -859,7 +876,7 @@ function submitConnect() {
 
 // ===================== SERVICE RECOVERY CHALLENGE =====================
 function renderRecovery() {
-  // Randomly assign 1 of 4 scenarios
+  // Randomly assign 1 of 3 scenarios
   if (!state.recoveryScenario) {
     state.recoveryScenario = RECOVERY_SCENARIOS[Math.floor(Math.random() * RECOVERY_SCENARIOS.length)];
   }
@@ -998,7 +1015,7 @@ function renderResults() {
   area.innerHTML = `
     <!-- SCORECARD -->
     <div class="scorecard">
-      <h3>Your RATER Scorecard — 5 Encounters</h3>
+      <h3>Your RATER Scorecard — ${ENCOUNTERS.length} Encounters</h3>
       ${RATER.map(r => {
         const val = parseFloat(avgScores[r.key]);
         const cls = val >= 4 ? 'score-good' : val >= 2.5 ? 'score-ok' : 'score-bad';
@@ -1081,37 +1098,37 @@ function renderResults() {
     <div class="discussion-section discussion-red">
       <h3>Group Discussion — Round 1: Compare Ratings</h3>
       <div class="discussion-round">
-        <h4>Step 1: Share Your Lowest</h4>
-        <p>Each person in your group: Which encounter did you rate the lowest on average? Read your explanation out loud.</p>
+        <h4>Step 1: Case vs. Reality</h4>
+        <p>Look at the Valvoline value proposition from the briefing: certainty, transparency, speed with reassurance. As a group, which encounter violated the most elements of that promise? Was it Encounter 1 or 2 — and why?</p>
       </div>
       <div class="discussion-round">
         <h4>Step 2: Zone Check</h4>
         <p>Did everyone in your group put the same encounters above / within / below? Where did you disagree? What does that tell you about Zone of Tolerance — is it the same for every customer?</p>
       </div>
       <div class="discussion-round">
-        <h4>Step 3: The RATER Mismatch</h4>
-        <p>Find one encounter where your group gave very different scores on the same RATER dimension. Why did the same experience get different numbers? What does that mean for a service company trying to satisfy everyone?</p>
+        <h4>Step 3: The Trust Break</h4>
+        <p>In Encounter 2, the tech got caught recommending a filter you just replaced. Did that moment change how you scored EVERYTHING else in the visit — not just that encounter? Why is Assurance the hardest RATER dimension to rebuild?</p>
       </div>
     </div>
 
     <!-- DISCUSSION: Round 2 -->
     <div class="discussion-section discussion-blue">
-      <h3>Group Discussion — Round 2: Connect to Tuesday</h3>
+      <h3>Group Discussion — Round 2: The Bigger Picture</h3>
       <div class="discussion-round">
         <h4>Step 1: Bridge to Run the Bay</h4>
         <p>Look at Encounter 1 (The Arrival). If you were back in Tuesday's exercise with your 15-point budget, which lever would have prevented this failure? What would it have cost?</p>
       </div>
       <div class="discussion-round">
-        <h4>Step 2: The Perishability Problem</h4>
-        <p>Encounter 4 shows empty bays at 2 PM and a line at 5:30 PM. As a group: name TWO concrete strategies a Valvoline manager could use to shift demand from 5:30 to 2:00. (Hint: think about pricing, scheduling, marketing.)</p>
+        <h4>Step 2: Recovery Challenge Debrief</h4>
+        <p>Share your recovery scenario with your group. What did you pick and why? Did anyone get a different scenario? Compare which pillars were hardest to get right.</p>
       </div>
       <div class="discussion-round">
-        <h4>Step 3: Recovery Challenge Debrief</h4>
-        <p>Share your recovery scenario with your group. What did you pick and why? Did anyone in your group get a different scenario? Compare which pillars were hardest to get right.</p>
+        <h4>Step 3: Recovery vs. Prevention</h4>
+        <p>Encounter 3 shows great service recovery after an oil leak. But what if Valvoline had spent more on preventing the leak in the first place (better training, better checklists)? Is it smarter to prevent failures or recover from them? The case says cutting steps saves money but destroys perceived value. Where's the line?</p>
       </div>
       <div class="discussion-round">
-        <h4>Step 4: Recovery vs. Prevention</h4>
-        <p>Encounter 5 shows great service recovery. But what if Valvoline had spent more budget on preventing the oil leak in the first place (better training, better checklists)? Is it smarter to prevent failures or recover from them? Defend your answer with a concept from Ch. 13.</p>
+        <h4>Step 4: The Open Question</h4>
+        <p>From the case: "If the service itself is the product, how much of it can be removed before customers stop believing it's worth paying for?" As a group, name ONE element of Valvoline's experience that could be cut without losing customers — and one that absolutely cannot.</p>
       </div>
     </div>
   `;
