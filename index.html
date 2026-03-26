@@ -3,524 +3,340 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MKTG 2080 — Exercises</title>
+  <title>MKTG 2080 — Prof. Hudnall</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ── RESET & BASE ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f8f8f8;
-      color: #333333;
-      min-height: 100vh;
-    }
+    body { font-family: 'Inter', sans-serif; background: #f8f8f8; color: #333333; min-height: 100vh; }
 
     /* ── HEADER ── */
-    .header {
-      background: #E00122;
-      color: #fff;
-      text-align: center;
-      padding: 2.5rem 1rem 2rem;
+    .header { background: #E00122; color: #fff; padding: 2.25rem 1.5rem 1.75rem; }
+    .header-inner {
+      max-width: 760px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .header h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.25rem;
-    }
-    .header p {
-      font-size: 0.95rem;
-      font-weight: 400;
-      opacity: 0.9;
-    }
+    .header-left h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+    .header-left p { font-size: 0.85rem; font-weight: 400; opacity: 0.85; margin-top: 0.1rem; }
+    .header-right { text-align: right; }
+    .header-right .school { font-size: 0.95rem; font-weight: 600; }
+    .header-right .semester { font-size: 0.8rem; font-weight: 400; opacity: 0.8; }
 
-    /* ── CURRENT-WEEK HERO ── */
-    .hero {
-      max-width: 720px;
-      margin: -1.5rem auto 0;
-      padding: 0 1rem;
-      position: relative;
-      z-index: 2;
-    }
+    /* ── HERO (current day) ── */
+    .hero { max-width: 760px; margin: -1.25rem auto 0; padding: 0 1rem; position: relative; z-index: 2; }
     .hero-card {
-      background: #fff;
-      border: 2px solid #E00122;
-      border-radius: 14px;
-      padding: 1.5rem 1.75rem;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.10);
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      cursor: pointer;
+      background: #fff; border: 2px solid #E00122; border-radius: 14px;
+      padding: 1.25rem 1.5rem; box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+      display: flex; align-items: center; gap: 1.1rem;
+      text-decoration: none; color: inherit;
       transition: transform 0.15s, box-shadow 0.15s;
-      text-decoration: none;
-      color: inherit;
     }
-    .hero-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 36px rgba(0,0,0,0.14);
-    }
+    .hero-card[href]:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(0,0,0,0.14); cursor: pointer; }
+    .hero-card.no-active { border-color: #ccc; }
     .hero-badge {
-      background: #E00122;
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 0.25rem 0.6rem;
-      border-radius: 6px;
-      white-space: nowrap;
+      background: #E00122; color: #fff; font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.2rem 0.55rem; border-radius: 5px; white-space: nowrap;
     }
-    .hero-icon {
-      font-size: 2.5rem;
-      flex-shrink: 0;
-      width: 56px;
-      text-align: center;
-    }
+    .hero-icon { font-size: 2.2rem; flex-shrink: 0; width: 48px; text-align: center; }
     .hero-text { flex: 1; }
-    .hero-text .week-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #E00122;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 0.15rem;
-    }
-    .hero-text h2 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 0.2rem;
-    }
-    .hero-text .concept {
-      font-size: 0.85rem;
-      color: #666;
-    }
-    .hero-arrow {
-      font-size: 1.5rem;
-      color: #E00122;
-      flex-shrink: 0;
-    }
+    .hero-text .week-label { font-size: 0.7rem; font-weight: 600; color: #E00122; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.1rem; }
+    .hero-text h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.15rem; }
+    .hero-text .concept { font-size: 0.8rem; color: #666; }
+    .hero-arrow { font-size: 1.4rem; color: #E00122; flex-shrink: 0; }
 
-    /* ── NO ACTIVE WEEK STATE ── */
-    .hero-card.no-active {
-      border-color: #ccc;
-      cursor: default;
-    }
-    .hero-card.no-active:hover {
-      transform: none;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.10);
-    }
+    /* ── WEEK GROUP ── */
+    .timeline { max-width: 760px; margin: 2rem auto 3rem; padding: 0 1rem; }
+    .timeline-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #999; margin-bottom: 1rem; padding-left: 2rem; }
+    .timeline-list { list-style: none; position: relative; padding-left: 2rem; }
+    .timeline-list::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: #ddd; }
 
-    /* ── TIMELINE ── */
-    .timeline {
-      max-width: 720px;
-      margin: 2.5rem auto 4rem;
-      padding: 0 1rem;
-      position: relative;
+    /* ── WEEK HEADER ── */
+    .week-group { position: relative; margin-bottom: 0.5rem; }
+    .week-group::before {
+      content: ''; position: absolute; left: -25px; top: 1rem;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #ddd; border: 2px solid #f8f8f8; z-index: 1;
     }
-    .timeline-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #999;
-      margin-bottom: 1.25rem;
-      padding-left: 2rem;
-    }
+    .week-group.past::before { background: #E00122; }
+    .week-group.current::before { background: #E00122; box-shadow: 0 0 0 4px rgba(224,1,34,0.2); }
+    .week-group.future::before { background: #ccc; }
 
-    /* The vertical line */
-    .timeline-list {
-      list-style: none;
-      position: relative;
-      padding-left: 2rem;
+    .week-header {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: #999; padding: 0.5rem 0 0.35rem;
     }
-    .timeline-list::before {
-      content: '';
-      position: absolute;
-      left: 7px;
-      top: 8px;
-      bottom: 8px;
-      width: 2px;
-      background: #ddd;
-    }
+    .week-group.current .week-header { color: #E00122; }
 
-    /* Each week card */
-    .week-item {
-      position: relative;
-      margin-bottom: 1rem;
-    }
-
-    /* Timeline dot */
-    .week-item::before {
-      content: '';
-      position: absolute;
-      left: -25px;
-      top: 1.4rem;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #ddd;
-      border: 2px solid #f8f8f8;
-      z-index: 1;
-    }
-    .week-item.past::before { background: #E00122; }
-    .week-item.current::before {
-      background: #E00122;
-      box-shadow: 0 0 0 4px rgba(224,1,34,0.2);
-    }
-    .week-item.future::before { background: #ccc; }
-
-    .week-card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 1rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      text-decoration: none;
-      color: inherit;
+    /* ── DAY CARDS ── */
+    .day-cards { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .day-card {
+      background: #fff; border-radius: 10px; padding: 0.85rem 1.1rem;
+      display: flex; align-items: center; gap: 0.9rem;
+      text-decoration: none; color: inherit;
       transition: transform 0.12s, box-shadow 0.12s;
       border: 1px solid #e8e8e8;
     }
+    .week-group.past .day-card[href] { cursor: pointer; }
+    .week-group.past .day-card[href]:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .week-group.current .day-card { border-color: #f0c0c8; }
+    .week-group.current .day-card[href] { cursor: pointer; border-color: #E00122; }
+    .week-group.current .day-card[href]:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(224,1,34,0.10); }
+    .week-group.future .day-card { opacity: 0.4; cursor: default; }
 
-    /* Past weeks — clickable */
-    .week-item.past .week-card {
-      cursor: pointer;
+    .day-tag {
+      font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: #fff; background: #bbb;
+      padding: 0.15rem 0.45rem; border-radius: 4px; flex-shrink: 0;
     }
-    .week-item.past .week-card:hover {
-      transform: translateX(4px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    }
+    .week-group.current .day-tag { background: #E00122; }
+    .week-group.past .day-tag { background: #999; }
 
-    /* Current week */
-    .week-item.current .week-card {
-      border-color: #E00122;
-      cursor: pointer;
-    }
-    .week-item.current .week-card:hover {
-      transform: translateX(4px);
-      box-shadow: 0 4px 16px rgba(224,1,34,0.10);
-    }
-
-    /* Future weeks — locked */
-    .week-item.future .week-card {
-      opacity: 0.45;
-      cursor: default;
-    }
-
-    .card-icon {
-      font-size: 1.75rem;
-      flex-shrink: 0;
-      width: 44px;
-      text-align: center;
-    }
+    .card-icon { font-size: 1.5rem; flex-shrink: 0; width: 36px; text-align: center; }
     .card-body { flex: 1; }
-    .card-body .card-week {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #999;
-    }
-    .card-body h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 0.1rem 0;
-    }
-    .card-body .card-concept {
-      font-size: 0.8rem;
-      color: #777;
-    }
-    .card-status {
-      flex-shrink: 0;
-      font-size: 0.8rem;
-    }
-    .card-status .arrow { color: #E00122; font-size: 1.2rem; }
-    .card-status .lock { color: #bbb; font-size: 1rem; }
+    .card-body h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.05rem; }
+    .card-body .card-focus { font-size: 0.75rem; color: #777; }
+    .card-status { flex-shrink: 0; font-size: 0.8rem; }
+    .card-status .arrow { color: #E00122; font-size: 1.1rem; }
+    .card-status .lock { color: #bbb; font-size: 0.9rem; }
 
     /* ── FOOTER ── */
-    .footer {
-      text-align: center;
-      padding: 2rem 1rem;
-      font-size: 0.75rem;
-      color: #aaa;
-    }
+    .footer { text-align: center; padding: 1.5rem 1rem 2rem; font-size: 0.7rem; color: #aaa; line-height: 1.6; }
 
     /* ── MOBILE ── */
-    @media (max-width: 520px) {
-      .header h1 { font-size: 1.35rem; }
-      .hero-card { flex-wrap: wrap; gap: 0.75rem; padding: 1.25rem; }
-      .hero-icon { width: 40px; font-size: 2rem; }
-      .card-icon { width: 36px; font-size: 1.4rem; }
+    @media (max-width: 560px) {
+      .header-inner { flex-direction: column; text-align: center; gap: 0.25rem; }
+      .header-right { text-align: center; }
+      .header-left h1 { font-size: 1.6rem; }
+      .hero-card { flex-wrap: wrap; gap: 0.65rem; padding: 1rem; }
+      .hero-icon { width: 36px; font-size: 1.8rem; }
+      .card-icon { width: 28px; font-size: 1.2rem; }
     }
   </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>MKTG 2080 — Marketing</h1>
-  <p>Weekly Exercises · UC Blue Ash</p>
+  <div class="header-inner">
+    <div class="header-left">
+      <h1>MKTG 2080</h1>
+      <p>Prof. Greg Hudnall</p>
+    </div>
+    <div class="header-right">
+      <div class="school">UC Blue Ash</div>
+      <div class="semester">Spring 2026</div>
+    </div>
+  </div>
 </div>
 
-<!-- Hero: auto-populated with current week -->
 <div class="hero" id="hero"></div>
 
-<!-- Timeline of all weeks -->
 <div class="timeline">
   <div class="timeline-title">All Weeks</div>
   <ul class="timeline-list" id="timeline"></ul>
 </div>
 
-<div class="footer">MKTG 2080 · Prof. Hudnall · UC Blue Ash</div>
+<div class="footer">
+  MKTG 2080 · University of Cincinnati Blue Ash · Spring 2026<br>
+  Case company names and logos are property of their respective owners and are used here for educational purposes only.
+</div>
 
 <script>
-  // ╔══════════════════════════════════════════════════════╗
-  // ║  SEMESTER CONFIG — Edit dates & links here only     ║
-  // ╚══════════════════════════════════════════════════════╝
-  //
-  //  startDate  = the Tuesday that week begins
-  //  link       = relative path to the HTML exercise (set to null if not built yet)
-  //  For weeks with no exercise (midterm, finals), set link to null
-  //
-  const weeks = [
-    {
-      num: 1,
-      case: "Quibi",
-      concept: "Value Creation",
-      chapter: "Ch 1",
-      exercise: "The Value Lab",
-      icon: "📺",
-      startDate: "2026-08-25",
-      link: null
-    },
-    {
-      num: 2,
-      case: "ALDI",
-      concept: "Strategy & Tradeoffs",
-      chapter: "Ch 2",
-      exercise: "Strategy Stress Test",
-      icon: "🛒",
-      startDate: "2026-09-01",
-      link: null
-    },
-    {
-      num: 3,
-      case: "Dollar General vs Walmart",
-      concept: "Marketing Environment",
-      chapter: "Ch 5",
-      exercise: "Force Field",
-      icon: "🏪",
-      startDate: "2026-09-08",
-      link: null
-    },
-    {
-      num: 4,
-      case: "Amazon Fire Phone",
-      concept: "Consumer Behavior",
-      chapter: "Ch 6",
-      exercise: "The Decision Path",
-      icon: "📱",
-      startDate: "2026-09-15",
-      link: null
-    },
-    {
-      num: 5,
-      case: "St. Anne's Hospital",
-      concept: "B2B Marketing",
-      chapter: "Ch 7",
-      exercise: "The Buying Center",
-      icon: "🏥",
-      startDate: "2026-09-22",
-      link: null
-    },
-    {
-      num: 6,
-      case: "Warby Parker",
-      concept: "Segmentation & Positioning",
-      chapter: "Ch 9",
-      exercise: "The Segment Lab",
-      icon: "👓",
-      startDate: "2026-09-29",
-      link: null
-    },
-    {
-      num: 7,
-      case: "Google Flu Trends",
-      concept: "Marketing Research",
-      chapter: "Ch 10",
-      exercise: "Signal Lab",
-      icon: "🔬",
-      startDate: "2026-10-06",
-      link: null
-    },
-    {
-      num: 8,
-      case: "Midterm",
-      concept: "Review & Exam",
-      chapter: "",
-      exercise: null,
-      icon: "📝",
-      startDate: "2026-10-13",
-      link: null
-    },
-    {
-      num: 9,
-      case: "P&G India Razor",
-      concept: "Product Strategy",
-      chapter: "Ch 11–12",
-      exercise: "Launch It",
-      icon: "🚀",
-      startDate: "2026-10-20",
-      link: null
-    },
-    {
-      num: 10,
-      case: "Valvoline",
-      concept: "Services Marketing",
-      chapter: "Ch 13",
-      exercise: "Rate the Bay",
-      icon: "🛢️",
-      startDate: "2026-10-27",
-      link: "W10-Rate-the-Bay.html"
-    },
-    {
-      num: 11,
-      case: "MoviePass",
-      concept: "Pricing",
-      chapter: "Ch 14",
-      exercise: "Price the Line",
-      icon: "🎬",
-      startDate: "2026-11-03",
-      link: null
-    },
-    {
-      num: 12,
-      case: "Apple vs Epic",
-      concept: "Supply Chain & Distribution",
-      chapter: "Ch 15",
-      exercise: "Channel Architect",
-      icon: "🎮",
-      startDate: "2026-11-10",
-      link: null
-    },
-    {
-      num: 13,
-      case: "Stranger Things",
-      concept: "Integrated Marketing Comms",
-      chapter: "Ch 17",
-      exercise: "Message Match",
-      icon: "📡",
-      startDate: "2026-11-17",
-      link: null
-    },
-    {
-      num: 14,
-      case: "They Ask, You Answer",
-      concept: "Digital Marketing",
-      chapter: "Ch 3",
-      exercise: null,
-      icon: "💬",
-      startDate: "2026-11-24",
-      link: null
-    },
-    {
-      num: 15,
-      case: "Final",
-      concept: "Presentations & Exam",
-      chapter: "",
-      exercise: null,
-      icon: "🎓",
-      startDate: "2026-12-01",
-      link: null
-    }
-  ];
+// ╔════════════════════════════════════════════════════════════════╗
+// ║  SPRING 2026 SCHEDULE — Each week has Day 1 (Tue) & Day 2    ║
+// ║  Edit links here as exercises are built. Set link = null      ║
+// ║  if the exercise isn't ready yet.                             ║
+// ╚════════════════════════════════════════════════════════════════╝
 
-  // ── DATE LOGIC ──
-  function getWeekStatus(weekIndex) {
-    const now = new Date();
-    const start = new Date(weeks[weekIndex].startDate + "T00:00:00");
-    const nextStart = weekIndex < weeks.length - 1
-      ? new Date(weeks[weekIndex + 1].startDate + "T00:00:00")
-      : new Date(start.getTime() + 7 * 86400000);
-
-    if (now >= start && now < nextStart) return "current";
-    if (now >= nextStart) return "past";
-    return "future";
+const weeks = [
+  {
+    num: 1, case: "Quibi", chapter: "Ch 1", icon: "📺",
+    day1: { date: "2026-01-13", focus: "What is marketing? What is a case?", link: null },
+    day2: { date: "2026-01-15", focus: "Is this a marketing problem?", link: null }
+  },
+  {
+    num: 2, case: "ALDI", chapter: "Ch 2", icon: "🛒",
+    day1: { date: "2026-01-20", focus: "Strategy & tradeoffs", link: null },
+    day2: { date: "2026-01-22", focus: "Choosing who not to serve", link: null }
+  },
+  {
+    num: 3, case: "Dollar General vs Walmart", chapter: "Ch 5", icon: "🏪",
+    day1: { date: "2026-01-27", focus: "Environment constraints & capability fit", link: null },
+    day2: { date: "2026-01-29", focus: "SWOT as fit vs tension", link: null }
+  },
+  {
+    num: 4, case: "Amazon Fire Phone", chapter: "Ch 6", icon: "📱",
+    day1: { date: "2026-02-03", focus: "Habit, risk, switching costs", link: null },
+    day2: { date: "2026-02-05", focus: "Behavior beats marketing", link: null }
+  },
+  {
+    num: 5, case: "St. Anne's Hospital", chapter: "Ch 7", icon: "🏥",
+    day1: { date: "2026-02-10", focus: "Buying center roles & risk", link: null },
+    day2: { date: "2026-02-12", focus: "Coordination vs persuasion", link: null }
+  },
+  {
+    num: 6, case: "Warby Parker", chapter: "Ch 9", icon: "👓",
+    day1: { date: "2026-02-17", focus: "Picking the right segment", link: null },
+    day2: { date: "2026-02-19", focus: "STP tradeoffs & constraints", link: null }
+  },
+  {
+    num: 7, case: "Google Flu Trends", chapter: "Ch 10", icon: "🔬",
+    day1: { date: "2026-02-24", focus: "Signals vs behavior", link: null },
+    day2: { date: "2026-02-26", focus: "Assumptions & drift", link: null }
+  },
+  {
+    num: 8, case: "Midterm", chapter: "", icon: "📝",
+    day1: { date: "2026-03-03", focus: "STP review", link: null },
+    day2: { date: "2026-03-05", focus: "Midterm exam", link: null }
+  },
+  {
+    num: 9, case: "P&G Low-Cost Razor (India)", chapter: "Ch 11–12", icon: "🚀",
+    day1: { date: "2026-03-10", focus: "Product–market fit via context", link: null },
+    day2: { date: "2026-03-12", focus: "Standardization vs localization", link: null }
+  },
+  {
+    num: 10, case: "Valvoline", chapter: "Ch 13", icon: "🛢️",
+    day1: { date: "2026-03-24", focus: "Experience is the product", link: "Week 10 - Run the Bay Game.html" },
+    day2: { date: "2026-03-26", focus: "Premium depends on delivery", link: "W10-Rate-the-Bay.html" }
+  },
+  {
+    num: 11, case: "Polymarket", chapter: "Ch 14", icon: "📊",
+    day1: { date: "2026-03-31", focus: "Value vs cost logic", link: null },
+    day2: { date: "2026-04-02", focus: "Demand can be destructive", link: null }
+  },
+  {
+    num: 12, case: "Apple vs Epic", chapter: "Ch 15", icon: "🎮",
+    day1: { date: "2026-04-07", focus: "Channel control & power", link: null },
+    day2: { date: "2026-04-09", focus: "Brand risk & backlash", link: null }
+  },
+  {
+    num: 13, case: "Stranger Things", chapter: "Ch 17", icon: "📡",
+    day1: { date: "2026-04-14", focus: "Message alignment", link: null },
+    day2: { date: "2026-04-16", focus: "Partner risk & discipline", link: null }
+  },
+  {
+    num: 14, case: "They Ask, You Answer", chapter: "Ch 3", icon: "💬",
+    day1: { date: "2026-04-21", focus: "Content builds trust", link: null },
+    day2: { date: "2026-04-23", focus: "Transparency tradeoffs", link: null }
+  },
+  {
+    num: 15, case: "Finals", chapter: "", icon: "🎓",
+    day1: { date: "2026-04-28", focus: "Project presentations + career day", link: null },
+    day2: { date: "2026-04-30", focus: "Final exam", link: null }
   }
+];
 
-  // ── RENDER HERO ──
-  function renderHero() {
-    const heroEl = document.getElementById("hero");
-    const currentIdx = weeks.findIndex((_, i) => getWeekStatus(i) === "current");
+// ── DATE LOGIC ──
+function getDayStatus(dateStr) {
+  const now = new Date(); now.setHours(0,0,0,0);
+  const d = new Date(dateStr + "T00:00:00");
+  if (now > d) return "past";
+  if (now.getTime() === d.getTime()) return "current";
+  return "future";
+}
 
-    if (currentIdx === -1) {
-      heroEl.innerHTML = `
-        <div class="hero-card no-active">
-          <div class="hero-icon">📅</div>
-          <div class="hero-text">
-            <div class="week-label">No Active Week</div>
-            <h2>Semester hasn't started yet</h2>
-            <div class="concept">Check back when classes begin!</div>
-          </div>
-        </div>`;
-      return;
-    }
+function getWeekStatus(w) {
+  const s1 = getDayStatus(w.day1.date);
+  const s2 = getDayStatus(w.day2.date);
+  if (s1 === "past" && s2 === "past") return "past";
+  if (s1 === "future" && s2 === "future") return "future";
+  return "current";
+}
 
-    const w = weeks[currentIdx];
-    const hasLink = w.link !== null;
-    const tag = hasLink ? "a" : "div";
-    const href = hasLink ? ` href="${w.link}"` : "";
-
-    heroEl.innerHTML = `
-      <${tag} class="hero-card"${href}>
-        <div class="hero-icon">${w.icon}</div>
-        <div class="hero-text">
-          <div class="week-label"><span class="hero-badge">This Week</span> &nbsp;Week ${w.num}${w.chapter ? " · " + w.chapter : ""}</div>
-          <h2>${w.case}${w.exercise ? " — " + w.exercise : ""}</h2>
-          <div class="concept">${w.concept}</div>
-        </div>
-        ${hasLink ? '<div class="hero-arrow">→</div>' : '<div class="hero-arrow" style="color:#bbb;font-size:0.8rem;">Coming soon</div>'}
-      </${tag}>`;
-  }
-
-  // ── RENDER TIMELINE ──
-  function renderTimeline() {
-    const list = document.getElementById("timeline");
-    list.innerHTML = weeks.map((w, i) => {
-      const status = getWeekStatus(i);
-      const hasLink = w.link !== null && status !== "future";
-      const tag = hasLink ? "a" : "div";
-      const href = hasLink ? ` href="${w.link}"` : "";
-
-      let statusIcon = "";
-      if (status === "future") {
-        statusIcon = '<span class="lock">🔒</span>';
-      } else if (hasLink) {
-        statusIcon = '<span class="arrow">→</span>';
-      } else if (status !== "future" && !w.exercise) {
-        statusIcon = '<span style="color:#bbb;font-size:0.75rem;">No exercise</span>';
-      } else {
-        statusIcon = '<span style="color:#bbb;font-size:0.75rem;">Coming soon</span>';
+// ── HERO: next upcoming or today's class ──
+function renderHero() {
+  const heroEl = document.getElementById("hero");
+  // Find the next upcoming or current-day class session
+  let heroDay = null, heroWeek = null;
+  for (const w of weeks) {
+    for (const day of [w.day1, w.day2]) {
+      const s = getDayStatus(day.date);
+      if (s === "current" || s === "future") {
+        if (!heroDay) { heroDay = day; heroWeek = w; }
+        break;
       }
+    }
+    if (heroDay) break;
+  }
+
+  if (!heroDay) {
+    heroEl.innerHTML = `
+      <div class="hero-card no-active" style="margin-top:1.25rem;">
+        <div class="hero-icon">🎉</div>
+        <div class="hero-text">
+          <div class="week-label">Semester Complete</div>
+          <h2>Great work this semester!</h2>
+          <div class="concept">All exercises are available below.</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const isToday = getDayStatus(heroDay.date) === "current";
+  const badge = isToday ? "Today" : "Up Next";
+  const dayLabel = heroDay === heroWeek.day1 ? "Day 1" : "Day 2";
+  const hasLink = heroDay.link !== null;
+  const tag = hasLink ? "a" : "div";
+  const href = hasLink ? ` href="${heroDay.link}"` : "";
+
+  heroEl.innerHTML = `
+    <${tag} class="hero-card" style="margin-top:1.25rem;"${href}>
+      <div class="hero-icon">${heroWeek.icon}</div>
+      <div class="hero-text">
+        <div class="week-label"><span class="hero-badge">${badge}</span> &nbsp;Week ${heroWeek.num} · ${dayLabel}${heroWeek.chapter ? " · " + heroWeek.chapter : ""}</div>
+        <h2>${heroWeek.case}</h2>
+        <div class="concept">${heroDay.focus}</div>
+      </div>
+      ${hasLink ? '<div class="hero-arrow">→</div>' : '<div class="hero-arrow" style="color:#bbb;font-size:0.75rem;">Coming soon</div>'}
+    </${tag}>`;
+}
+
+// ── TIMELINE ──
+function renderTimeline() {
+  const list = document.getElementById("timeline");
+  list.innerHTML = weeks.map(w => {
+    const wStatus = getWeekStatus(w);
+
+    function dayCard(day, label) {
+      const dStatus = getDayStatus(day.date);
+      const accessible = dStatus !== "future";
+      const hasLink = day.link && accessible;
+      const tag = hasLink ? "a" : "div";
+      const href = hasLink ? ` href="${day.link}"` : "";
+
+      let statusHtml = "";
+      if (!accessible) statusHtml = '<span class="lock">🔒</span>';
+      else if (hasLink) statusHtml = '<span class="arrow">→</span>';
+      else statusHtml = '';
+
+      const dateObj = new Date(day.date + "T00:00:00");
+      const dateLabel = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
       return `
-        <li class="week-item ${status}">
-          <${tag} class="week-card"${href}>
-            <div class="card-icon">${w.icon}</div>
-            <div class="card-body">
-              <div class="card-week">Week ${w.num}${w.chapter ? " · " + w.chapter : ""}</div>
-              <h3>${w.case}</h3>
-              <div class="card-concept">${w.concept}${w.exercise ? " — " + w.exercise : ""}</div>
-            </div>
-            <div class="card-status">${statusIcon}</div>
-          </${tag}>
-        </li>`;
-    }).join("");
-  }
+        <${tag} class="day-card"${href}>
+          <span class="day-tag">${label}</span>
+          <div class="card-icon">${w.icon}</div>
+          <div class="card-body">
+            <h3>${day.focus}</h3>
+            <div class="card-focus">${dateLabel}</div>
+          </div>
+          <div class="card-status">${statusHtml}</div>
+        </${tag}>`;
+    }
 
-  renderHero();
-  renderTimeline();
+    return `
+      <li class="week-group ${wStatus}">
+        <div class="week-header">Week ${w.num}${w.chapter ? " · " + w.chapter : ""} — ${w.case}</div>
+        <div class="day-cards">
+          ${dayCard(w.day1, "Day 1")}
+          ${dayCard(w.day2, "Day 2")}
+        </div>
+      </li>`;
+  }).join("");
+}
+
+renderHero();
+renderTimeline();
 </script>
 
 </body>
