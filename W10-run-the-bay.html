@@ -651,6 +651,42 @@
     .header h1 { font-size: 16px; }
   }
 </style>
+<!-- Firebase (dormant — set FIREBASE_ENABLED = true to activate) -->
+<script type="module">
+  // Firebase imports — only loaded when FIREBASE_ENABLED = true
+  window.FIREBASE_ENABLED = false;
+  window.firebaseSave = async function() {}; // no-op until activated
+
+  if (window.FIREBASE_ENABLED) {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+
+    // TODO: Replace with your Firebase project config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseSave = async function(data) {
+      try {
+        await addDoc(collection(db, "run-the-bay-responses"), {
+          ...data,
+          timestamp: serverTimestamp()
+        });
+        console.log("[Firebase] Response saved");
+      } catch (e) {
+        console.warn("[Firebase] Save failed:", e);
+      }
+    };
+  }
+</script>
 </head>
 <body>
 
@@ -668,7 +704,7 @@
 <div class="screen active" id="joinScreen">
   <div class="join-card">
     <h2>Run the Bay</h2>
-    <p class="subtitle">Valvoline Instant Oil Change · Service Design Game</p>
+    <p class="subtitle">Valvoline Instant Oil Change · Service Design Exercise</p>
 
     <div class="input-group">
       <label>Your Name</label>
@@ -676,11 +712,11 @@
     </div>
 
     <div class="input-group">
-      <label>Your Table</label>
+      <label>Your Group</label>
       <div class="table-grid" id="tableGrid"></div>
     </div>
 
-    <button class="btn btn-primary" id="joinBtn" disabled onclick="joinGame()">Join Table</button>
+    <button class="btn btn-primary" id="joinBtn" disabled onclick="joinGame()">Join Group</button>
   </div>
 </div>
 
@@ -746,7 +782,7 @@
   <div id="rolePickerArea" style="margin-top:24px;">
     <div style="background:var(--valv-blue); color:white; border-radius:12px; padding:20px 24px; margin-bottom:16px;">
       <h2 style="font-size:20px; font-weight:800; margin-bottom:4px;">Choose Your Role</h2>
-      <p style="opacity:0.8; font-size:14px;">Each person at your table picks a different role. Coordinate — no duplicates!</p>
+      <p style="opacity:0.8; font-size:14px;">Each person in your group picks a different role. Coordinate — no duplicates!</p>
     </div>
     <div id="roleButtons" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div>
   </div>
@@ -931,7 +967,7 @@ function init() {
   for (let i = 1; i <= 8; i++) {
     const btn = document.createElement('button');
     btn.className = 'table-option';
-    btn.innerHTML = `<div class="table-num">${i}</div><div class="table-label">Table ${i}</div>`;
+    btn.innerHTML = `<div class="table-num">${i}</div><div class="table-label">Group ${i}</div>`;
     btn.onclick = () => selectTable(i, btn);
     grid.appendChild(btn);
   }
@@ -995,7 +1031,7 @@ function updateHeader() {
   if (state.role) {
     right.innerHTML = `
       <div style="display:flex; align-items:center; gap:12px;">
-        <span style="font-size:13px; opacity:0.8;">${state.name} · Table ${state.table}</span>
+        <span style="font-size:13px; opacity:0.8;">${state.name} · Group ${state.table}</span>
         <span class="badge">${state.role.icon} ${state.role.title}</span>
       </div>`;
   }
@@ -1167,6 +1203,21 @@ function submitConnect() {
     document.getElementById('connectError').style.display = 'block';
     return;
   }
+  // Firebase: save student response (dormant until FIREBASE_ENABLED = true)
+  if (window.FIREBASE_ENABLED) {
+    window.firebaseSave({
+      game: 'run-the-bay',
+      student: state.name,
+      group: state.table,
+      role: state.role ? state.role.title : null,
+      choices: state.choices.map((c, i) => ({
+        lever: LEVERS[i].title,
+        option: LEVERS[i].options[c].label,
+        cost: LEVERS[i].options[c].cost
+      })),
+      connectAnswers: { ...connectAnswers }
+    });
+  }
   showScreen('resultsScreen');
   renderResults();
 }
@@ -1201,16 +1252,16 @@ function renderResults() {
   const discussionDay1 = `
     <div style="background:var(--valv-blue); color:white; border-radius:12px; padding:28px 32px; margin-top:24px;">
       <h2 style="font-size:22px; margin-bottom:4px; font-weight:800;">Group Discussion</h2>
-      <p style="opacity:0.8; font-size:14px; margin-bottom:20px;">Compare your individual picks with your tablemates. Each of you has a different role — you SHOULD disagree.</p>
+      <p style="opacity:0.8; font-size:14px; margin-bottom:20px;">Compare your individual picks with your groupmates. Each of you has a different role — you SHOULD disagree.</p>
 
       <div style="background:rgba(255,255,255,0.12); border-radius:8px; padding:16px 20px; margin-bottom:16px;">
         <p style="font-weight:700; font-size:15px; margin-bottom:4px;">⏱️ Your Task (10 minutes)</p>
-        <p style="font-size:14px; opacity:0.9;">Agree on <strong>ONE shared configuration</strong> that stays within 15 points. Everyone at the table must be able to defend it.</p>
+        <p style="font-size:14px; opacity:0.9;">Agree on <strong>ONE shared configuration</strong> that stays within 15 points. Everyone in your group must be able to defend it.</p>
       </div>
 
       <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; margin-bottom:12px;">
         <p style="font-weight:700; color:var(--valv-gold); margin-bottom:8px;">Step 1: Share Your Picks</p>
-        <p style="font-size:14px; margin-bottom:6px;">1. Go around the table. Each person: say your <strong>role title</strong> and which lever you set the highest. Why did your role push you there?</p>
+        <p style="font-size:14px; margin-bottom:6px;">1. Go around the group. Each person: say your <strong>role title</strong> and which lever you set the highest. Why did your role push you there?</p>
         <p style="font-size:14px;">2. Where do you disagree the most? That lever is where the real trade-off lives.</p>
       </div>
 
@@ -1240,7 +1291,7 @@ function renderResults() {
 
       <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; margin-bottom:12px;">
         <p style="font-weight:700; color:var(--valv-gold); margin-bottom:8px;">Step 1: Reveal & Defend</p>
-        <p style="font-size:14px; margin-bottom:6px;">1. Go around the table. Each person: name the lever you protected and <strong>make your case</strong> for why it can't be cut — from your role's perspective.</p>
+        <p style="font-size:14px; margin-bottom:6px;">1. Go around the group. Each person: name the lever you protected and <strong>make your case</strong> for why it can't be cut — from your role's perspective.</p>
         <p style="font-size:14px;">2. Who has the strongest argument? Who has the weakest? Be honest.</p>
       </div>
 
@@ -1262,7 +1313,7 @@ function renderResults() {
     <div class="results-card">
       <h3>🏗️ Your Service Configuration</h3>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:12px; background:var(--valv-light); border-radius:8px;">
-        <span><strong>${state.name}</strong> · ${state.role.icon} ${state.role.title} · Table ${state.table}</span>
+        <span><strong>${state.name}</strong> · ${state.role.icon} ${state.role.title} · Group ${state.table}</span>
         <span style="font-weight:800; font-size:18px; color:${totalUsed <= budget ? 'var(--success)' : 'var(--danger)'};">${totalUsed} / ${budget} pts</span>
       </div>
       ${rows}
@@ -1270,7 +1321,7 @@ function renderResults() {
     ${discussionDay1}
     <div class="results-card">
       <h3>📝 What You're Taking Away</h3>
-      <p style="color:var(--muted); margin-bottom:16px;">Each lever in this game maps to a core concept from Chapter 13. These are the ideas you'll be tested on.</p>
+      <p style="color:var(--muted); margin-bottom:16px;">Each lever in this exercise maps to a core concept from Chapter 13. These are the ideas you'll be tested on.</p>
       ${LEVERS.map(l => `
         <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:12px; padding:12px; background:var(--valv-light); border-radius:8px;">
           <div style="min-width:120px;"><strong style="color:var(--valv-blue);">${l.concept}</strong></div>
