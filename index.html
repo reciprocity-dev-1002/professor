@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MKTG 2080 — Exercises</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8f8f8;
+      color: #333333;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: #E00122;
+      color: #fff;
+      text-align: center;
+      padding: 2.5rem 1rem 2rem;
+    }
+    .header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+    .header p {
+      font-size: 0.95rem;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    /* ── CURRENT-WEEK HERO ── */
+    .hero {
+      max-width: 720px;
+      margin: -1.5rem auto 0;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-card {
+      background: #fff;
+      border: 2px solid #E00122;
+      border-radius: 14px;
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .hero-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.14);
+    }
+    .hero-badge {
+      background: #E00122;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .hero-icon {
+      font-size: 2.5rem;
+      flex-shrink: 0;
+      width: 56px;
+      text-align: center;
+    }
+    .hero-text { flex: 1; }
+    .hero-text .week-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #E00122;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.15rem;
+    }
+    .hero-text h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .hero-text .concept {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    .hero-arrow {
+      font-size: 1.5rem;
+      color: #E00122;
+      flex-shrink: 0;
+    }
+
+    /* ── NO ACTIVE WEEK STATE ── */
+    .hero-card.no-active {
+      border-color: #ccc;
+      cursor: default;
+    }
+    .hero-card.no-active:hover {
+      transform: none;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      max-width: 720px;
+      margin: 2.5rem auto 4rem;
+      padding: 0 1rem;
+      position: relative;
+    }
+    .timeline-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #999;
+      margin-bottom: 1.25rem;
+      padding-left: 2rem;
+    }
+
+    /* The vertical line */
+    .timeline-list {
+      list-style: none;
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline-list::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: #ddd;
+    }
+
+    /* Each week card */
+    .week-item {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    /* Timeline dot */
+    .week-item::before {
+      content: '';
+      position: absolute;
+      left: -25px;
+      top: 1.4rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ddd;
+      border: 2px solid #f8f8f8;
+      z-index: 1;
+    }
+    .week-item.past::before { background: #E00122; }
+    .week-item.current::before {
+      background: #E00122;
+      box-shadow: 0 0 0 4px rgba(224,1,34,0.2);
+    }
+    .week-item.future::before { background: #ccc; }
+
+    .week-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.12s, box-shadow 0.12s;
+      border: 1px solid #e8e8e8;
+    }
+
+    /* Past weeks — clickable */
+    .week-item.past .week-card {
+      cursor: pointer;
+    }
+    .week-item.past .week-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    /* Current week */
+    .week-item.current .week-card {
+      border-color: #E00122;
+      cursor: pointer;
+    }
+    .week-item.current .week-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 16px rgba(224,1,34,0.10);
+    }
+
+    /* Future weeks — locked */
+    .week-item.future .week-card {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .card-icon {
+      font-size: 1.75rem;
+      flex-shrink: 0;
+      width: 44px;
+      text-align: center;
+    }
+    .card-body { flex: 1; }
+    .card-body .card-week {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #999;
+    }
+    .card-body h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0.1rem 0;
+    }
+    .card-body .card-concept {
+      font-size: 0.8rem;
+      color: #777;
+    }
+    .card-status {
+      flex-shrink: 0;
+      font-size: 0.8rem;
+    }
+    .card-status .arrow { color: #E00122; font-size: 1.2rem; }
+    .card-status .lock { color: #bbb; font-size: 1rem; }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.75rem;
+      color: #aaa;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 520px) {
+      .header h1 { font-size: 1.35rem; }
+      .hero-card { flex-wrap: wrap; gap: 0.75rem; padding: 1.25rem; }
+      .hero-icon { width: 40px; font-size: 2rem; }
+      .card-icon { width: 36px; font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>MKTG 2080 — Marketing</h1>
+  <p>Weekly Exercises · UC Blue Ash</p>
+</div>
+
+<!-- Hero: auto-populated with current week -->
+<div class="hero" id="hero"></div>
+
+<!-- Timeline of all weeks -->
+<div class="timeline">
+  <div class="timeline-title">All Weeks</div>
+  <ul class="timeline-list" id="timeline"></ul>
+</div>
+
+<div class="footer">MKTG 2080 · Prof. Hudnall · UC Blue Ash</div>
+
+<script>
+  // ╔══════════════════════════════════════════════════════╗
+  // ║  SEMESTER CONFIG — Edit dates & links here only     ║
+  // ╚══════════════════════════════════════════════════════╝
+  //
+  //  startDate  = the Tuesday that week begins
+  //  link       = relative path to the HTML exercise (set to null if not built yet)
+  //  For weeks with no exercise (midterm, finals), set link to null
+  //
+  const weeks = [
+    {
+      num: 1,
+      case: "Quibi",
+      concept: "Value Creation",
+      chapter: "Ch 1",
+      exercise: "The Value Lab",
+      icon: "📺",
+      startDate: "2026-08-25",
+      link: null
+    },
+    {
+      num: 2,
+      case: "ALDI",
+      concept: "Strategy & Tradeoffs",
+      chapter: "Ch 2",
+      exercise: "Strategy Stress Test",
+      icon: "🛒",
+      startDate: "2026-09-01",
+      link: null
+    },
+    {
+      num: 3,
+      case: "Dollar General vs Walmart",
+      concept: "Marketing Environment",
+      chapter: "Ch 5",
+      exercise: "Force Field",
+      icon: "🏪",
+      startDate: "2026-09-08",
+      link: null
+    },
+    {
+      num: 4,
+      case: "Amazon Fire Phone",
+      concept: "Consumer Behavior",
+      chapter: "Ch 6",
+      exercise: "The Decision Path",
+      icon: "📱",
+      startDate: "2026-09-15",
+      link: null
+    },
+    {
+      num: 5,
+      case: "St. Anne's Hospital",
+      concept: "B2B Marketing",
+      chapter: "Ch 7",
+      exercise: "The Buying Center",
+      icon: "🏥",
+      startDate: "2026-09-22",
+      link: null
+    },
+    {
+      num: 6,
+      case: "Warby Parker",
+      concept: "Segmentation & Positioning",
+      chapter: "Ch 9",
+      exercise: "The Segment Lab",
+      icon: "👓",
+      startDate: "2026-09-29",
+      link: null
+    },
+    {
+      num: 7,
+      case: "Google Flu Trends",
+      concept: "Marketing Research",
+      chapter: "Ch 10",
+      exercise: "Signal Lab",
+      icon: "🔬",
+      startDate: "2026-10-06",
+      link: null
+    },
+    {
+      num: 8,
+      case: "Midterm",
+      concept: "Review & Exam",
+      chapter: "",
+      exercise: null,
+      icon: "📝",
+      startDate: "2026-10-13",
+      link: null
+    },
+    {
+      num: 9,
+      case: "P&G India Razor",
+      concept: "Product Strategy",
+      chapter: "Ch 11–12",
+      exercise: "Launch It",
+      icon: "🚀",
+      startDate: "2026-10-20",
+      link: null
+    },
+    {
+      num: 10,
+      case: "Valvoline",
+      concept: "Services Marketing",
+      chapter: "Ch 13",
+      exercise: "Rate the Bay",
+      icon: "🛢️",
+      startDate: "2026-10-27",
+      link: "W10-Rate-the-Bay.html"
+    },
+    {
+      num: 11,
+      case: "MoviePass",
+      concept: "Pricing",
+      chapter: "Ch 14",
+      exercise: "Price the Line",
+      icon: "🎬",
+      startDate: "2026-11-03",
+      link: null
+    },
+    {
+      num: 12,
+      case: "Apple vs Epic",
+      concept: "Supply Chain & Distribution",
+      chapter: "Ch 15",
+      exercise: "Channel Architect",
+      icon: "🎮",
+      startDate: "2026-11-10",
+      link: null
+    },
+    {
+      num: 13,
+      case: "Stranger Things",
+      concept: "Integrated Marketing Comms",
+      chapter: "Ch 17",
+      exercise: "Message Match",
+      icon: "📡",
+      startDate: "2026-11-17",
+      link: null
+    },
+    {
+      num: 14,
+      case: "They Ask, You Answer",
+      concept: "Digital Marketing",
+      chapter: "Ch 3",
+      exercise: null,
+      icon: "💬",
+      startDate: "2026-11-24",
+      link: null
+    },
+    {
+      num: 15,
+      case: "Final",
+      concept: "Presentations & Exam",
+      chapter: "",
+      exercise: null,
+      icon: "🎓",
+      startDate: "2026-12-01",
+      link: null
+    }
+  ];
+
+  // ── DATE LOGIC ──
+  function getWeekStatus(weekIndex) {
+    const now = new Date();
+    const start = new Date(weeks[weekIndex].startDate + "T00:00:00");
+    const nextStart = weekIndex < weeks.length - 1
+      ? new Date(weeks[weekIndex + 1].startDate + "T00:00:00")
+      : new Date(start.getTime() + 7 * 86400000);
+
+    if (now >= start && now < nextStart) return "current";
+    if (now >= nextStart) return "past";
+    return "future";
+  }
+
+  // ── RENDER HERO ──
+  function renderHero() {
+    const heroEl = document.getElementById("hero");
+    const currentIdx = weeks.findIndex((_, i) => getWeekStatus(i) === "current");
+
+    if (currentIdx === -1) {
+      heroEl.innerHTML = `
+        <div class="hero-card no-active">
+          <div class="hero-icon">📅</div>
+          <div class="hero-text">
+            <div class="week-label">No Active Week</div>
+            <h2>Semester hasn't started yet</h2>
+            <div class="concept">Check back when classes begin!</div>
+          </div>
+        </div>`;
+      return;
+    }
+
+    const w = weeks[currentIdx];
+    const hasLink = w.link !== null;
+    const tag = hasLink ? "a" : "div";
+    const href = hasLink ? ` href="${w.link}"` : "";
+
+    heroEl.innerHTML = `
+      <${tag} class="hero-card"${href}>
+        <div class="hero-icon">${w.icon}</div>
+        <div class="hero-text">
+          <div class="week-label"><span class="hero-badge">This Week</span> &nbsp;Week ${w.num}${w.chapter ? " · " + w.chapter : ""}</div>
+          <h2>${w.case}${w.exercise ? " — " + w.exercise : ""}</h2>
+          <div class="concept">${w.concept}</div>
+        </div>
+        ${hasLink ? '<div class="hero-arrow">→</div>' : '<div class="hero-arrow" style="color:#bbb;font-size:0.8rem;">Coming soon</div>'}
+      </${tag}>`;
+  }
+
+  // ── RENDER TIMELINE ──
+  function renderTimeline() {
+    const list = document.getElementById("timeline");
+    list.innerHTML = weeks.map((w, i) => {
+      const status = getWeekStatus(i);
+      const hasLink = w.link !== null && status !== "future";
+      const tag = hasLink ? "a" : "div";
+      const href = hasLink ? ` href="${w.link}"` : "";
+
+      let statusIcon = "";
+      if (status === "future") {
+        statusIcon = '<span class="lock">🔒</span>';
+      } else if (hasLink) {
+        statusIcon = '<span class="arrow">→</span>';
+      } else if (status !== "future" && !w.exercise) {
+        statusIcon = '<span style="color:#bbb;font-size:0.75rem;">No exercise</span>';
+      } else {
+        statusIcon = '<span style="color:#bbb;font-size:0.75rem;">Coming soon</span>';
+      }
+
+      return `
+        <li class="week-item ${status}">
+          <${tag} class="week-card"${href}>
+            <div class="card-icon">${w.icon}</div>
+            <div class="card-body">
+              <div class="card-week">Week ${w.num}${w.chapter ? " · " + w.chapter : ""}</div>
+              <h3>${w.case}</h3>
+              <div class="card-concept">${w.concept}${w.exercise ? " — " + w.exercise : ""}</div>
+            </div>
+            <div class="card-status">${statusIcon}</div>
+          </${tag}>
+        </li>`;
+    }).join("");
+  }
+
+  renderHero();
+  renderTimeline();
+</script>
+
+</body>
+</html>
