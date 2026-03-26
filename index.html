@@ -11,39 +11,39 @@
     body { font-family: 'Inter', sans-serif; background: #f8f8f8; color: #333333; min-height: 100vh; }
 
     /* ── HEADER ── */
-    .header { background: #E00122; color: #fff; padding: 2.25rem 1.5rem 1.75rem; }
+    .header { background: #E00122; color: #fff; padding: 3rem 1.5rem 2.5rem; }
     .header-inner {
       max-width: 760px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .header-left h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
-    .header-left p { font-size: 0.85rem; font-weight: 400; opacity: 0.85; margin-top: 0.1rem; }
+    .header-left h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .header-left p { font-size: 1rem; font-weight: 400; opacity: 0.85; margin-top: 0.2rem; }
     .header-right { text-align: right; }
-    .header-right .school { font-size: 0.95rem; font-weight: 600; }
-    .header-right .semester { font-size: 0.8rem; font-weight: 400; opacity: 0.8; }
+    .header-right .school { font-size: 1.1rem; font-weight: 600; }
+    .header-right .semester { font-size: 0.9rem; font-weight: 400; opacity: 0.8; }
 
     /* ── HERO (current day) ── */
-    .hero { max-width: 760px; margin: -1.25rem auto 0; padding: 0 1rem; position: relative; z-index: 2; }
+    .hero { max-width: 760px; margin: -1.5rem auto 0; padding: 0 1rem; position: relative; z-index: 2; }
     .hero-card {
       background: #fff; border: 2px solid #E00122; border-radius: 14px;
-      padding: 1.25rem 1.5rem; box-shadow: 0 8px 28px rgba(0,0,0,0.10);
-      display: flex; align-items: center; gap: 1.1rem;
+      padding: 1.5rem 1.75rem; box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+      display: flex; align-items: center; gap: 1.25rem;
       text-decoration: none; color: inherit;
       transition: transform 0.15s, box-shadow 0.15s;
     }
     .hero-card[href]:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(0,0,0,0.14); cursor: pointer; }
     .hero-card.no-active { border-color: #ccc; }
     .hero-badge {
-      background: #E00122; color: #fff; font-size: 0.65rem; font-weight: 700;
+      background: #E00122; color: #fff; font-size: 0.7rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.08em;
-      padding: 0.2rem 0.55rem; border-radius: 5px; white-space: nowrap;
+      padding: 0.25rem 0.6rem; border-radius: 5px; white-space: nowrap;
     }
-    .hero-icon { font-size: 2.2rem; flex-shrink: 0; width: 48px; text-align: center; }
+    .hero-icon { font-size: 2.5rem; flex-shrink: 0; width: 52px; text-align: center; }
     .hero-text { flex: 1; }
-    .hero-text .week-label { font-size: 0.7rem; font-weight: 600; color: #E00122; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.1rem; }
-    .hero-text h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.15rem; }
-    .hero-text .concept { font-size: 0.8rem; color: #666; }
-    .hero-arrow { font-size: 1.4rem; color: #E00122; flex-shrink: 0; }
+    .hero-text .week-label { font-size: 0.75rem; font-weight: 600; color: #E00122; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.15rem; }
+    .hero-text h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .hero-text .concept { font-size: 0.9rem; color: #666; }
+    .hero-arrow { font-size: 1.5rem; color: #E00122; flex-shrink: 0; }
 
     /* ── WEEK GROUP ── */
     .timeline { max-width: 760px; margin: 2rem auto 3rem; padding: 0 1rem; }
@@ -63,40 +63,42 @@
     .week-group.future::before { background: #ccc; }
 
     .week-header {
-      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.05em; color: #999; padding: 0.5rem 0 0.35rem;
+      font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: #999; padding: 0.5rem 0 0.4rem;
     }
     .week-group.current .week-header { color: #E00122; }
 
-    /* ── DAY CARDS ── */
-    .day-cards { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; }
+    /* ── DAY CARDS (side by side) ── */
+    .day-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.25rem; }
     .day-card {
-      background: #fff; border-radius: 10px; padding: 0.85rem 1.1rem;
-      display: flex; align-items: center; gap: 0.9rem;
+      background: #fff; border-radius: 10px; padding: 0.9rem 1rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
       text-decoration: none; color: inherit;
       transition: transform 0.12s, box-shadow 0.12s;
       border: 1px solid #e8e8e8;
+      position: relative;
     }
     .week-group.past .day-card[href] { cursor: pointer; }
-    .week-group.past .day-card[href]:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .week-group.past .day-card[href]:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
     .week-group.current .day-card { border-color: #f0c0c8; }
     .week-group.current .day-card[href] { cursor: pointer; border-color: #E00122; }
-    .week-group.current .day-card[href]:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(224,1,34,0.10); }
+    .week-group.current .day-card[href]:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(224,1,34,0.10); }
     .week-group.future .day-card { opacity: 0.4; cursor: default; }
 
+    .day-top { display: flex; align-items: center; justify-content: space-between; }
     .day-tag {
-      font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: 0.05em; color: #fff; background: #bbb;
-      padding: 0.15rem 0.45rem; border-radius: 4px; flex-shrink: 0;
+      padding: 0.2rem 0.5rem; border-radius: 4px;
     }
     .week-group.current .day-tag { background: #E00122; }
     .week-group.past .day-tag { background: #999; }
+    .day-date { font-size: 0.65rem; color: #aaa; font-weight: 500; }
 
-    .card-icon { font-size: 1.5rem; flex-shrink: 0; width: 36px; text-align: center; }
     .card-body { flex: 1; }
-    .card-body h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.05rem; }
-    .card-body .card-focus { font-size: 0.75rem; color: #777; }
-    .card-status { flex-shrink: 0; font-size: 0.8rem; }
+    .card-body h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.1rem; line-height: 1.3; }
+    .card-body .card-focus { font-size: 0.8rem; color: #777; }
+    .card-status { font-size: 0.8rem; }
     .card-status .arrow { color: #E00122; font-size: 1.1rem; }
     .card-status .lock { color: #bbb; font-size: 0.9rem; }
 
@@ -105,12 +107,13 @@
 
     /* ── MOBILE ── */
     @media (max-width: 560px) {
+      .header { padding: 2rem 1rem 1.75rem; }
       .header-inner { flex-direction: column; text-align: center; gap: 0.25rem; }
       .header-right { text-align: center; }
-      .header-left h1 { font-size: 1.6rem; }
-      .hero-card { flex-wrap: wrap; gap: 0.65rem; padding: 1rem; }
-      .hero-icon { width: 36px; font-size: 1.8rem; }
-      .card-icon { width: 28px; font-size: 1.2rem; }
+      .header-left h1 { font-size: 1.8rem; }
+      .hero-card { flex-wrap: wrap; gap: 0.65rem; padding: 1.1rem; }
+      .hero-icon { width: 40px; font-size: 2rem; }
+      .day-cards { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -142,87 +145,93 @@
 </div>
 
 <script>
-// ╔════════════════════════════════════════════════════════════════╗
-// ║  SPRING 2026 SCHEDULE — Each week has Day 1 (Tue) & Day 2    ║
-// ║  Edit links here as exercises are built. Set link = null      ║
-// ║  if the exercise isn't ready yet.                             ║
-// ╚════════════════════════════════════════════════════════════════╝
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║  SPRING 2026 SCHEDULE                                            ║
+// ║                                                                  ║
+// ║  NAMING CONVENTION:  W{nn}-{slug}.html                           ║
+// ║    • nn = two-digit week number (01–15)                          ║
+// ║    • slug = lowercase, dashes, no spaces                         ║
+// ║    • Each day gets its own file                                  ║
+// ║                                                                  ║
+// ║  Set link = null until the exercise file is uploaded to GitHub.   ║
+// ║  Once uploaded, set link to the filename and commit index.html.  ║
+// ╚════════════════════════════════════════════════════════════════════╝
 
 const weeks = [
   {
     num: 1, case: "Quibi", chapter: "Ch 1", icon: "📺",
-    day1: { date: "2026-01-13", focus: "What is marketing? What is a case?", link: null },
-    day2: { date: "2026-01-15", focus: "Is this a marketing problem?", link: null }
+    day1: { date: "2026-01-13", focus: "What is marketing? What is a case?",       link: null },  // W01-value-lab.html
+    day2: { date: "2026-01-15", focus: "Is this a marketing problem?",              link: null }   // W01-value-lab-rebuild.html
   },
   {
     num: 2, case: "ALDI", chapter: "Ch 2", icon: "🛒",
-    day1: { date: "2026-01-20", focus: "Strategy & tradeoffs", link: null },
-    day2: { date: "2026-01-22", focus: "Choosing who not to serve", link: null }
+    day1: { date: "2026-01-20", focus: "Strategy & tradeoffs",                      link: null },  // W02-strategy-stress-test.html
+    day2: { date: "2026-01-22", focus: "Choosing who not to serve",                 link: null }   // W02-strategy-stress-test-reverse.html
   },
   {
     num: 3, case: "Dollar General vs Walmart", chapter: "Ch 5", icon: "🏪",
-    day1: { date: "2026-01-27", focus: "Environment constraints & capability fit", link: null },
-    day2: { date: "2026-01-29", focus: "SWOT as fit vs tension", link: null }
+    day1: { date: "2026-01-27", focus: "Environment constraints & capability fit",  link: null },  // W03-force-field.html
+    day2: { date: "2026-01-29", focus: "SWOT as fit vs tension",                    link: null }   // W03-force-field-asymmetry.html
   },
   {
     num: 4, case: "Amazon Fire Phone", chapter: "Ch 6", icon: "📱",
-    day1: { date: "2026-02-03", focus: "Habit, risk, switching costs", link: null },
-    day2: { date: "2026-02-05", focus: "Behavior beats marketing", link: null }
+    day1: { date: "2026-02-03", focus: "Habit, risk, switching costs",              link: null },  // W04-decision-path.html
+    day2: { date: "2026-02-05", focus: "Behavior beats marketing",                  link: null }   // W04-decision-path-compare.html
   },
   {
     num: 5, case: "St. Anne's Hospital", chapter: "Ch 7", icon: "🏥",
-    day1: { date: "2026-02-10", focus: "Buying center roles & risk", link: null },
-    day2: { date: "2026-02-12", focus: "Coordination vs persuasion", link: null }
+    day1: { date: "2026-02-10", focus: "Buying center roles & risk",                link: null },  // W05-buying-center.html
+    day2: { date: "2026-02-12", focus: "Coordination vs persuasion",                link: null }   // W05-buying-center-pressure.html
   },
   {
     num: 6, case: "Warby Parker", chapter: "Ch 9", icon: "👓",
-    day1: { date: "2026-02-17", focus: "Picking the right segment", link: null },
-    day2: { date: "2026-02-19", focus: "STP tradeoffs & constraints", link: null }
+    day1: { date: "2026-02-17", focus: "Picking the right segment",                 link: null },  // W06-segment-lab.html
+    day2: { date: "2026-02-19", focus: "STP tradeoffs & constraints",               link: null }   // W06-segment-lab-position.html
   },
   {
     num: 7, case: "Google Flu Trends", chapter: "Ch 10", icon: "🔬",
-    day1: { date: "2026-02-24", focus: "Signals vs behavior", link: null },
-    day2: { date: "2026-02-26", focus: "Assumptions & drift", link: null }
+    day1: { date: "2026-02-24", focus: "Signals vs behavior",                       link: null },  // W07-signal-lab.html
+    day2: { date: "2026-02-26", focus: "Assumptions & drift",                       link: null }   // W07-signal-lab-update.html
   },
   {
     num: 8, case: "Midterm", chapter: "", icon: "📝",
-    day1: { date: "2026-03-03", focus: "STP review", link: null },
-    day2: { date: "2026-03-05", focus: "Midterm exam", link: null }
+    day1: { date: "2026-03-03", focus: "STP review",                                link: null },  // no exercise
+    day2: { date: "2026-03-05", focus: "Midterm exam",                              link: null }   // no exercise
   },
   {
     num: 9, case: "P&G Low-Cost Razor (India)", chapter: "Ch 11–12", icon: "🚀",
-    day1: { date: "2026-03-10", focus: "Product–market fit via context", link: null },
-    day2: { date: "2026-03-12", focus: "Standardization vs localization", link: null }
+    day1: { date: "2026-03-10", focus: "Product–market fit via context",            link: null },  // W09-launch-it.html
+    day2: { date: "2026-03-12", focus: "Standardization vs localization",           link: null }   // W09-launch-it-adapt.html
   },
   {
     num: 10, case: "Valvoline", chapter: "Ch 13", icon: "🛢️",
-    day1: { date: "2026-03-24", focus: "Experience is the product", link: "Week 10 - Run the Bay Game.html" },
-    day2: { date: "2026-03-26", focus: "Premium depends on delivery", link: "W10-Rate-the-Bay.html" }
+    day1: { date: "2026-03-24", focus: "Experience is the product",                 link: "W10-run-the-bay.html" },
+    day2: { date: "2026-03-26", focus: "Premium depends on delivery",               link: "W10-rate-the-bay.html" }
   },
   {
     num: 11, case: "Polymarket", chapter: "Ch 14", icon: "📊",
-    day1: { date: "2026-03-31", focus: "Value vs cost logic", link: null },
-    day2: { date: "2026-04-02", focus: "Demand can be destructive", link: null }
+    day1: { date: "2026-03-31", focus: "Value vs cost logic",                       link: null },  // W11-price-the-line.html
+    day2: { date: "2026-04-02", focus: "Demand can be destructive",                 link: null }   // W11-price-the-line-sim.html
   },
   {
     num: 12, case: "Apple vs Epic", chapter: "Ch 15", icon: "🎮",
-    day1: { date: "2026-04-07", focus: "Channel control & power", link: null },
-    day2: { date: "2026-04-09", focus: "Brand risk & backlash", link: null }
+    day1: { date: "2026-04-07", focus: "Channel control & power",                   link: null },  // W12-channel-architect.html
+    day2: { date: "2026-04-09", focus: "Brand risk & backlash",                     link: null }   // W12-channel-architect-tradeoff.html
   },
   {
     num: 13, case: "Stranger Things", chapter: "Ch 17", icon: "📡",
-    day1: { date: "2026-04-14", focus: "Message alignment", link: null },
-    day2: { date: "2026-04-16", focus: "Partner risk & discipline", link: null }
+    day1: { date: "2026-04-14", focus: "Message alignment",                         link: null },  // W13-message-match.html
+    day2: { date: "2026-04-16", focus: "Partner risk & discipline",                 link: null }   // W13-message-match-rewrite.html
   },
   {
     num: 14, case: "They Ask, You Answer", chapter: "Ch 3", icon: "💬",
-    day1: { date: "2026-04-21", focus: "Content builds trust", link: null },
-    day2: { date: "2026-04-23", focus: "Transparency tradeoffs", link: null }
+    day1: { date: "2026-04-21", focus: "Content builds trust",                      link: null },  // no exercise (project week)
+    day2: { date: "2026-04-23", focus: "Transparency tradeoffs",                    link: null }   // no exercise (project week)
   },
   {
     num: 15, case: "Finals", chapter: "", icon: "🎓",
-    day1: { date: "2026-04-28", focus: "Project presentations + career day", link: null },
-    day2: { date: "2026-04-30", focus: "Final exam", link: null }
+    day1: { date: "2026-04-28", focus: "Project presentations + career day",        link: null },  // no exercise
+    day2: { date: "2026-04-30", focus: "Final exam",                                link: null }   // no exercise
   }
 ];
 
@@ -274,7 +283,7 @@ function renderHero() {
 
   const isToday = getDayStatus(heroDay.date) === "current";
   const badge = isToday ? "Today" : "Up Next";
-  const dayLabel = heroDay === heroWeek.day1 ? "Day 1" : "Day 2";
+  const dayLabel = heroDay === heroWeek.day1 ? "Tuesday" : "Thursday";
   const hasLink = heroDay.link !== null;
   const tag = hasLink ? "a" : "div";
   const href = hasLink ? ` href="${heroDay.link}"` : "";
@@ -314,11 +323,12 @@ function renderTimeline() {
 
       return `
         <${tag} class="day-card"${href}>
-          <span class="day-tag">${label}</span>
-          <div class="card-icon">${w.icon}</div>
+          <div class="day-top">
+            <span class="day-tag">${label}</span>
+            <span class="day-date">${dateLabel}</span>
+          </div>
           <div class="card-body">
             <h3>${day.focus}</h3>
-            <div class="card-focus">${dateLabel}</div>
           </div>
           <div class="card-status">${statusHtml}</div>
         </${tag}>`;
@@ -328,8 +338,8 @@ function renderTimeline() {
       <li class="week-group ${wStatus}">
         <div class="week-header">Week ${w.num}${w.chapter ? " · " + w.chapter : ""} — ${w.case}</div>
         <div class="day-cards">
-          ${dayCard(w.day1, "Day 1")}
-          ${dayCard(w.day2, "Day 2")}
+          ${dayCard(w.day1, "Tuesday")}
+          ${dayCard(w.day2, "Thursday")}
         </div>
       </li>`;
   }).join("");
