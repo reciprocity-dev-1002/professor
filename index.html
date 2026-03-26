@@ -337,7 +337,7 @@ function renderTimeline() {
 
     return `
       <li class="week-group ${wStatus}">
-        <div class="week-header">Week ${w.num}${w.chapter ? " · " + w.chapter : ""} — ${w.case}</div>
+        <div class="week-header">${w.icon} Week ${w.num}${w.chapter ? " · " + w.chapter : ""} — ${w.case}</div>
         <div class="day-cards">
           ${dayCard(w.day1, "Tuesday")}
           ${dayCard(w.day2, "Thursday")}
