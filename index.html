@@ -23,7 +23,7 @@
     .header-right .semester { font-size: 0.9rem; font-weight: 400; opacity: 0.8; }
 
     /* ── HERO (current day) ── */
-    .hero { max-width: 760px; margin: -1.5rem auto 0; padding: 0 1rem; position: relative; z-index: 2; }
+    .hero { max-width: 760px; margin: 1.5rem auto 0; padding: 0 1rem; position: relative; z-index: 2; }
     .hero-card {
       background: #fff; border: 2px solid #E00122; border-radius: 14px;
       padding: 1.5rem 1.75rem; box-shadow: 0 8px 28px rgba(0,0,0,0.10);
@@ -195,7 +195,7 @@ const weeks = [
   },
   {
     num: 8, case: "Midterm", chapter: "", icon: "📝",
-    day1: { date: "2026-03-03", focus: "STP review",                                link: null },  // no exercise
+    day1: { date: "2026-03-03", focus: "Marketing brief review",                     link: null },  // no exercise
     day2: { date: "2026-03-05", focus: "Midterm exam",                              link: null }   // no exercise
   },
   {
@@ -308,7 +308,8 @@ function renderTimeline() {
 
     function dayCard(day, label) {
       const dStatus = getDayStatus(day.date);
-      const accessible = dStatus !== "future";
+      // Make days clickable if the WEEK is current or past (not just the individual day)
+      const accessible = wStatus !== "future";
       const hasLink = day.link && accessible;
       const tag = hasLink ? "a" : "div";
       const href = hasLink ? ` href="${day.link}"` : "";
