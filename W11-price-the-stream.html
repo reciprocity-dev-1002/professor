@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Price the Stream - StreamLocal Exercise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --case-primary: #1a56db;
+      --case-secondary: #1e3a5f;
+      --case-accent: #f59e0b;
+      --case-light: #eff6ff;
+      --case-dark: #0f172a;
+      --text: #1E293B;
+      --muted: #64748B;
+      --card-bg: #FFFFFF;
+      --success: #059669;
+      --warning: #D97706;
+      --danger: #DC2626;
+      --border: #CBD5E1;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--case-light) 0%, #f0f9ff 100%);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header {
+      background: var(--case-primary);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-content {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .header-group-info {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .shake {
+      animation: shake 0.5s;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border);
+    }
+
+    .card.accent {
+      border-color: var(--case-accent);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.02) 100%);
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--case-dark);
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .password-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .password-card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .password-card h2 {
+      margin-bottom: 8px;
+    }
+
+    .password-card p {
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .password-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 16px;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.3s;
+    }
+
+    .password-input:focus {
+      outline: none;
+      border-color: var(--case-primary);
+    }
+
+    .password-error {
+      color: var(--danger);
+      font-size: 14px;
+      margin-bottom: 12px;
+      min-height: 20px;
+    }
+
+    button {
+      background: var(--case-primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--case-secondary);
+      transform: translateY(-2px);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--case-primary);
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+    }
+
+    .brand-card {
+      background: linear-gradient(135deg, var(--case-primary) 0%, var(--case-secondary) 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand-logo {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+
+    .brand-tagline {
+      font-size: 18px;
+      font-weight: 500;
+      opacity: 0.95;
+    }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .data-card {
+      background: var(--case-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .data-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--case-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .data-item {
+      font-size: 14px;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .data-item-label {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .data-item-value {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .research-list {
+      list-style: none;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .research-list li {
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .research-list li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--case-accent);
+      font-weight: 700;
+    }
+
+    .student-inputs {
+      background: var(--case-light);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .student-input-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: flex-end;
+    }
+
+    .student-input-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .student-input-row input {
+      flex: 1;
+    }
+
+    .student-input-row button {
+      padding: 10px 16px;
+      font-size: 14px;
+      background: var(--case-accent);
+      white-space: nowrap;
+    }
+
+    .student-input-row button:hover {
+      background: #dc8c02;
+    }
+
+    .pricing-round {
+      margin-bottom: 40px;
+    }
+
+    .pricing-method {
+      background: var(--case-light);
+      border-left: 4px solid var(--case-primary);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .pricing-method h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--case-primary);
+      margin-bottom: 8px;
+    }
+
+    .pricing-method p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+
+    .formula {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      margin-top: 8px;
+      color: var(--text);
+    }
+
+    .student-pricing-section {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .student-name {
+      font-weight: 700;
+      color: var(--case-primary);
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .calculator-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .calculator-row select,
+    .calculator-row input {
+      flex: 1;
+    }
+
+    .price-display {
+      background: var(--case-primary);
+      color: white;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .justification-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      resize: vertical;
+      min-height: 60px;
+      margin-bottom: 12px;
+    }
+
+    .submit-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    .checkmark {
+      color: var(--success);
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .progress-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .progress-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .progress-item.submitted {
+      color: var(--success);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .price-card {
+      background: linear-gradient(135deg, var(--case-light) 0%, white 100%);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .price-card h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .price-large {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--case-primary);
+      margin-bottom: 4px;
+    }
+
+    .price-small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .comparison-table th {
+      background: var(--case-primary);
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .comparison-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tr:nth-child(even) {
+      background: var(--case-light);
+    }
+
+    .consensus-card {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid var(--success);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .consensus-card h3 {
+      color: var(--success);
+      margin-top: 0;
+    }
+
+    .reflection-prompt {
+      background: var(--case-light);
+      border-left: 4px solid var(--case-accent);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 24px;
+      font-size: 14px;
+    }
+
+    .reflection-prompt strong {
+      color: var(--case-accent);
+    }
+
+    .summary-section {
+      margin-bottom: 24px;
+    }
+
+    .summary-section h3 {
+      margin-top: 0;
+    }
+
+    .summary-students {
+      background: var(--case-light);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .summary-students strong {
+      color: var(--case-primary);
+    }
+
+    .note {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      color: var(--text);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .brand-card {
+        padding: 24px;
+      }
+
+      .brand-logo {
+        font-size: 36px;
+      }
+
+      .brand-tagline {
+        font-size: 16px;
+      }
+
+      .data-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .calculator-row {
+        flex-direction: column;
+      }
+
+      .student-input-row {
+        flex-direction: column;
+      }
+
+      .student-input-row button {
+        width: 100%;
+      }
+
+      .comparison-table {
+        font-size: 12px;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 8px;
+      }
+
+      .price-large {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header" class="header" style="display: none;">
+  <div class="header-content">
+    <h1>Price the Stream</h1>
+    <div class="header-group-info">
+      <span id="headerGroupNum"></span>
+      <span id="headerStudents"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Password Screen -->
+<div id="passwordScreen" class="screen active">
+  <div class="password-screen">
+    <div class="password-card">
+      <h2>Price the Stream</h2>
+      <p>Enter your group's access code to begin.</p>
+      <input type="text" id="passwordInput" class="password-input" placeholder="Enter code" autocomplete="off">
+      <div class="password-error" id="passwordError"></div>
+      <button onclick="checkPassword()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Join Screen -->
+<div id="joinScreen" class="screen">
+  <div class="container">
+    <div class="card">
+      <h2>Join Your Group</h2>
+      <p style="margin-bottom: 24px; color: var(--muted);">Tell us who's on your team.</p>
+
+      <div class="input-group">
+        <label for="groupNum">Group Number (1-10)</label>
+        <select id="groupNum" onchange="updateJoinButton()">
+          <option value="">Select your group...</option>
+          <option value="1">Group 1</option>
+          <option value="2">Group 2</option>
+          <option value="3">Group 3</option>
+          <option value="4">Group 4</option>
+          <option value="5">Group 5</option>
+          <option value="6">Group 6</option>
+          <option value="7">Group 7</option>
+          <option value="8">Group 8</option>
+          <option value="9">Group 9</option>
+          <option value="10">Group 10</option>
+        </select>
+      </div>
+
+      <div class="student-inputs">
+        <div id="studentInputsContainer"></div>
+        <button onclick="addStudentField()" style="width: 100%; margin-top: 12px; background: var(--case-accent); font-size: 14px;">+ Add Student</button>
+      </div>
+
+      <button id="startBtn" onclick="startExercise()" disabled style="width: 100%; padding: 14px; font-size: 16px;">Start Exercise</button>
+    </div>
+  </div>
+</div>
+
+<!-- Instructions Screen -->
+<div id="instructionsScreen" class="screen">
+  <div class="container">
+    <div class="card">
+      <h2>Your Mission</h2>
+      <p>Your group has been hired as pricing consultants for <strong>StreamLocal</strong> — a new streaming service featuring local news, local sports, and regional entertainment. You have real cost data, competitor pricing, and customer research.</p>
+      <p style="margin-bottom: 24px;"><strong>Your job:</strong> set the monthly subscription price using three different pricing methods, then recommend one.</p>
+
+      <div class="brand-card">
+        <div class="brand-logo">StreamLocal</div>
+        <div class="brand-tagline">Your city. Your stories. Your stream.</div>
+      </div>
+
+      <button onclick="goToDataBriefing()" style="width: 100%;">Got it — Start Pricing</button>
+    </div>
+  </div>
+</div>
+
+<!-- Data Briefing Screen -->
+<div id="dataBriefingScreen" class="screen">
+  <div class="container">
+    <div class="card">
+      <h2>Your Data</h2>
+      <p style="margin-bottom: 24px; color: var(--muted);">Everything you need to set your price.</p>
+
+      <div class="data-grid">
+        <div class="data-card">
+          <h4>Cost Data</h4>
+          <div class="data-item">
+            <div class="data-item-label">Fixed Costs (annual):</div>
+            <div class="data-item-value">$2,400,000</div>
+            <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Content licensing, platform, staff</div>
+          </div>
+          <div class="data-item" style="margin-bottom: 0;">
+            <div class="data-item-label">Variable Cost per Sub (monthly):</div>
+            <div class="data-item-value">$3.50</div>
+            <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Bandwidth, support, royalties</div>
+          </div>
+          <div class="data-item" style="margin-bottom: 0;">
+            <div class="data-item-label">Target Subscribers (Year 1):</div>
+            <div class="data-item-value">50,000</div>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <h4>Competitor Pricing</h4>
+          <ul class="research-list">
+            <li>Netflix Standard with Ads: $7.99/mo</li>
+            <li>Hulu with Ads: $9.99/mo</li>
+            <li>Disney+ with Ads: $9.99/mo</li>
+            <li>Peacock Premium: $7.99/mo</li>
+            <li>ESPN+: $11.99/mo</li>
+            <li>Regional sports networks: $20–30/mo</li>
+          </ul>
+        </div>
+
+        <div class="data-card">
+          <h4>Customer Research</h4>
+          <p style="margin-bottom: 12px; font-size: 13px; color: var(--muted);">Survey of 1,000 potential subscribers:</p>
+          <ul class="research-list">
+            <li><strong>60%</strong> would pay $5–8/mo</li>
+            <li><strong>25%</strong> would pay $9–12/mo</li>
+            <li><strong>10%</strong> would pay $13–16/mo</li>
+            <li><strong>5%</strong> would pay $17+/mo</li>
+            <li style="margin-top: 12px; border-top: 1px solid var(--border); padding-top: 12px;"><strong>Most valued:</strong> Local sports (78%)</li>
+            <li><strong>Second:</strong> Local news (52%)</li>
+          </ul>
+        </div>
+      </div>
+
+      <button onclick="goPricingRound1()" style="width: 100%;">Start Pricing</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing Round 1: Cost-Plus -->
+<div id="pricingRound1Screen" class="screen">
+  <div class="container">
+    <div class="card">
+      <h2>Round 1: Cost-Plus Pricing</h2>
+
+      <div class="pricing-method">
+        <h4>Method Definition</h4>
+        <p>Start with your costs. Add a markup percentage. The price covers costs and delivers a predictable profit.</p>
+        <div class="formula">Price = Variable Cost + (Fixed Cost ÷ Subscribers ÷ 12) + Markup</div>
+      </div>
+
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px;">Each team member: choose a markup, see the price update in real time, and justify your choice.</p>
+
+      <div id="round1Container"></div>
+
+      <div class="progress-row" id="round1Progress"></div>
+
+      <button id="round1SubmitBtn" onclick="submitRound1()" disabled style="width: 100%; margin-top: 24px;">All Set — See Results</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing Round 2: Margin-Based -->
+<div id="pricingRound2Screen" class="screen">
+  <div class="container">
+    <div class="card">
+      <h2>Round 2: Margin-Based Pricing</h2>
+
+      <div class="pricing-method">
+        <h4>Method Definition</h4>
+        <p>Start with your target profit margin. Work backward to find the price that delivers it.</p>
+        <div class="formula">Price = Variable Cost ÷ (1 - Target Margin%)</div>
+        <p style="font-size: 12px; color: var(--warning); margin-top: 8px; margin-bottom: 0;"><strong>Note:</strong> This method ignores fixed costs in the per-unit calculation. You need enough volume to cover fixed costs separately.</p>
+      </div>
+
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px; margin-top: 24px;">Each team member: choose a target margin, see the price, and justify your choice.</p>
+
+      <div id="round2Container"></div>
+
+      <div class="progress-row" id="round2Progress"></div>
+
+      <button id="round2SubmitBtn" onclick="submitRound2()" disabled style="width: 100%; margin-top: 24px;">All Set — See Results</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing Round 3: Value-Based -->
+<div id="pricingRound3Screen" class="screen">
+  <div class="container">
+    <div class="card">
+      <h2>Round 3: Value-Based Pricing</h2>
+
+      <div class="pricing-method">
+        <h4>Method Definition</h4>
+        <p>Start with what customers are willing to pay. Price to the value they perceive, not what it costs you.</p>
+      </div>
+
+      <div class="data-grid" style="margin-bottom: 24px;">
+        <div class="data-card">
+          <h4>What Customers Will Pay</h4>
+          <ul class="research-list" style="margin-bottom: 0;">
+            <li><strong>60%</strong> → $5–8/mo</li>
+            <li><strong>25%</strong> → $9–12/mo</li>
+            <li><strong>10%</strong> → $13–16/mo</li>
+            <li><strong>5%</strong> → $17+/mo</li>
+          </ul>
+        </div>
+        <div class="data-card">
+          <h4>Most Valued Features</h4>
+          <ul class="research-list" style="margin-bottom: 0;">
+            <li><strong>Local sports:</strong> 78% value it</li>
+            <li><strong>Local news:</strong> 52% value it</li>
+          </ul>
+        </div>
+      </div>
+
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px;">Each team member: pick a price, then explain which customer segment you're targeting and why.</p>
+
+      <div id="round3Container"></div>
+
+      <div class="progress-row" id="round3Progress"></div>
+
+      <button id="round3SubmitBtn" onclick="submitRound3()" disabled style="width: 100%; margin-top: 24px;">All Set — See Results</button>
+    </div>
+  </div>
+</div>
+
+<!-- Results & Group Decision -->
+<div id="resultsScreen" class="screen">
+  <div class="container">
+    <div class="card">
+      <h2>See What Happened</h2>
+      <p style="margin-bottom: 24px; color: var(--muted);">Each method produces a very different price. Here's the breakdown:</p>
+
+      <div class="results-grid">
+        <div class="price-card">
+          <h4>Cost-Plus Range</h4>
+          <div class="price-large" id="costPlusRange">$9.75–15.00</div>
+          <div class="price-small">Average: $<span id="costPlusAvg">12.19</span></div>
+        </div>
+        <div class="price-card">
+          <h4>Margin-Based Range</h4>
+          <div class="price-large" id="marginRange">$7.00–11.67</div>
+          <div class="price-small">Average: $<span id="marginAvg">8.94</span></div>
+        </div>
+        <div class="price-card">
+          <h4>Value-Based Range</h4>
+          <div class="price-large" id="valuePriceRange">$8.50–16.00</div>
+          <div class="price-small">Average: $<span id="valueAvg">11.73</span></div>
+        </div>
+      </div>
+
+      <h3>The Three Methods Side by Side</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Price Range</th>
+            <th>Logic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Cost-Plus</strong></td>
+            <td>$<span id="compCP">9.75</span>–$<span id="compCPMax">15.00</span></td>
+            <td>All costs + markup = profit</td>
+          </tr>
+          <tr>
+            <td><strong>Margin-Based</strong></td>
+            <td>$<span id="compMB">7.00</span>–$<span id="compMBMax">11.67</span></td>
+            <td>Customer pays you % profit on cost</td>
+          </tr>
+          <tr>
+            <td><strong>Value-Based</strong></td>
+            <td>$<span id="compVB">8.50</span>–$<span id="compVBMax">16.00</span></td>
+            <td>What customers say they'll pay</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="reflection-prompt">
+        <strong>Why does value-based pricing produce a higher price than cost-based?</strong> What does this tell you about how marketers should think about pricing?
+      </div>
+
+      <div class="consensus-card">
+        <h3>Your Group's Final Recommendation</h3>
+        <div class="input-group">
+          <label for="finalPrice">Recommended Price ($/month)</label>
+          <input type="number" id="finalPrice" placeholder="e.g., 9.99" step="0.01" min="1" max="50">
+        </div>
+        <div class="input-group">
+          <label for="finalJustification">Why this price?</label>
+          <textarea id="finalJustification" placeholder="We recommend StreamLocal charge $___/month because..." style="width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; font-family: 'Inter', sans-serif; resize: vertical; min-height: 80px;"></textarea>
+          <div id="justificationCounter" style="font-size: 12px; color: var(--muted); margin-top: 4px;">0 / 40 characters</div>
+        </div>
+        <button id="goSummaryBtn" onclick="goToSummary()" disabled style="width: 100%;">See Final Summary</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Summary Screen -->
+<div id="summaryScreen" class="screen">
+  <div class="container">
+    <div class="card">
+      <h2>Exercise Complete</h2>
+      <p style="margin-bottom: 24px; color: var(--muted);">Here's what your group decided.</p>
+
+      <div class="summary-section">
+        <h3 style="margin-top: 0;">Your Group</h3>
+        <div class="summary-students">
+          <strong>Group <span id="summaryGroupNum">1</span>:</strong> <span id="summaryStudents">Alice, Bob</span>
+        </div>
+      </div>
+
+      <div class="summary-section">
+        <h3>Pricing Breakdown</h3>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Cost-Plus</th>
+              <th>Margin-Based</th>
+              <th>Value-Based</th>
+            </tr>
+          </thead>
+          <tbody id="summaryTable"></tbody>
+        </table>
+      </div>
+
+      <div class="summary-section">
+        <h3>Your Final Recommendation</h3>
+        <div class="card accent">
+          <div style="font-size: 18px; font-weight: 700; color: var(--case-primary); margin-bottom: 8px;">
+            $<span id="summaryFinalPrice">9.99</span>/month
+          </div>
+          <div style="font-size: 14px; color: var(--text); line-height: 1.6;" id="summaryFinalJustification">We recommend this price because...</div>
+        </div>
+      </div>
+
+      <div class="reflection-prompt">
+        <strong>Final Reflection:</strong> Which of the 5 Cs from Tuesday most influenced your pricing decision today?
+      </div>
+
+      <div class="note">
+        <strong>💡 Reminder:</strong> Screenshot this page for your notes — data is not saved between sessions.
+      </div>
+
+      <button onclick="location.reload()" style="width: 100%; margin-top: 24px;">Reset & Start Over</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============ Data & State ============
+  const PASSWORD = 'VALUE3';
+
+  let state = {
+    groupNum: null,
+    students: [],
+    round1: {},  // { studentName: { markup: 30, price: 9.75, justification: '...' }, ... }
+    round2: {},  // { studentName: { margin: 50, price: 7.00, justification: '...' }, ... }
+    round3: {},  // { studentName: { price: 10, justification: '...' }, ... }
+    finalPrice: null,
+    finalJustification: null
+  };
+
+  // Fixed cost data
+  const FIXED_ANNUAL = 2400000;
+  const VARIABLE_MONTHLY = 3.50;
+  const TARGET_SUBSCRIBERS = 50000;
+  const FIXED_PER_SUB = FIXED_ANNUAL / TARGET_SUBSCRIBERS / 12; // $4.00
+
+  // ============ Password Gate ============
+  function checkPassword() {
+    const input = document.getElementById('passwordInput').value.trim();
+    const errorDiv = document.getElementById('passwordError');
+
+    if (input === PASSWORD) {
+      errorDiv.textContent = '';
+      goToJoinScreen();
+    } else {
+      errorDiv.textContent = 'Try again.';
+      document.getElementById('passwordInput').classList.add('shake');
+      setTimeout(() => {
+        document.getElementById('passwordInput').classList.remove('shake');
+      }, 500);
+    }
+  }
+
+  document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') checkPassword();
+  });
+
+  // ============ Screen Navigation ============
+  function goToScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    if (screenId !== 'passwordScreen') {
+      document.getElementById('header').style.display = 'block';
+    } else {
+      document.getElementById('header').style.display = 'none';
+    }
+  }
+
+  function goToJoinScreen() {
+    renderStudentInputs();
+    goToScreen('joinScreen');
+  }
+
+  function goToInstructionsScreen() {
+    updateHeader();
+    goToScreen('instructionsScreen');
+  }
+
+  function goToDataBriefing() {
+    goToScreen('dataBriefingScreen');
+  }
+
+  function goPricingRound1() {
+    renderRound1();
+    goToScreen('pricingRound1Screen');
+  }
+
+  function goPricingRound2() {
+    renderRound2();
+    goToScreen('pricingRound2Screen');
+  }
+
+  function goPricingRound3() {
+    renderRound3();
+    goToScreen('pricingRound3Screen');
+  }
+
+  function goToResults() {
+    calculateResults();
+    goToScreen('resultsScreen');
+  }
+
+  function goToSummary() {
+    renderSummary();
+    goToScreen('summaryScreen');
+  }
+
+  // ============ Join Screen ============
+  function renderStudentInputs() {
+    const container = document.getElementById('studentInputsContainer');
+    container.innerHTML = '';
+    for (let i = 0; i < 2; i++) {
+      const row = document.createElement('div');
+      row.className = 'student-input-row';
+      row.innerHTML = `
+        <input type="text" class="student-input" placeholder="Student name" value="${state.students[i] || ''}">
+      `;
+      container.appendChild(row);
+    }
+    state.students = ['', ''];
+  }
+
+  function addStudentField() {
+    if (state.students.length < 5) {
+      state.students.push('');
+      const container = document.getElementById('studentInputsContainer');
+      const row = document.createElement('div');
+      row.className = 'student-input-row';
+      row.innerHTML = `
+        <input type="text" class="student-input" placeholder="Student name">
+      `;
+      container.appendChild(row);
+    }
+  }
+
+  function updateJoinButton() {
+    const groupNum = document.getElementById('groupNum').value;
+    const inputs = document.querySelectorAll('.student-input');
+    const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n);
+
+    state.groupNum = groupNum;
+    state.students = Array.from(inputs).map(i => i.value.trim());
+
+    const canStart = groupNum && names.length >= 2;
+    document.getElementById('startBtn').disabled = !canStart;
+  }
+
+  function startExercise() {
+    // Update state with finalized student names
+    state.students = Array.from(document.querySelectorAll('.student-input'))
+      .map(i => i.value.trim())
+      .filter(n => n);
+
+    goToInstructionsScreen();
+  }
+
+  function updateHeader() {
+    document.getElementById('headerGroupNum').textContent = `Group ${state.groupNum}`;
+    document.getElementById('headerStudents').textContent = `${state.students.length} students`;
+  }
+
+  // ============ Pricing Calculations ============
+  function calculateCostPlusPrice(markupPercent) {
+    const baseCost = VARIABLE_MONTHLY + FIXED_PER_SUB; // $7.50
+    const markup = baseCost * (markupPercent / 100);
+    return baseCost + markup;
+  }
+
+  function calculateMarginBasedPrice(marginPercent) {
+    return VARIABLE_MONTHLY / (1 - marginPercent / 100);
+  }
+
+  // ============ Round 1: Cost-Plus ============
+  function renderRound1() {
+    const container = document.getElementById('round1Container');
+    container.innerHTML = '';
+
+    state.students.forEach(student => {
+      if (!state.round1[student]) {
+        state.round1[student] = { markup: 30, price: null, justification: '' };
+      }
+
+      const section = document.createElement('div');
+      section.className = 'student-pricing-section';
+      section.innerHTML = `
+        <div class="student-name">${student}</div>
+        <div class="input-group">
+          <label>Markup Percentage</label>
+          <div class="calculator-row">
+            <select class="markup-select" data-student="${student}" onchange="updateCostPlusPrice('${student}')">
+              <option value="20">20%</option>
+              <option value="30" selected>30%</option>
+              <option value="40">40%</option>
+              <option value="50">50%</option>
+              <option value="75">75%</option>
+              <option value="100">100%</option>
+            </select>
+          </div>
+        </div>
+        <div class="price-display">
+          Price: $<span class="cp-price" data-student="${student}">9.75</span>/month
+        </div>
+        <div class="input-group">
+          <label>Your Justification (1 sentence)</label>
+          <textarea class="justification-input" data-student="${student}" placeholder="Why this markup?"></textarea>
+        </div>
+        <div class="submit-indicator">
+          <span class="checkmark" data-student="${student}" style="display: none;">✓</span>
+          <span class="status-text" data-student="${student}">Not yet submitted</span>
+        </div>
+      `;
+      container.appendChild(section);
+    });
+
+    updateCostPlusDisplay();
+  }
+
+  function updateCostPlusPrice(student) {
+    const select = document.querySelector(`[data-student="${student}"].markup-select`);
+    const markup = parseInt(select.value);
+    const price = calculateCostPlusPrice(markup);
+    state.round1[student].markup = markup;
+    state.round1[student].price = parseFloat(price.toFixed(2));
+
+    document.querySelector(`[data-student="${student}"].cp-price`).textContent = price.toFixed(2);
+    checkRound1Complete();
+  }
+
+  function updateCostPlusDisplay() {
+    state.students.forEach(student => {
+      const markup = state.round1[student]?.markup || 30;
+      const price = calculateCostPlusPrice(markup);
+      state.round1[student].price = parseFloat(price.toFixed(2));
+      document.querySelector(`[data-student="${student}"].cp-price`).textContent = price.toFixed(2);
+    });
+  }
+
+  function checkRound1Complete() {
+    let allDone = true;
+    state.students.forEach(student => {
+      const just = document.querySelector(`[data-student="${student}"].justification-input`)?.value.trim();
+      if (!just) {
+        allDone = false;
+      } else {
+        state.round1[student].justification = just;
+      }
+    });
+
+    updateRound1Progress();
+    document.getElementById('round1SubmitBtn').disabled = !allDone;
+  }
+
+  function updateRound1Progress() {
+    const progressDiv = document.getElementById('round1Progress');
+    progressDiv.innerHTML = '';
+    state.students.forEach(student => {
+      const just = document.querySelector(`[data-student="${student}"].justification-input`)?.value.trim();
+      const submitted = !!just;
+      state.round1[student].justification = just || '';
+
+      const item = document.createElement('div');
+      item.className = `progress-item ${submitted ? 'submitted' : ''}`;
+      item.innerHTML = `
+        ${submitted ? '<span class="checkmark">✓</span>' : '<span style="color: var(--danger);">○</span>'}
+        <span>${student}</span>
+      `;
+      progressDiv.appendChild(item);
+    });
+  }
+
+  document.addEventListener('input', (e) => {
+    if (e.target.classList.contains('justification-input')) {
+      checkRound1Complete();
+    }
+  });
+
+  function submitRound1() {
+    goPricingRound2();
+  }
+
+  // ============ Round 2: Margin-Based ============
+  function renderRound2() {
+    const container = document.getElementById('round2Container');
+    container.innerHTML = '';
+
+    state.students.forEach(student => {
+      if (!state.round2[student]) {
+        state.round2[student] = { margin: 50, price: null, justification: '' };
+      }
+
+      const section = document.createElement('div');
+      section.className = 'student-pricing-section';
+      section.innerHTML = `
+        <div class="student-name">${student}</div>
+        <div class="input-group">
+          <label>Target Profit Margin</label>
+          <div class="calculator-row">
+            <select class="margin-select" data-student="${student}" onchange="updateMarginBasedPrice('${student}')">
+              <option value="30">30%</option>
+              <option value="40">40%</option>
+              <option value="50" selected>50%</option>
+              <option value="60">60%</option>
+              <option value="70">70%</option>
+            </select>
+          </div>
+        </div>
+        <div class="price-display">
+          Price: $<span class="mb-price" data-student="${student}">7.00</span>/month
+        </div>
+        <div class="input-group">
+          <label>Your Justification (1 sentence)</label>
+          <textarea class="justification-input-mb" data-student="${student}" placeholder="Why this margin?"></textarea>
+        </div>
+        <div class="submit-indicator">
+          <span class="checkmark" data-student="${student}" style="display: none;">✓</span>
+          <span class="status-text" data-student="${student}">Not yet submitted</span>
+        </div>
+      `;
+      container.appendChild(section);
+    });
+
+    updateMarginBasedDisplay();
+  }
+
+  function updateMarginBasedPrice(student) {
+    const select = document.querySelector(`[data-student="${student}"].margin-select`);
+    const margin = parseInt(select.value);
+    const price = calculateMarginBasedPrice(margin);
+    state.round2[student].margin = margin;
+    state.round2[student].price = parseFloat(price.toFixed(2));
+
+    document.querySelector(`[data-student="${student}"].mb-price`).textContent = price.toFixed(2);
+    checkRound2Complete();
+  }
+
+  function updateMarginBasedDisplay() {
+    state.students.forEach(student => {
+      const margin = state.round2[student]?.margin || 50;
+      const price = calculateMarginBasedPrice(margin);
+      state.round2[student].price = parseFloat(price.toFixed(2));
+      document.querySelector(`[data-student="${student}"].mb-price`).textContent = price.toFixed(2);
+    });
+  }
+
+  function checkRound2Complete() {
+    let allDone = true;
+    state.students.forEach(student => {
+      const just = document.querySelector(`[data-student="${student}"].justification-input-mb`)?.value.trim();
+      if (!just) {
+        allDone = false;
+      } else {
+        state.round2[student].justification = just;
+      }
+    });
+
+    updateRound2Progress();
+    document.getElementById('round2SubmitBtn').disabled = !allDone;
+  }
+
+  function updateRound2Progress() {
+    const progressDiv = document.getElementById('round2Progress');
+    progressDiv.innerHTML = '';
+    state.students.forEach(student => {
+      const just = document.querySelector(`[data-student="${student}"].justification-input-mb`)?.value.trim();
+      const submitted = !!just;
+      state.round2[student].justification = just || '';
+
+      const item = document.createElement('div');
+      item.className = `progress-item ${submitted ? 'submitted' : ''}`;
+      item.innerHTML = `
+        ${submitted ? '<span class="checkmark">✓</span>' : '<span style="color: var(--danger);">○</span>'}
+        <span>${student}</span>
+      `;
+      progressDiv.appendChild(item);
+    });
+  }
+
+  document.addEventListener('input', (e) => {
+    if (e.target.classList.contains('justification-input-mb')) {
+      checkRound2Complete();
+    }
+  });
+
+  function submitRound2() {
+    goPricingRound3();
+  }
+
+  // ============ Round 3: Value-Based ============
+  function renderRound3() {
+    const container = document.getElementById('round3Container');
+    container.innerHTML = '';
+
+    state.students.forEach(student => {
+      if (!state.round3[student]) {
+        state.round3[student] = { price: null, justification: '' };
+      }
+
+      const section = document.createElement('div');
+      section.className = 'student-pricing-section';
+      section.innerHTML = `
+        <div class="student-name">${student}</div>
+        <div class="input-group">
+          <label>Your Price ($1–$50/month)</label>
+          <input type="number" class="vb-price-input" data-student="${student}" min="1" max="50" step="0.01" placeholder="e.g., 10.99">
+        </div>
+        <div class="input-group">
+          <label>Your Justification (2 sentences)</label>
+          <textarea class="justification-input-vb" data-student="${student}" placeholder="I priced at $____ because... (explain which customer segment you're targeting and why)"></textarea>
+          <div class="justification-counter-vb" data-student="${student}" style="font-size: 12px; color: var(--muted); margin-top: 4px;">0 characters</div>
+        </div>
+        <div class="submit-indicator">
+          <span class="checkmark" data-student="${student}" style="display: none;">✓</span>
+          <span class="status-text" data-student="${student}">Not yet submitted</span>
+        </div>
+      `;
+      container.appendChild(section);
+
+      // Add event listeners
+      const priceInput = container.querySelector(`[data-student="${student}"].vb-price-input`);
+      const justInput = container.querySelector(`[data-student="${student}"].justification-input-vb`);
+
+      priceInput.addEventListener('input', () => checkRound3Complete());
+      justInput.addEventListener('input', () => {
+        const counter = container.querySelector(`[data-student="${student}"].justification-counter-vb`);
+        counter.textContent = justInput.value.length + ' characters';
+        checkRound3Complete();
+      });
+    });
+  }
+
+  function checkRound3Complete() {
+    let allDone = true;
+    state.students.forEach(student => {
+      const priceInput = document.querySelector(`[data-student="${student}"].vb-price-input`);
+      const just = document.querySelector(`[data-student="${student}"].justification-input-vb`)?.value.trim();
+      const price = priceInput?.value;
+
+      if (!price || !just) {
+        allDone = false;
+      } else {
+        state.round3[student].price = parseFloat(price);
+        state.round3[student].justification = just;
+      }
+    });
+
+    updateRound3Progress();
+    document.getElementById('round3SubmitBtn').disabled = !allDone;
+  }
+
+  function updateRound3Progress() {
+    const progressDiv = document.getElementById('round3Progress');
+    progressDiv.innerHTML = '';
+    state.students.forEach(student => {
+      const priceInput = document.querySelector(`[data-student="${student}"].vb-price-input`);
+      const just = document.querySelector(`[data-student="${student}"].justification-input-vb`)?.value.trim();
+      const price = priceInput?.value;
+      const submitted = !!(price && just);
+
+      const item = document.createElement('div');
+      item.className = `progress-item ${submitted ? 'submitted' : ''}`;
+      item.innerHTML = `
+        ${submitted ? '<span class="checkmark">✓</span>' : '<span style="color: var(--danger);">○</span>'}
+        <span>${student}</span>
+      `;
+      progressDiv.appendChild(item);
+    });
+  }
+
+  function submitRound3() {
+    goToResults();
+  }
+
+  // ============ Results & Group Decision ============
+  function calculateResults() {
+    const cp = Object.values(state.round1).map(r => r.price).filter(p => p);
+    const mb = Object.values(state.round2).map(r => r.price).filter(p => p);
+    const vb = Object.values(state.round3).map(r => r.price).filter(p => p);
+
+    const cpMin = Math.min(...cp).toFixed(2);
+    const cpMax = Math.max(...cp).toFixed(2);
+    const cpAvg = (cp.reduce((a, b) => a + b) / cp.length).toFixed(2);
+
+    const mbMin = Math.min(...mb).toFixed(2);
+    const mbMax = Math.max(...mb).toFixed(2);
+    const mbAvg = (mb.reduce((a, b) => a + b) / mb.length).toFixed(2);
+
+    const vbMin = Math.min(...vb).toFixed(2);
+    const vbMax = Math.max(...vb).toFixed(2);
+    const vbAvg = (vb.reduce((a, b) => a + b) / vb.length).toFixed(2);
+
+    document.getElementById('costPlusRange').textContent = `$${cpMin}–${cpMax}`;
+    document.getElementById('costPlusAvg').textContent = cpAvg;
+
+    document.getElementById('marginRange').textContent = `$${mbMin}–${mbMax}`;
+    document.getElementById('marginAvg').textContent = mbAvg;
+
+    document.getElementById('valuePriceRange').textContent = `$${vbMin}–${vbMax}`;
+    document.getElementById('valueAvg').textContent = vbAvg;
+
+    document.getElementById('compCP').textContent = cpMin;
+    document.getElementById('compCPMax').textContent = cpMax;
+    document.getElementById('compMB').textContent = mbMin;
+    document.getElementById('compMBMax').textContent = mbMax;
+    document.getElementById('compVB').textContent = vbMin;
+    document.getElementById('compVBMax').textContent = vbMax;
+
+    // Attach listeners to final decision form
+    const priceInput = document.getElementById('finalPrice');
+    const justInput = document.getElementById('finalJustification');
+    const counter = document.getElementById('justificationCounter');
+
+    priceInput.addEventListener('input', checkFinalComplete);
+    justInput.addEventListener('input', () => {
+      counter.textContent = justInput.value.length + ' / 40 characters';
+      checkFinalComplete();
+    });
+  }
+
+  function checkFinalComplete() {
+    const price = document.getElementById('finalPrice').value;
+    const just = document.getElementById('finalJustification').value.trim();
+    const validLength = just.length >= 40;
+
+    if (price && validLength) {
+      state.finalPrice = parseFloat(price);
+      state.finalJustification = just;
+    }
+
+    document.getElementById('goSummaryBtn').disabled = !(price && validLength);
+  }
+
+  // ============ Summary Screen ============
+  function renderSummary() {
+    document.getElementById('summaryGroupNum').textContent = state.groupNum;
+    document.getElementById('summaryStudents').textContent = state.students.join(', ');
+
+    const tbody = document.getElementById('summaryTable');
+    tbody.innerHTML = '';
+
+    state.students.forEach(student => {
+      const tr = document.createElement('tr');
+      const cp = state.round1[student]?.price.toFixed(2) || '–';
+      const mb = state.round2[student]?.price.toFixed(2) || '–';
+      const vb = state.round3[student]?.price.toFixed(2) || '–';
+
+      tr.innerHTML = `
+        <td><strong>${student}</strong></td>
+        <td>$${cp}</td>
+        <td>$${mb}</td>
+        <td>$${vb}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('summaryFinalPrice').textContent = state.finalPrice.toFixed(2);
+    document.getElementById('summaryFinalJustification').textContent = state.finalJustification;
+  }
+</script>
+
+<!-- Firebase commented out for future integration
+<script>
+  // Uncomment and configure to enable data persistence
+  // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+  // import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+  // const firebaseConfig = {
+  //   apiKey: "YOUR_API_KEY",
+  //   authDomain: "YOUR_PROJECT.firebaseapp.com",
+  //   projectId: "YOUR_PROJECT_ID",
+  //   storageBucket: "YOUR_PROJECT.appspot.com",
+  //   messagingSenderId: "YOUR_SENDER_ID",
+  //   appId: "YOUR_APP_ID"
+  // };
+
+  // const app = initializeApp(firebaseConfig);
+  // const db = getFirestore(app);
+
+  // Function to save results
+  // async function saveResults() {
+  //   try {
+  //     await addDoc(collection(db, "pricing_exercises"), {
+  //       groupNum: state.groupNum,
+  //       students: state.students,
+  //       round1: state.round1,
+  //       round2: state.round2,
+  //       round3: state.round3,
+  //       finalPrice: state.finalPrice,
+  //       finalJustification: state.finalJustification,
+  //       timestamp: new Date()
+  //     });
+  //     console.log("Results saved successfully");
+  //   } catch (e) {
+  //     console.error("Error saving results: ", e);
+  //   }
+  // }
+</script>
+-->
+
+</body>
+</html>

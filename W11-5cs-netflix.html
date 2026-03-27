@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 5 Cs of Netflix Exercise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --case-primary: #E50914;
+            --case-secondary: #221F1F;
+            --case-accent: #F5F5F1;
+            --case-light: #FFF5F5;
+            --case-dark: #141414;
+            --text: #1E293B;
+            --muted: #64748B;
+            --card-bg: #FFFFFF;
+            --success: #059669;
+            --warning: #D97706;
+            --danger: #DC2626;
+            --border: #CBD5E1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background: var(--case-dark);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: none;
+        }
+
+        .sticky-header.show {
+            display: block;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .header-group-info {
+            font-size: 14px;
+            color: #E0E0E0;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Password Screen */
+        .password-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--case-dark) 0%, var(--case-secondary) 100%);
+            padding: 20px;
+        }
+
+        .password-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .netflix-logo {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--case-primary);
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+
+        .password-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--case-secondary);
+        }
+
+        .password-subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+        .password-input-group {
+            margin-bottom: 20px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--case-primary);
+        }
+
+        .password-input.shake {
+            animation: shake 0.5s;
+            border-color: var(--danger) !important;
+        }
+
+        .password-error {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .password-error.show {
+            display: block;
+        }
+
+        /* Buttons */
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: var(--case-primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #CC070B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: var(--case-accent);
+            color: var(--case-secondary);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #EFEFEF;
+            border-color: var(--case-primary);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background-color: #047857;
+        }
+
+        /* Join Screen */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--case-secondary);
+        }
+
+        .form-select, .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: var(--case-primary);
+        }
+
+        .students-container {
+            background: var(--case-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .student-input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: flex-end;
+        }
+
+        .student-input-group input {
+            flex: 1;
+        }
+
+        .btn-remove {
+            background-color: var(--danger);
+            color: white;
+            padding: 12px 16px;
+            min-width: 50px;
+            font-size: 14px;
+        }
+
+        .btn-remove:hover {
+            background-color: #B91C1C;
+        }
+
+        .btn-add-student {
+            background-color: var(--case-primary);
+            color: white;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        /* Instructions Screen */
+        .instructions-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--case-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .instructions-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--text);
+        }
+
+        .tier-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .tier-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .tier-card:hover {
+            box-shadow: 0 8px 24px rgba(229, 9, 20, 0.15);
+            border-color: var(--case-primary);
+        }
+
+        .tier-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--case-secondary);
+            margin-bottom: 8px;
+        }
+
+        .tier-price {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--case-primary);
+            margin-bottom: 12px;
+        }
+
+        .tier-period {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        /* Activity Screen */
+        .round-header {
+            background: linear-gradient(135deg, var(--case-dark) 0%, var(--case-secondary) 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .round-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .round-definition {
+            font-size: 14px;
+            color: #E0E0E0;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .phase-indicator {
+            background: var(--case-light);
+            border-left: 4px solid var(--case-primary);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            color: var(--case-secondary);
+        }
+
+        .phase-label {
+            color: var(--case-primary);
+            font-weight: 700;
+        }
+
+        .question-box {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .question-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--case-secondary);
+            line-height: 1.6;
+        }
+
+        /* Individual Inputs Phase */
+        .student-responses {
+            margin-bottom: 30px;
+        }
+
+        .student-response-block {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+
+        .student-response-block.submitted {
+            border-color: var(--success);
+            background: #F0FDF4;
+        }
+
+        .student-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--case-secondary);
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .student-checkmark {
+            display: none;
+            color: var(--success);
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .student-response-block.submitted .student-checkmark {
+            display: inline;
+        }
+
+        .form-input.student-input {
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+            padding: 12px 16px;
+        }
+
+        .char-count {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        .char-count.warning {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .char-count.success {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            background: var(--case-light);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 8px;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--border);
+            transition: all 0.3s;
+        }
+
+        .progress-dot.submitted {
+            background-color: var(--success);
+            transform: scale(1.2);
+        }
+
+        /* Consensus Phase */
+        .consensus-section {
+            background: linear-gradient(135deg, var(--case-light) 0%, #FEF2F2 100%);
+            border: 2px solid var(--case-primary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .consensus-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--case-primary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .consensus-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--case-secondary);
+            margin-bottom: 16px;
+        }
+
+        .form-input.consensus-input {
+            width: 100%;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* All Answers Display */
+        .all-answers {
+            margin-bottom: 30px;
+        }
+
+        .answers-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .answer-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .answer-student-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .answer-text {
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Summary Screen */
+        .summary-header {
+            background: var(--case-dark);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .summary-group-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .summary-group-members {
+            font-size: 14px;
+            color: #E0E0E0;
+        }
+
+        .round-summary {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .round-summary-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--case-primary);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--case-light);
+        }
+
+        .summary-section {
+            margin-bottom: 20px;
+        }
+
+        .summary-section-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .summary-answers {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .summary-answer {
+            background: var(--case-light);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid var(--case-primary);
+        }
+
+        .summary-answer-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .summary-answer-text {
+            font-size: 14px;
+            color: var(--text);
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+
+        .summary-consensus {
+            background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 3px solid var(--success);
+        }
+
+        .summary-consensus-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--success);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .summary-consensus-text {
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Takeaway Section */
+        .takeaway-section {
+            background: var(--card-bg);
+            border: 2px solid var(--case-primary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .takeaway-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--case-primary);
+            margin-bottom: 16px;
+        }
+
+        .takeaway-prompt {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--case-secondary);
+            margin-bottom: 12px;
+        }
+
+        .form-input.takeaway-input {
+            width: 100%;
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .takeaway-note {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .nav-button {
+            flex: 1;
+        }
+
+        .btn-next {
+            flex: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .container {
+                padding: 12px;
+            }
+
+            .password-card {
+                padding: 30px 20px;
+            }
+
+            .tier-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .student-input-group {
+                flex-direction: column;
+            }
+
+            .btn-remove {
+                width: 100%;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+
+            .form-select, .form-input, .btn-primary {
+                font-size: 16px;
+            }
+
+            .round-title {
+                font-size: 20px;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Header -->
+    <div class="sticky-header" id="stickyHeader">
+        <div class="header-content">
+            <div class="header-title">The 5 Cs of Netflix Exercise</div>
+            <div class="header-group-info">
+                Group <span id="headerGroupNum"></span> • <span id="headerStudents"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Password Screen -->
+        <div class="screen active" id="passwordScreen">
+            <div class="password-screen">
+                <div class="password-card">
+                    <div class="netflix-logo">NETFLIX</div>
+                    <h1 class="password-title">5 Cs Exercise</h1>
+                    <p class="password-subtitle">Enter the password to begin</p>
+                    <div class="password-input-group">
+                        <input
+                            type="password"
+                            class="password-input"
+                            id="passwordInput"
+                            placeholder="Password"
+                            autocomplete="off"
+                        >
+                        <div class="password-error" id="passwordError">Try again.</div>
+                    </div>
+                    <button class="btn-primary" onclick="checkPassword()">Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Join Screen -->
+        <div class="screen" id="joinScreen">
+            <h1 class="instructions-title">Join Your Group</h1>
+
+            <div class="form-group">
+                <label class="form-label">Group Number (1-10)</label>
+                <select class="form-select" id="groupSelect" onchange="updateJoinButton()">
+                    <option value="">-- Select a group --</option>
+                    <option value="1">Group 1</option>
+                    <option value="2">Group 2</option>
+                    <option value="3">Group 3</option>
+                    <option value="4">Group 4</option>
+                    <option value="5">Group 5</option>
+                    <option value="6">Group 6</option>
+                    <option value="7">Group 7</option>
+                    <option value="8">Group 8</option>
+                    <option value="9">Group 9</option>
+                    <option value="10">Group 10</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Student Names</label>
+                <div class="students-container" id="studentsContainer">
+                    <div class="student-input-group">
+                        <input
+                            type="text"
+                            class="form-input student-name-input"
+                            placeholder="Student 1 name"
+                            onchange="updateJoinButton()"
+                        >
+                    </div>
+                    <div class="student-input-group">
+                        <input
+                            type="text"
+                            class="form-input student-name-input"
+                            placeholder="Student 2 name"
+                            onchange="updateJoinButton()"
+                        >
+                    </div>
+                </div>
+                <button class="btn-add-student" onclick="addStudentField()">+ Add Student</button>
+            </div>
+
+            <button class="btn-primary" id="startBtn" disabled onclick="startExercise()">
+                Start Exercise
+            </button>
+        </div>
+
+        <!-- Instructions Screen -->
+        <div class="screen" id="instructionsScreen">
+            <h1 class="instructions-title">The 5 Cs of Netflix Pricing</h1>
+
+            <p class="instructions-text">
+                Netflix offers three subscription tiers with different pricing models. Your group will analyze Netflix's pricing through the 5 Cs framework. Each student will answer questions individually first, then your group will build a consensus answer.
+            </p>
+
+            <div class="tier-cards">
+                <div class="tier-card">
+                    <div class="tier-name">Standard with Ads</div>
+                    <div class="tier-price">$7.99</div>
+                    <div class="tier-period">/month</div>
+                </div>
+                <div class="tier-card">
+                    <div class="tier-name">Standard</div>
+                    <div class="tier-price">$17.99</div>
+                    <div class="tier-period">/month</div>
+                </div>
+                <div class="tier-card">
+                    <div class="tier-name">Premium</div>
+                    <div class="tier-price">$24.99</div>
+                    <div class="tier-period">/month</div>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="goToRound(0)">Begin Activity</button>
+        </div>
+
+        <!-- Activity Screens (rounds 0-4) -->
+        <div class="screen" id="roundScreen">
+            <!-- Dynamically populated by JavaScript -->
+        </div>
+
+        <!-- Summary Screen -->
+        <div class="screen" id="summaryScreen">
+            <div class="summary-header">
+                <div class="summary-group-title">Group <span id="summaryGroupNum"></span></div>
+                <div class="summary-group-members" id="summaryMembers"></div>
+            </div>
+
+            <div id="summaryContent">
+                <!-- Dynamically populated by JavaScript -->
+            </div>
+
+            <div class="takeaway-section">
+                <div class="takeaway-title">Key Takeaway</div>
+                <div class="takeaway-prompt">
+                    The most important C for Netflix's pricing is _____ because _____
+                </div>
+                <textarea
+                    class="form-input takeaway-input"
+                    id="takeawayInput"
+                    placeholder="Type your group's key takeaway here (minimum 30 characters)..."
+                ></textarea>
+                <div class="takeaway-note">
+                    Screenshot this page for your notes — data is not saved between sessions.
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="window.location.reload()">End Exercise</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================================
+        // DATA STRUCTURE & STATE
+        // ============================================================================
+
+        const exerciseData = {
+            groupNumber: null,
+            students: [],
+            currentRound: null,
+            rounds: [
+                {
+                    title: "C #1: Company Objectives",
+                    definition: "What is the company trying to achieve? Profit maximization? Market share? Subscriber growth?",
+                    question: "Netflix created a $7.99 ad tier after years of being ad-free. What company objective does this reveal — are they prioritizing subscriber growth, revenue per user, or something else?",
+                    individualAnswers: {},
+                    consensusAnswer: ""
+                },
+                {
+                    title: "C #2: Customers",
+                    definition: "What are customers willing to pay? How do they perceive value?",
+                    question: "There's a $10/month gap between Standard with Ads and Standard. What does this gap tell you about how Netflix views its two types of customers?",
+                    individualAnswers: {},
+                    consensusAnswer: ""
+                },
+                {
+                    title: "C #3: Costs",
+                    definition: "What does it cost to produce and deliver the product? Fixed costs vs variable costs.",
+                    question: "Netflix spends ~$17 billion/year on content. Every subscriber watches the same library. How do Netflix's costs change (or not change) as they add subscribers?",
+                    individualAnswers: {},
+                    consensusAnswer: ""
+                },
+                {
+                    title: "C #4: Competition",
+                    definition: "What are competitors charging? How does competitive pressure shape your pricing?",
+                    question: "Disney+ charges $9.99 (with ads) and $16.99 (no ads). Hulu starts at $9.99. Max starts at $10.99. How does Netflix justify charging $17.99 for Standard when competitors are cheaper?",
+                    individualAnswers: {},
+                    consensusAnswer: ""
+                },
+                {
+                    title: "C #5: Channel Members",
+                    definition: "Who else is between you and the customer? Do they affect your pricing?",
+                    question: "Netflix sells direct to consumers — no middlemen. But they now have an ad tier, which means advertisers are a new 'channel partner.' How does adding advertisers change Netflix's pricing calculus?",
+                    individualAnswers: {},
+                    consensusAnswer: ""
+                }
+            ]
+        };
+
+        // ============================================================================
+        // PASSWORD GATE
+        // ============================================================================
+
+        function checkPassword() {
+            const input = document.getElementById("passwordInput");
+            const password = input.value.trim();
+            const errorMsg = document.getElementById("passwordError");
+
+            if (password === "FIVE5C") {
+                showScreen("joinScreen");
+            } else {
+                input.classList.add("shake");
+                errorMsg.classList.add("show");
+                setTimeout(() => {
+                    input.classList.remove("shake");
+                    input.value = "";
+                }, 500);
+                setTimeout(() => {
+                    errorMsg.classList.remove("show");
+                }, 3000);
+            }
+        }
+
+        document.getElementById("passwordInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") checkPassword();
+        });
+
+        // ============================================================================
+        // JOIN SCREEN
+        // ============================================================================
+
+        function addStudentField() {
+            const container = document.getElementById("studentsContainer");
+            const count = container.querySelectorAll(".student-input-group").length;
+
+            if (count < 5) {
+                const newGroup = document.createElement("div");
+                newGroup.className = "student-input-group";
+                newGroup.innerHTML = `
+                    <input
+                        type="text"
+                        class="form-input student-name-input"
+                        placeholder="Student ${count + 1} name"
+                        onchange="updateJoinButton()"
+                    >
+                    <button class="btn-remove" onclick="removeStudentField(this)">Remove</button>
+                `;
+                container.appendChild(newGroup);
+                updateJoinButton();
+            }
+        }
+
+        function removeStudentField(btn) {
+            btn.parentElement.remove();
+            updateJoinButton();
+        }
+
+        function updateJoinButton() {
+            const groupSelect = document.getElementById("groupSelect").value;
+            const inputs = document.querySelectorAll(".student-name-input");
+            let filledCount = 0;
+            inputs.forEach(input => {
+                if (input.value.trim()) filledCount++;
+            });
+
+            const startBtn = document.getElementById("startBtn");
+            startBtn.disabled = !groupSelect || filledCount < 2;
+        }
+
+        function startExercise() {
+            exerciseData.groupNumber = document.getElementById("groupSelect").value;
+            exerciseData.students = [];
+
+            document.querySelectorAll(".student-name-input").forEach(input => {
+                if (input.value.trim()) {
+                    exerciseData.students.push(input.value.trim());
+                }
+            });
+
+            // Update sticky header
+            document.getElementById("stickyHeader").classList.add("show");
+            document.getElementById("headerGroupNum").textContent = exerciseData.groupNumber;
+            document.getElementById("headerStudents").textContent =
+                exerciseData.students.length + " students";
+
+            // Initialize round data
+            exerciseData.rounds.forEach(round => {
+                round.individualAnswers = {};
+                exerciseData.students.forEach(student => {
+                    round.individualAnswers[student] = "";
+                });
+                round.consensusAnswer = "";
+            });
+
+            showScreen("instructionsScreen");
+        }
+
+        // ============================================================================
+        // ROUND ACTIVITY FLOW
+        // ============================================================================
+
+        function goToRound(roundIndex) {
+            exerciseData.currentRound = roundIndex;
+            renderRoundScreen();
+            showScreen("roundScreen");
+        }
+
+        function renderRoundScreen() {
+            const roundIndex = exerciseData.currentRound;
+            const round = exerciseData.rounds[roundIndex];
+            const roundScreen = document.getElementById("roundScreen");
+
+            let html = `
+                <div class="round-header">
+                    <div class="round-title">${round.title}</div>
+                    <div class="round-definition">${round.definition}</div>
+                </div>
+
+                <div class="phase-indicator">
+                    <span class="phase-label">PHASE A:</span> Individual Input
+                </div>
+
+                <div class="question-box">
+                    <div class="question-label">Your Challenge</div>
+                    <div class="question-text">${round.question}</div>
+                </div>
+
+                <div class="student-responses" id="studentResponses">
+            `;
+
+            // Individual input blocks
+            exerciseData.students.forEach(student => {
+                const answer = round.individualAnswers[student] || "";
+                const charCount = answer.length;
+                const isSubmitted = charCount >= 20;
+                const statusClass = isSubmitted ? "submitted" : "";
+
+                html += `
+                    <div class="student-response-block ${statusClass}">
+                        <div class="student-label">
+                            ${student}
+                            <span class="student-checkmark">✓</span>
+                        </div>
+                        <textarea
+                            class="form-input student-input"
+                            placeholder="Type your answer here (minimum 20 characters)..."
+                            onchange="updateStudentAnswer('${student}', this.value)"
+                            oninput="updateStudentAnswer('${student}', this.value)"
+                        >${answer}</textarea>
+                        <div class="char-count ${charCount >= 20 ? 'success' : charCount > 0 ? 'warning' : ''}">
+                            ${charCount}/20 characters
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+
+                <div class="progress-indicator">
+                    <span class="progress-label">Progress:</span>
+                    <div class="progress-dots" id="progressDots">
+            `;
+
+            // Progress dots
+            exerciseData.students.forEach((student, idx) => {
+                const answer = round.individualAnswers[student] || "";
+                const submitted = answer.length >= 20 ? "submitted" : "";
+                html += `<div class="progress-dot ${submitted}" title="${student}"></div>`;
+            });
+
+            html += `
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="phaseABtn" disabled onclick="goToPhaseB()">
+                    Next: Group Consensus
+                </button>
+            `;
+
+            roundScreen.innerHTML = html;
+            updatePhaseAButton();
+        }
+
+        function updateStudentAnswer(studentName, value) {
+            const round = exerciseData.rounds[exerciseData.currentRound];
+            round.individualAnswers[studentName] = value;
+            updatePhaseAButton();
+
+            // Re-render to update progress dots
+            renderRoundScreen();
+        }
+
+        function updatePhaseAButton() {
+            const round = exerciseData.rounds[exerciseData.currentRound];
+            const allSubmitted = exerciseData.students.every(
+                student => round.individualAnswers[student].length >= 20
+            );
+
+            const btn = document.getElementById("phaseABtn");
+            if (btn) btn.disabled = !allSubmitted;
+        }
+
+        function goToPhaseB() {
+            const roundIndex = exerciseData.currentRound;
+            const round = exerciseData.rounds[roundIndex];
+            const roundScreen = document.getElementById("roundScreen");
+
+            let html = `
+                <div class="round-header">
+                    <div class="round-title">${round.title}</div>
+                    <div class="round-definition">${round.definition}</div>
+                </div>
+
+                <div class="phase-indicator">
+                    <span class="phase-label">PHASE B:</span> Group Consensus
+                </div>
+
+                <div class="all-answers">
+                    <div class="answers-title">All Individual Answers</div>
+            `;
+
+            // Display all individual answers
+            exerciseData.students.forEach(student => {
+                const answer = round.individualAnswers[student];
+                html += `
+                    <div class="answer-item">
+                        <div class="answer-student-name">${student}</div>
+                        <div class="answer-text">${answer}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+
+                <div class="consensus-section">
+                    <div class="consensus-label">Group Consensus Answer</div>
+                    <div class="consensus-title">Discuss and agree on one answer</div>
+                    <textarea
+                        class="form-input consensus-input"
+                        id="consensusInput"
+                        placeholder="Type your group's consensus answer (minimum 30 characters)..."
+                        onchange="updateConsensus(this.value)"
+                        oninput="updateConsensusLength(this)"
+                    >${round.consensusAnswer}</textarea>
+                    <div class="char-count" id="consensusCharCount">
+                        ${round.consensusAnswer.length}/30 characters
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <button class="btn-secondary nav-button" onclick="goToRound(${roundIndex})">
+                        Back
+                    </button>
+                    <button class="btn-primary nav-button" id="nextRoundBtn" disabled
+                        onclick="goToNextRound()">
+                        Next C
+                    </button>
+                </div>
+            `;
+
+            roundScreen.innerHTML = html;
+            updateNextRoundButton();
+        }
+
+        function updateConsensusLength(textarea) {
+            const charCount = textarea.value.length;
+            const counter = document.getElementById("consensusCharCount");
+            counter.textContent = `${charCount}/30 characters`;
+
+            if (charCount >= 30) {
+                counter.classList.add("success");
+                counter.classList.remove("warning");
+            } else if (charCount > 0) {
+                counter.classList.add("warning");
+                counter.classList.remove("success");
+            } else {
+                counter.classList.remove("warning", "success");
+            }
+
+            updateNextRoundButton();
+        }
+
+        function updateConsensus(value) {
+            exerciseData.rounds[exerciseData.currentRound].consensusAnswer = value;
+        }
+
+        function updateNextRoundButton() {
+            const round = exerciseData.rounds[exerciseData.currentRound];
+            const consensusInput = document.getElementById("consensusInput");
+            const btn = document.getElementById("nextRoundBtn");
+
+            if (btn) {
+                btn.disabled = !consensusInput || consensusInput.value.length < 30;
+            }
+        }
+
+        function goToNextRound() {
+            if (exerciseData.currentRound < 4) {
+                goToRound(exerciseData.currentRound + 1);
+            } else {
+                showSummaryScreen();
+            }
+        }
+
+        // ============================================================================
+        // SUMMARY SCREEN
+        // ============================================================================
+
+        function showSummaryScreen() {
+            const summaryScreen = document.getElementById("summaryScreen");
+
+            // Update header
+            document.getElementById("summaryGroupNum").textContent = exerciseData.groupNumber;
+            document.getElementById("summaryMembers").textContent =
+                exerciseData.students.join(", ");
+
+            // Build summary content
+            let html = "";
+
+            exerciseData.rounds.forEach((round, idx) => {
+                html += `
+                    <div class="round-summary">
+                        <div class="round-summary-title">${round.title}</div>
+
+                        <div class="summary-section">
+                            <div class="summary-section-label">Individual Answers</div>
+                            <div class="summary-answers">
+                `;
+
+                exerciseData.students.forEach(student => {
+                    const answer = round.individualAnswers[student];
+                    html += `
+                        <div class="summary-answer">
+                            <div class="summary-answer-name">${student}</div>
+                            <div class="summary-answer-text">${answer}</div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                            </div>
+                        </div>
+
+                        <div class="summary-section">
+                            <div class="summary-consensus">
+                                <div class="summary-consensus-label">✓ Group Consensus</div>
+                                <div class="summary-consensus-text">${round.consensusAnswer}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById("summaryContent").innerHTML = html;
+            showScreen("summaryScreen");
+        }
+
+        // ============================================================================
+        // SCREEN NAVIGATION
+        // ============================================================================
+
+        function showScreen(screenId) {
+            document.querySelectorAll(".screen").forEach(screen => {
+                screen.classList.remove("active");
+            });
+            document.getElementById(screenId).classList.add("active");
+        }
+    </script>
+
+    <!--
+    ============================================================================
+    FIREBASE INTEGRATION (FUTURE USE)
+    ============================================================================
+
+    To save exercise data to Firebase in the future, uncomment and configure below:
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-realtime-database.js"></script>
+
+    <script>
+        // const firebaseConfig = {
+        //   apiKey: "YOUR_API_KEY",
+        //   authDomain: "YOUR_AUTH_DOMAIN",
+        //   projectId: "YOUR_PROJECT_ID",
+        //   storageBucket: "YOUR_STORAGE_BUCKET",
+        //   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        //   appId: "YOUR_APP_ID",
+        //   databaseURL: "YOUR_DATABASE_URL"
+        // };
+
+        // const app = firebase.initializeApp(firebaseConfig);
+        // const database = firebase.getDatabase(app);
+
+        // function saveExerciseData() {
+        //     const ref = firebase.database().ref(`exercises/${exerciseData.groupNumber}`);
+        //     ref.set(exerciseData);
+        // }
+    </script>
+    -->
+</body>
+</html>
