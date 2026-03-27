@@ -650,6 +650,56 @@
     .table-grid { grid-template-columns: repeat(2, 1fr); }
     .header h1 { font-size: 16px; }
   }
+
+  /* Password Gate */
+  .password-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .password-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+  .password-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .password-card .subtitle { color: var(--muted); margin-bottom: 24px; font-size: 14px; }
+  .password-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .password-input:focus { border-color: var(--valv-blue); }
+  .password-input.shake {
+    animation: shake 0.4s ease;
+    border-color: var(--danger);
+  }
+  .password-error {
+    color: var(--danger);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: none;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
 </style>
 <!-- Firebase (dormant — set FIREBASE_ENABLED = true to activate) -->
 <script type="module">
@@ -690,7 +740,18 @@
 </head>
 <body>
 
-<div class="header">
+<!-- ==================== PASSWORD GATE ==================== -->
+<div class="password-screen" id="passwordScreen">
+  <div class="password-card">
+    <h2>Run the Bay</h2>
+    <p class="subtitle">Enter the class code to begin</p>
+    <input type="text" class="password-input" id="passwordInput" placeholder="CODE" maxlength="10" autocomplete="off">
+    <div class="password-error" id="passwordError">Incorrect code. Try again.</div>
+    <button class="btn btn-primary" onclick="checkPassword()" style="width:100%;">Enter</button>
+  </div>
+</div>
+
+<div class="header" id="mainHeader" style="display:none;">
   <div class="header-left">
     <div>
       <h1>RUN THE BAY</h1>
@@ -701,7 +762,7 @@
 </div>
 
 <!-- ==================== SCREEN 1: JOIN ==================== -->
-<div class="screen active" id="joinScreen">
+<div class="screen" id="joinScreen" style="display:none;">
   <div class="join-card">
     <h2>Run the Bay</h2>
     <p class="subtitle">Valvoline Instant Oil Change · Service Design Exercise</p>
@@ -833,6 +894,28 @@
 </div>
 
 <script>
+// Password gate
+const EXERCISE_PASSWORD = 'SERVE4';
+
+function checkPassword() {
+  const input = document.getElementById('passwordInput');
+  const error = document.getElementById('passwordError');
+  if (input.value.trim().toUpperCase() === EXERCISE_PASSWORD) {
+    document.getElementById('passwordScreen').style.display = 'none';
+    document.getElementById('mainHeader').style.display = '';
+    document.getElementById('joinScreen').style.display = '';
+    document.getElementById('joinScreen').classList.add('active');
+  } else {
+    input.classList.add('shake');
+    error.style.display = 'block';
+    setTimeout(() => input.classList.remove('shake'), 400);
+  }
+}
+
+document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') checkPassword();
+});
+
 // ===================== GAME DATA =====================
 const ROLES = [
   {
