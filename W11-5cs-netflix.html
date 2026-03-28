@@ -104,44 +104,16 @@
         }
 
         /* Password Screen */
-        .password-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--case-dark) 0%, var(--case-secondary) 100%);
-            padding: 20px;
-        }
-
-        .password-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        .password-screen-content {
             max-width: 400px;
-            width: 100%;
+            margin: 100px auto;
             text-align: center;
         }
 
-        .netflix-logo {
-            font-size: 48px;
+        .password-title {
+            font-size: 28px;
             font-weight: 800;
             color: var(--case-primary);
-            margin-bottom: 10px;
-            letter-spacing: -2px;
-        }
-
-        .password-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--case-secondary);
-        }
-
-        .password-subtitle {
-            font-size: 14px;
-            color: var(--muted);
             margin-bottom: 30px;
         }
 
@@ -166,30 +138,30 @@
 
         .password-input.shake {
             animation: shake 0.5s;
-            border-color: var(--danger) !important;
         }
 
         .password-error {
             color: var(--danger);
             font-size: 14px;
             margin-top: 10px;
-            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .password-error.show {
-            display: block;
+            opacity: 1;
         }
 
         /* Buttons */
-        button {
+        .btn {
             padding: 12px 24px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            display: inline-block;
         }
 
         .btn-primary {
@@ -257,41 +229,20 @@
             border-color: var(--case-primary);
         }
 
-        .students-container {
-            background: var(--case-light);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
+        .form-input.error {
+            border-color: var(--danger);
         }
 
-        .student-input-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-            align-items: flex-end;
+        .form-error {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .student-input-group input {
-            flex: 1;
-        }
-
-        .btn-remove {
-            background-color: var(--danger);
-            color: white;
-            padding: 12px 16px;
-            min-width: 50px;
-            font-size: 14px;
-        }
-
-        .btn-remove:hover {
-            background-color: #B91C1C;
-        }
-
-        .btn-add-student {
-            background-color: var(--case-primary);
-            color: white;
-            width: 100%;
-            margin-top: 12px;
+        .form-error.show {
+            opacity: 1;
         }
 
         /* Instructions Screen */
@@ -349,13 +300,20 @@
         .tier-period {
             font-size: 14px;
             color: var(--muted);
+            margin-bottom: 12px;
         }
 
-        /* Activity Screen */
+        .tier-features {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* Round Screen */
         .round-header {
-            background: linear-gradient(135deg, var(--case-dark) 0%, var(--case-secondary) 100%);
+            background: linear-gradient(135deg, var(--case-dark) 0%, #2A2727 100%);
             color: white;
-            padding: 24px;
+            padding: 30px 24px;
             border-radius: 12px;
             margin-bottom: 30px;
         }
@@ -367,20 +325,19 @@
         }
 
         .round-definition {
-            font-size: 14px;
-            color: #E0E0E0;
+            font-size: 15px;
             line-height: 1.6;
-            max-width: 600px;
+            opacity: 0.9;
         }
 
         .phase-indicator {
             background: var(--case-light);
+            padding: 12px 16px;
             border-left: 4px solid var(--case-primary);
-            padding: 16px;
-            border-radius: 8px;
+            border-radius: 4px;
             margin-bottom: 24px;
             font-weight: 600;
-            color: var(--case-secondary);
+            font-size: 14px;
         }
 
         .phase-label {
@@ -391,28 +348,60 @@
         .question-box {
             background: var(--card-bg);
             border: 2px solid var(--border);
-            padding: 20px;
             border-radius: 12px;
+            padding: 24px;
             margin-bottom: 30px;
         }
 
         .question-label {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--muted);
-            margin-bottom: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
         .question-text {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        /* Discussion Gate */
+        .discussion-gate {
+            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+            border: 3px solid var(--warning);
+            border-radius: 16px;
+            padding: 40px 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .discussion-gate-title {
+            font-size: 32px;
+            font-weight: 800;
             color: var(--case-secondary);
+            margin-bottom: 16px;
+        }
+
+        .discussion-gate-subtitle {
+            font-size: 16px;
+            color: var(--case-secondary);
+            margin-bottom: 24px;
             line-height: 1.6;
         }
 
-        /* Individual Inputs Phase */
+        .discussion-question {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--case-secondary);
+            margin-bottom: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+
+        /* Individual/Group Answer Sections */
         .student-responses {
             margin-bottom: 30px;
         }
@@ -422,7 +411,7 @@
             border: 2px solid var(--border);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             transition: all 0.3s;
         }
 
@@ -432,42 +421,30 @@
         }
 
         .student-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
             color: var(--case-secondary);
             margin-bottom: 12px;
-            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .student-checkmark {
-            display: none;
             color: var(--success);
             font-size: 18px;
-            font-weight: 800;
         }
 
-        .student-response-block.submitted .student-checkmark {
-            display: inline;
-        }
-
-        .form-input.student-input {
-            width: 100%;
-            min-height: 100px;
+        .student-input {
             resize: vertical;
-            padding: 12px 16px;
+            min-height: 100px;
+            margin-bottom: 8px;
         }
 
         .char-count {
             font-size: 12px;
             color: var(--muted);
-            margin-top: 6px;
-        }
-
-        .char-count.warning {
-            color: var(--warning);
-            font-weight: 600;
+            text-align: right;
         }
 
         .char-count.success {
@@ -475,25 +452,56 @@
             font-weight: 600;
         }
 
+        .char-count.warning {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        /* Consensus Section */
+        .consensus-section {
+            background: var(--card-bg);
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .consensus-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--success);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .consensus-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--case-secondary);
+            margin-bottom: 16px;
+        }
+
+        .consensus-input {
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 8px;
+        }
+
         /* Progress Indicator */
         .progress-indicator {
-            background: var(--case-light);
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 24px;
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
             align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding: 16px;
+            background: var(--case-light);
+            border-radius: 8px;
         }
 
         .progress-label {
-            font-size: 12px;
             font-weight: 600;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-right: 8px;
+            font-size: 14px;
+            color: var(--case-secondary);
         }
 
         .progress-dots {
@@ -502,105 +510,112 @@
         }
 
         .progress-dot {
-            width: 8px;
-            height: 8px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background-color: var(--border);
+            background: var(--border);
             transition: all 0.3s;
         }
 
         .progress-dot.submitted {
-            background-color: var(--success);
-            transform: scale(1.2);
+            background: var(--success);
+            box-shadow: 0 0 8px rgba(5, 150, 105, 0.3);
         }
 
-        /* Consensus Phase */
-        .consensus-section {
-            background: linear-gradient(135deg, var(--case-light) 0%, #FEF2F2 100%);
-            border: 2px solid var(--case-primary);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
+        /* Navigation */
+        .navigation {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
         }
 
-        .consensus-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--case-primary);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .nav-button {
+            flex: 1;
         }
 
-        .consensus-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--case-secondary);
-            margin-bottom: 16px;
-        }
-
-        .form-input.consensus-input {
-            width: 100%;
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        /* All Answers Display */
-        .all-answers {
-            margin-bottom: 30px;
-        }
-
-        .answers-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-        }
-
-        .answer-item {
+        /* Ranking Screen */
+        .ranking-container {
             background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
         }
 
-        .answer-student-name {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .answer-text {
-            font-size: 14px;
-            color: var(--text);
+        .ranking-instructions {
+            font-size: 16px;
             line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 30px;
+        }
+
+        .ranking-item {
+            display: grid;
+            grid-template-columns: 1fr 120px;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--case-light);
+            border-radius: 8px;
+            border: 2px solid var(--border);
+        }
+
+        .ranking-cname {
+            font-weight: 600;
+            color: var(--case-secondary);
+            font-size: 15px;
+        }
+
+        .ranking-select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .ranking-select:focus {
+            outline: none;
+            border-color: var(--case-primary);
+        }
+
+        .ranking-error {
+            color: var(--danger);
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: #FEE2E2;
+            border: 1px solid #FCA5A5;
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .ranking-error.show {
+            opacity: 1;
         }
 
         /* Summary Screen */
         .summary-header {
-            background: var(--case-dark);
+            background: linear-gradient(135deg, var(--case-dark) 0%, #2A2727 100%);
             color: white;
             padding: 24px;
             border-radius: 12px;
             margin-bottom: 30px;
-            text-align: center;
         }
 
-        .summary-group-title {
-            font-size: 24px;
+        .summary-header-title {
+            font-size: 22px;
             font-weight: 800;
             margin-bottom: 12px;
         }
 
-        .summary-group-members {
+        .summary-header-info {
             font-size: 14px;
-            color: #E0E0E0;
+            opacity: 0.9;
         }
 
         .round-summary {
@@ -615,13 +630,17 @@
             font-size: 18px;
             font-weight: 700;
             color: var(--case-primary);
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 2px solid var(--case-light);
+            border-bottom: 2px solid var(--border);
         }
 
         .summary-section {
             margin-bottom: 20px;
+        }
+
+        .summary-section:last-child {
+            margin-bottom: 0;
         }
 
         .summary-section-label {
@@ -629,41 +648,41 @@
             font-weight: 700;
             color: var(--muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .summary-answers {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 16px;
+            background: var(--case-light);
+            border-radius: 8px;
+            padding: 16px;
         }
 
         .summary-answer {
-            background: var(--case-light);
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 3px solid var(--case-primary);
+            margin-bottom: 16px;
+        }
+
+        .summary-answer:last-child {
+            margin-bottom: 0;
         }
 
         .summary-answer-name {
             font-size: 12px;
-            font-weight: 600;
-            color: var(--muted);
+            font-weight: 700;
+            color: var(--case-secondary);
+            margin-bottom: 4px;
         }
 
         .summary-answer-text {
             font-size: 14px;
             color: var(--text);
-            margin-top: 4px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .summary-consensus {
-            background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
-            padding: 16px;
+            background: #F0FDF4;
+            border: 2px solid var(--success);
             border-radius: 8px;
-            border-left: 3px solid var(--success);
+            padding: 16px;
         }
 
         .summary-consensus-label {
@@ -671,7 +690,6 @@
             font-weight: 700;
             color: var(--success);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             margin-bottom: 8px;
         }
 
@@ -681,76 +699,158 @@
             line-height: 1.6;
         }
 
-        /* Takeaway Section */
-        .takeaway-section {
+        .ranking-summary {
             background: var(--card-bg);
-            border: 2px solid var(--case-primary);
+            border: 2px solid var(--border);
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 24px;
+        }
+
+        .ranking-summary-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--case-primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ranking-result {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: var(--case-light);
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .ranking-result:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Takeaway Section */
+        .takeaway-section {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
         }
 
         .takeaway-title {
             font-size: 18px;
             font-weight: 700;
             color: var(--case-primary);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .takeaway-prompt {
             font-size: 14px;
-            font-weight: 600;
-            color: var(--case-secondary);
-            margin-bottom: 12px;
+            color: var(--text);
+            margin-bottom: 16px;
+            font-weight: 500;
         }
 
-        .form-input.takeaway-input {
-            width: 100%;
-            min-height: 80px;
+        .takeaway-input {
             resize: vertical;
+            min-height: 80px;
+            margin-bottom: 12px;
         }
 
         .takeaway-note {
             font-size: 12px;
             color: var(--muted);
-            margin-top: 12px;
-            font-style: italic;
         }
 
-        /* Navigation */
-        .navigation {
-            display: flex;
-            gap: 12px;
-            margin-top: 30px;
+        .participation-message {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            background: var(--success);
+            padding: 12px 16px;
+            border-radius: 6px;
+            display: inline-block;
         }
 
-        .nav-button {
-            flex: 1;
+        /* All Answers Review */
+        .all-answers {
+            background: var(--case-light);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
         }
 
-        .btn-next {
-            flex: 1;
+        .answers-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--case-secondary);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .answer-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--case-primary);
+        }
+
+        .answer-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .answer-student-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--case-primary);
+            margin-bottom: 6px;
+        }
+
+        .answer-text {
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.6;
         }
 
         /* Responsive */
-        @media (max-width: 700px) {
+        @media (max-width: 768px) {
             .container {
-                padding: 12px;
+                padding: 16px;
             }
 
-            .password-card {
-                padding: 30px 20px;
+            .instructions-title {
+                font-size: 22px;
             }
 
             .tier-cards {
                 grid-template-columns: 1fr;
             }
 
-            .student-input-group {
-                flex-direction: column;
+            .round-header {
+                padding: 20px 16px;
             }
 
-            .btn-remove {
+            .round-title {
+                font-size: 18px;
+            }
+
+            .discussion-gate {
+                padding: 30px 20px;
+            }
+
+            .discussion-gate-title {
+                font-size: 24px;
+            }
+
+            .ranking-item {
+                grid-template-columns: 1fr;
+            }
+
+            .ranking-select {
                 width: 100%;
             }
 
@@ -758,27 +858,18 @@
                 flex-direction: column;
             }
 
-            .form-select, .form-input, .btn-primary {
-                font-size: 16px;
-            }
-
-            .round-title {
-                font-size: 20px;
-            }
-
-            .question-text {
-                font-size: 16px;
+            .nav-button {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Sticky Header -->
     <div class="sticky-header" id="stickyHeader">
         <div class="header-content">
-            <div class="header-title">The 5 Cs of Netflix Exercise</div>
+            <div class="header-title">The 5 Cs of Netflix</div>
             <div class="header-group-info">
-                Group <span id="headerGroupNum"></span> • <span id="headerStudents"></span>
+                Group <span id="headerGroupNum">—</span> | <span id="headerStudent">—</span>
             </div>
         </div>
     </div>
@@ -786,23 +877,25 @@
     <div class="container">
         <!-- Password Screen -->
         <div class="screen active" id="passwordScreen">
-            <div class="password-screen">
-                <div class="password-card">
-                    <div class="netflix-logo">NETFLIX</div>
-                    <h1 class="password-title">5 Cs Exercise</h1>
-                    <p class="password-subtitle">Enter the password to begin</p>
-                    <div class="password-input-group">
-                        <input
-                            type="password"
-                            class="password-input"
-                            id="passwordInput"
-                            placeholder="Password"
-                            autocomplete="off"
-                        >
-                        <div class="password-error" id="passwordError">Try again.</div>
+            <div class="password-screen-content">
+                <div class="password-title">🔒 Protected Exercise</div>
+                <p class="instructions-text">Enter the password given in class to begin.</p>
+
+                <div class="password-input-group">
+                    <input
+                        type="password"
+                        class="password-input"
+                        id="passwordInput"
+                        placeholder="Enter password"
+                    >
+                    <div class="password-error" id="passwordError">
+                        Incorrect password. Try again.
                     </div>
-                    <button class="btn-primary" onclick="checkPassword()">Submit</button>
                 </div>
+
+                <button class="btn btn-primary" onclick="checkPassword()">
+                    Unlock Exercise
+                </button>
             </div>
         </div>
 
@@ -828,72 +921,57 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">Student Names</label>
-                <div class="students-container" id="studentsContainer">
-                    <div class="student-input-group">
-                        <input
-                            type="text"
-                            class="form-input student-name-input"
-                            placeholder="Student 1 name"
-                            onchange="updateJoinButton()"
-                        >
-                    </div>
-                    <div class="student-input-group">
-                        <input
-                            type="text"
-                            class="form-input student-name-input"
-                            placeholder="Student 2 name"
-                            onchange="updateJoinButton()"
-                        >
-                    </div>
-                </div>
-                <button class="btn-add-student" onclick="addStudentField()">+ Add Student</button>
+                <label class="form-label">Your Name</label>
+                <input
+                    type="text"
+                    class="form-input"
+                    id="studentNameInput"
+                    placeholder="Your full name"
+                    onchange="updateJoinButton()"
+                    oninput="updateJoinButton()"
+                >
             </div>
 
-            <button class="btn-primary" id="startBtn" disabled onclick="startExercise()">
+            <div class="form-group">
+                <label class="form-label">UC Email</label>
+                <input
+                    type="email"
+                    class="form-input"
+                    id="studentEmailInput"
+                    placeholder="you@mail.uc.edu"
+                    onchange="updateJoinButton()"
+                    oninput="updateJoinButton()"
+                >
+                <div class="form-error" id="emailError">
+                    Email must end with @mail.uc.edu or @uc.edu
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="startBtn" disabled onclick="startExercise()">
                 Start Exercise
             </button>
         </div>
 
         <!-- Instructions Screen -->
-        <div class="screen" id="instructionsScreen">
-            <h1 class="instructions-title">The 5 Cs of Netflix Pricing</h1>
+        <div class="screen" id="instructionsScreen"></div>
 
-            <p class="instructions-text">
-                Netflix offers three subscription tiers with different pricing models. Your group will analyze Netflix's pricing through the 5 Cs framework. Each student will answer questions individually first, then your group will build a consensus answer.
-            </p>
-
-            <div class="tier-cards">
-                <div class="tier-card">
-                    <div class="tier-name">Standard with Ads</div>
-                    <div class="tier-price">$7.99</div>
-                    <div class="tier-period">/month</div>
-                </div>
-                <div class="tier-card">
-                    <div class="tier-name">Standard</div>
-                    <div class="tier-price">$17.99</div>
-                    <div class="tier-period">/month</div>
-                </div>
-                <div class="tier-card">
-                    <div class="tier-name">Premium</div>
-                    <div class="tier-price">$24.99</div>
-                    <div class="tier-period">/month</div>
-                </div>
-            </div>
-
-            <button class="btn-primary" onclick="goToRound(0)">Begin Activity</button>
+        <!-- Round Screen -->
+        <div class="screen" id="roundScreen">
+            <!-- Dynamically populated by JavaScript -->
         </div>
 
-        <!-- Activity Screens (rounds 0-4) -->
-        <div class="screen" id="roundScreen">
+        <!-- Ranking Screen -->
+        <div class="screen" id="rankingScreen">
             <!-- Dynamically populated by JavaScript -->
         </div>
 
         <!-- Summary Screen -->
         <div class="screen" id="summaryScreen">
             <div class="summary-header">
-                <div class="summary-group-title">Group <span id="summaryGroupNum"></span></div>
-                <div class="summary-group-members" id="summaryMembers"></div>
+                <div class="summary-header-title">Exercise Summary</div>
+                <div class="summary-header-info">
+                    <strong id="summaryStudent">—</strong> | Group <strong id="summaryGroupNum">—</strong>
+                </div>
             </div>
 
             <div id="summaryContent">
@@ -908,63 +986,76 @@
                 <textarea
                     class="form-input takeaway-input"
                     id="takeawayInput"
-                    placeholder="Type your group's key takeaway here (minimum 30 characters)..."
+                    placeholder="Type your key takeaway here (minimum 30 characters)..."
                 ></textarea>
-                <div class="takeaway-note">
+                <div class="takeaway-note" id="takeawayNote">
                     Screenshot this page for your notes — data is not saved between sessions.
                 </div>
             </div>
 
-            <button class="btn-primary" onclick="window.location.reload()">End Exercise</button>
+            <button class="btn btn-primary" onclick="window.location.reload()">End Exercise</button>
         </div>
     </div>
 
     <script>
         // ============================================================================
+        // CONFIGURATION
+        // ============================================================================
+
+        const WEBHOOK_URL = ''; // n8n webhook URL goes here
+
+        // ============================================================================
         // DATA STRUCTURE & STATE
         // ============================================================================
 
         const exerciseData = {
+            studentName: '',
+            studentEmail: '',
             groupNumber: null,
-            students: [],
             currentRound: null,
             rounds: [
                 {
                     title: "C #1: Company Objectives",
                     definition: "What is the company trying to achieve? Profit maximization? Market share? Subscriber growth?",
                     question: "Netflix created a $7.99 ad tier after years of being ad-free. What company objective does this reveal — are they prioritizing subscriber growth, revenue per user, or something else?",
-                    individualAnswers: {},
+                    myAnswer: "",
+                    groupmateSaid: "",
                     consensusAnswer: ""
                 },
                 {
                     title: "C #2: Customers",
                     definition: "What are customers willing to pay? How do they perceive value?",
                     question: "There's a $10/month gap between Standard with Ads and Standard. What does this gap tell you about how Netflix views its two types of customers?",
-                    individualAnswers: {},
+                    myAnswer: "",
+                    groupmateSaid: "",
                     consensusAnswer: ""
                 },
                 {
                     title: "C #3: Costs",
                     definition: "What does it cost to produce and deliver the product? Fixed costs vs variable costs.",
                     question: "Netflix spends ~$17 billion/year on content. Every subscriber watches the same library. How do Netflix's costs change (or not change) as they add subscribers?",
-                    individualAnswers: {},
+                    myAnswer: "",
+                    groupmateSaid: "",
                     consensusAnswer: ""
                 },
                 {
                     title: "C #4: Competition",
                     definition: "What are competitors charging? How does competitive pressure shape your pricing?",
                     question: "Disney+ charges $9.99 (with ads) and $16.99 (no ads). Hulu starts at $9.99. Max starts at $10.99. How does Netflix justify charging $17.99 for Standard when competitors are cheaper?",
-                    individualAnswers: {},
+                    myAnswer: "",
+                    groupmateSaid: "",
                     consensusAnswer: ""
                 },
                 {
                     title: "C #5: Channel Members",
                     definition: "Who else is between you and the customer? Do they affect your pricing?",
                     question: "Netflix sells direct to consumers — no middlemen. But they now have an ad tier, which means advertisers are a new 'channel partner.' How does adding advertisers change Netflix's pricing calculus?",
-                    individualAnswers: {},
+                    myAnswer: "",
+                    groupmateSaid: "",
                     consensusAnswer: ""
                 }
-            ]
+            ],
+            ranking: {}
         };
 
         // ============================================================================
@@ -999,70 +1090,111 @@
         // JOIN SCREEN
         // ============================================================================
 
-        function addStudentField() {
-            const container = document.getElementById("studentsContainer");
-            const count = container.querySelectorAll(".student-input-group").length;
-
-            if (count < 5) {
-                const newGroup = document.createElement("div");
-                newGroup.className = "student-input-group";
-                newGroup.innerHTML = `
-                    <input
-                        type="text"
-                        class="form-input student-name-input"
-                        placeholder="Student ${count + 1} name"
-                        onchange="updateJoinButton()"
-                    >
-                    <button class="btn-remove" onclick="removeStudentField(this)">Remove</button>
-                `;
-                container.appendChild(newGroup);
-                updateJoinButton();
-            }
-        }
-
-        function removeStudentField(btn) {
-            btn.parentElement.remove();
-            updateJoinButton();
+        function validateEmail(email) {
+            return email.endsWith("@mail.uc.edu") || email.endsWith("@uc.edu");
         }
 
         function updateJoinButton() {
             const groupSelect = document.getElementById("groupSelect").value;
-            const inputs = document.querySelectorAll(".student-name-input");
-            let filledCount = 0;
-            inputs.forEach(input => {
-                if (input.value.trim()) filledCount++;
-            });
+            const nameInput = document.getElementById("studentNameInput").value.trim();
+            const emailInput = document.getElementById("studentEmailInput").value.trim();
+            const emailError = document.getElementById("emailError");
 
             const startBtn = document.getElementById("startBtn");
-            startBtn.disabled = !groupSelect || filledCount < 2;
+
+            let isEmailValid = false;
+            if (emailInput) {
+                isEmailValid = validateEmail(emailInput);
+                if (!isEmailValid) {
+                    emailError.classList.add("show");
+                    document.getElementById("studentEmailInput").classList.add("error");
+                } else {
+                    emailError.classList.remove("show");
+                    document.getElementById("studentEmailInput").classList.remove("error");
+                }
+            } else {
+                emailError.classList.remove("show");
+                document.getElementById("studentEmailInput").classList.remove("error");
+            }
+
+            const allFilled = groupSelect && nameInput && emailInput && isEmailValid;
+            startBtn.disabled = !allFilled;
         }
 
         function startExercise() {
             exerciseData.groupNumber = document.getElementById("groupSelect").value;
-            exerciseData.students = [];
-
-            document.querySelectorAll(".student-name-input").forEach(input => {
-                if (input.value.trim()) {
-                    exerciseData.students.push(input.value.trim());
-                }
-            });
+            exerciseData.studentName = document.getElementById("studentNameInput").value.trim();
+            exerciseData.studentEmail = document.getElementById("studentEmailInput").value.trim();
 
             // Update sticky header
             document.getElementById("stickyHeader").classList.add("show");
             document.getElementById("headerGroupNum").textContent = exerciseData.groupNumber;
-            document.getElementById("headerStudents").textContent =
-                exerciseData.students.length + " students";
+            document.getElementById("headerStudent").textContent = exerciseData.studentName;
 
             // Initialize round data
             exerciseData.rounds.forEach(round => {
-                round.individualAnswers = {};
-                exerciseData.students.forEach(student => {
-                    round.individualAnswers[student] = "";
-                });
+                round.myAnswer = "";
+                round.groupmateSaid = "";
                 round.consensusAnswer = "";
             });
 
+            renderInstructionsScreen();
             showScreen("instructionsScreen");
+        }
+
+        // ============================================================================
+        // INSTRUCTIONS SCREEN
+        // ============================================================================
+
+        function renderInstructionsScreen() {
+            const instructionsScreen = document.getElementById("instructionsScreen");
+
+            instructionsScreen.innerHTML = `
+                <h1 class="instructions-title">The 5 Cs of Pricing: Netflix Edition</h1>
+
+                <p class="instructions-text">
+                    Netflix's pricing strategy reveals how the 5 Cs of pricing work in the real world.
+                    You'll analyze each C and build consensus with your group.
+                </p>
+
+                <div class="tier-cards">
+                    <div class="tier-card">
+                        <div class="tier-name">Standard with Ads</div>
+                        <div class="tier-price">$7.99</div>
+                        <div class="tier-period">/month</div>
+                        <div class="tier-features">
+                            Ads • 1080p • Limited offline downloads
+                        </div>
+                    </div>
+
+                    <div class="tier-card">
+                        <div class="tier-name">Standard</div>
+                        <div class="tier-price">$15.49</div>
+                        <div class="tier-period">/month</div>
+                        <div class="tier-features">
+                            Ad-free • 1080p • 2 screens • Offline downloads
+                        </div>
+                    </div>
+
+                    <div class="tier-card">
+                        <div class="tier-name">Premium</div>
+                        <div class="tier-price">$22.99</div>
+                        <div class="tier-period">/month</div>
+                        <div class="tier-features">
+                            Ad-free • 4K • 4 screens • Offline downloads
+                        </div>
+                    </div>
+                </div>
+
+                <p class="instructions-text">
+                    <strong>Your Task:</strong> For each of the 5 Cs, you'll first answer individually, then discuss with your group,
+                    then build a consensus answer. Finally, you'll rank which C matters most for Netflix's strategy.
+                </p>
+
+                <button class="btn btn-primary" onclick="goToRound(0)">
+                    Start: C #1 (Company Objectives)
+                </button>
+            `;
         }
 
         // ============================================================================
@@ -1071,23 +1203,26 @@
 
         function goToRound(roundIndex) {
             exerciseData.currentRound = roundIndex;
-            renderRoundScreen();
+            renderPhaseA();
             showScreen("roundScreen");
         }
 
-        function renderRoundScreen() {
+        function renderPhaseA() {
             const roundIndex = exerciseData.currentRound;
             const round = exerciseData.rounds[roundIndex];
             const roundScreen = document.getElementById("roundScreen");
 
-            let html = `
+            const charCount = round.myAnswer.length;
+            const isSubmitted = charCount >= 20;
+
+            const html = `
                 <div class="round-header">
                     <div class="round-title">${round.title}</div>
                     <div class="round-definition">${round.definition}</div>
                 </div>
 
                 <div class="phase-indicator">
-                    <span class="phase-label">PHASE A:</span> Individual Input
+                    <span class="phase-label">PHASE A:</span> Your Answer
                 </div>
 
                 <div class="question-box">
@@ -1095,56 +1230,27 @@
                     <div class="question-text">${round.question}</div>
                 </div>
 
-                <div class="student-responses" id="studentResponses">
-            `;
-
-            // Individual input blocks
-            exerciseData.students.forEach(student => {
-                const answer = round.individualAnswers[student] || "";
-                const charCount = answer.length;
-                const isSubmitted = charCount >= 20;
-                const statusClass = isSubmitted ? "submitted" : "";
-
-                html += `
-                    <div class="student-response-block ${statusClass}">
+                <div class="student-responses">
+                    <div class="student-response-block ${isSubmitted ? 'submitted' : ''}">
                         <div class="student-label">
-                            ${student}
-                            <span class="student-checkmark">✓</span>
+                            ${exerciseData.studentName}
+                            <span class="student-checkmark" style="${isSubmitted ? '' : 'opacity: 0'}">✓</span>
                         </div>
                         <textarea
                             class="form-input student-input"
+                            id="myAnswerInput"
                             placeholder="Type your answer here (minimum 20 characters)..."
-                            onchange="updateStudentAnswer('${student}', this.value)"
-                            oninput="updateStudentAnswer('${student}', this.value)"
-                        >${answer}</textarea>
+                            onchange="updateMyAnswer(this.value)"
+                            oninput="updateMyAnswerLength(this)"
+                        >${round.myAnswer}</textarea>
                         <div class="char-count ${charCount >= 20 ? 'success' : charCount > 0 ? 'warning' : ''}">
                             ${charCount}/20 characters
                         </div>
                     </div>
-                `;
-            });
-
-            html += `
                 </div>
 
-                <div class="progress-indicator">
-                    <span class="progress-label">Progress:</span>
-                    <div class="progress-dots" id="progressDots">
-            `;
-
-            // Progress dots
-            exerciseData.students.forEach((student, idx) => {
-                const answer = round.individualAnswers[student] || "";
-                const submitted = answer.length >= 20 ? "submitted" : "";
-                html += `<div class="progress-dot ${submitted}" title="${student}"></div>`;
-            });
-
-            html += `
-                    </div>
-                </div>
-
-                <button class="btn-primary" id="phaseABtn" disabled onclick="goToPhaseB()">
-                    Next: Group Consensus
+                <button class="btn btn-primary" id="phaseABtn" disabled onclick="goToPhaseB()">
+                    Next: Group Discussion
                 </button>
             `;
 
@@ -1152,60 +1258,118 @@
             updatePhaseAButton();
         }
 
-        function updateStudentAnswer(studentName, value) {
+        function updateMyAnswer(value) {
             const round = exerciseData.rounds[exerciseData.currentRound];
-            round.individualAnswers[studentName] = value;
+            round.myAnswer = value;
             updatePhaseAButton();
+            renderPhaseA();
+        }
 
-            // Re-render to update progress dots
-            renderRoundScreen();
+        function updateMyAnswerLength(textarea) {
+            const charCount = textarea.value.length;
+            const round = exerciseData.rounds[exerciseData.currentRound];
+            round.myAnswer = textarea.value;
+            updatePhaseAButton();
         }
 
         function updatePhaseAButton() {
             const round = exerciseData.rounds[exerciseData.currentRound];
-            const allSubmitted = exerciseData.students.every(
-                student => round.individualAnswers[student].length >= 20
-            );
-
             const btn = document.getElementById("phaseABtn");
-            if (btn) btn.disabled = !allSubmitted;
+            if (btn) btn.disabled = round.myAnswer.length < 20;
         }
 
         function goToPhaseB() {
+            renderDiscussionGate();
+        }
+
+        function renderDiscussionGate() {
             const roundIndex = exerciseData.currentRound;
             const round = exerciseData.rounds[roundIndex];
             const roundScreen = document.getElementById("roundScreen");
 
-            let html = `
+            const charCount = round.groupmateSaid.length;
+
+            const html = `
+                <div class="round-header">
+                    <div class="round-title">${round.title}</div>
+                </div>
+
+                <div class="discussion-gate">
+                    <div class="discussion-gate-title">🛑 STOP — Turn to Your Group</div>
+                    <div class="discussion-gate-subtitle">
+                        Share your answer with your group. Listen to theirs.
+                    </div>
+                    <div class="discussion-question">
+                        What's one thing a groupmate said that was different from yours?
+                    </div>
+                    <textarea
+                        class="form-input"
+                        id="groupmateSaidInput"
+                        placeholder="Briefly describe what you heard from a groupmate..."
+                        onchange="updateGroupmateSaid(this.value)"
+                        oninput="updateGroupmateSaidLength(this)"
+                        style="text-align: left; min-height: 100px; margin-bottom: 8px;"
+                    >${round.groupmateSaid}</textarea>
+                    <div class="char-count ${charCount >= 20 ? 'success' : charCount > 0 ? 'warning' : ''}">
+                        ${charCount}/20 characters
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="discussionBtn" disabled onclick="goToConsensus()">
+                    Continue to Group Consensus
+                </button>
+            `;
+
+            roundScreen.innerHTML = html;
+            updateDiscussionButton();
+        }
+
+        function updateGroupmateSaid(value) {
+            const round = exerciseData.rounds[exerciseData.currentRound];
+            round.groupmateSaid = value;
+            updateDiscussionButton();
+        }
+
+        function updateGroupmateSaidLength(textarea) {
+            const charCount = textarea.value.length;
+            const round = exerciseData.rounds[exerciseData.currentRound];
+            round.groupmateSaid = textarea.value;
+            updateDiscussionButton();
+        }
+
+        function updateDiscussionButton() {
+            const round = exerciseData.rounds[exerciseData.currentRound];
+            const btn = document.getElementById("discussionBtn");
+            if (btn) btn.disabled = round.groupmateSaid.length < 20;
+        }
+
+        function goToConsensus() {
+            const roundIndex = exerciseData.currentRound;
+            const round = exerciseData.rounds[roundIndex];
+            const roundScreen = document.getElementById("roundScreen");
+
+            const charCount = round.consensusAnswer.length;
+
+            const html = `
                 <div class="round-header">
                     <div class="round-title">${round.title}</div>
                     <div class="round-definition">${round.definition}</div>
                 </div>
 
                 <div class="phase-indicator">
-                    <span class="phase-label">PHASE B:</span> Group Consensus
+                    <span class="phase-label">PHASE C:</span> Group Consensus
                 </div>
 
                 <div class="all-answers">
-                    <div class="answers-title">All Individual Answers</div>
-            `;
-
-            // Display all individual answers
-            exerciseData.students.forEach(student => {
-                const answer = round.individualAnswers[student];
-                html += `
+                    <div class="answers-title">Your Answer</div>
                     <div class="answer-item">
-                        <div class="answer-student-name">${student}</div>
-                        <div class="answer-text">${answer}</div>
+                        <div class="answer-student-name">${exerciseData.studentName}</div>
+                        <div class="answer-text">${round.myAnswer}</div>
                     </div>
-                `;
-            });
-
-            html += `
                 </div>
 
                 <div class="consensus-section">
-                    <div class="consensus-label">Group Consensus Answer</div>
+                    <div class="consensus-label">✓ Group Consensus</div>
                     <div class="consensus-title">Discuss and agree on one answer</div>
                     <textarea
                         class="form-input consensus-input"
@@ -1215,16 +1379,15 @@
                         oninput="updateConsensusLength(this)"
                     >${round.consensusAnswer}</textarea>
                     <div class="char-count" id="consensusCharCount">
-                        ${round.consensusAnswer.length}/30 characters
+                        ${charCount}/30 characters
                     </div>
                 </div>
 
                 <div class="navigation">
-                    <button class="btn-secondary nav-button" onclick="goToRound(${roundIndex})">
+                    <button class="btn btn-secondary nav-button" onclick="goToPhaseB()">
                         Back
                     </button>
-                    <button class="btn-primary nav-button" id="nextRoundBtn" disabled
-                        onclick="goToNextRound()">
+                    <button class="btn btn-primary nav-button" id="nextRoundBtn" disabled onclick="goToNextRound()">
                         Next C
                     </button>
                 </div>
@@ -1270,8 +1433,113 @@
             if (exerciseData.currentRound < 4) {
                 goToRound(exerciseData.currentRound + 1);
             } else {
-                showSummaryScreen();
+                renderRankingScreen();
+                showScreen("rankingScreen");
             }
+        }
+
+        // ============================================================================
+        // RANKING SCREEN
+        // ============================================================================
+
+        function renderRankingScreen() {
+            const rankingScreen = document.getElementById("rankingScreen");
+
+            const cNames = ["Company Objectives", "Customers", "Costs", "Competition", "Channel Members"];
+            const rankings = exerciseData.ranking;
+
+            let html = `
+                <h1 class="instructions-title">Which C Matters Most for Netflix?</h1>
+
+                <div class="ranking-container">
+                    <div class="ranking-instructions">
+                        You've analyzed all 5 Cs. Now rank them from MOST to LEAST important for Netflix's pricing strategy.
+                    </div>
+
+                    <div class="ranking-error" id="rankingError">
+                        Each C must have a unique ranking (can't rank two the same).
+                    </div>
+
+                    <div id="rankingItems">
+            `;
+
+            cNames.forEach((cName) => {
+                const currentRank = rankings[cName] || '';
+                html += `
+                    <div class="ranking-item">
+                        <div class="ranking-cname">${cName}</div>
+                        <select class="ranking-select" data-cname="${cName}" onchange="updateRanking()">
+                            <option value="">--</option>
+                            <option value="1" ${currentRank === '1' ? 'selected' : ''}>1st</option>
+                            <option value="2" ${currentRank === '2' ? 'selected' : ''}>2nd</option>
+                            <option value="3" ${currentRank === '3' ? 'selected' : ''}>3rd</option>
+                            <option value="4" ${currentRank === '4' ? 'selected' : ''}>4th</option>
+                            <option value="5" ${currentRank === '5' ? 'selected' : ''}>5th</option>
+                        </select>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="submitRankingBtn" disabled onclick="submitRanking()">
+                    Submit Ranking
+                </button>
+            `;
+
+            rankingScreen.innerHTML = html;
+            updateRankingButton();
+        }
+
+        function updateRanking() {
+            const selects = document.querySelectorAll(".ranking-select");
+            const rankings = {};
+
+            selects.forEach(select => {
+                const cName = select.getAttribute("data-cname");
+                const value = select.value;
+                if (value) rankings[cName] = value;
+            });
+
+            exerciseData.ranking = rankings;
+            updateRankingButton();
+        }
+
+        function updateRankingButton() {
+            const selects = document.querySelectorAll(".ranking-select");
+            const rankings = exerciseData.ranking;
+
+            // Check if all are filled
+            let allFilled = true;
+            const values = [];
+            selects.forEach(select => {
+                const value = select.value;
+                if (!value) {
+                    allFilled = false;
+                } else {
+                    values.push(value);
+                }
+            });
+
+            // Check if all are unique
+            let allUnique = new Set(values).size === values.length;
+
+            const errorDiv = document.getElementById("rankingError");
+            const submitBtn = document.getElementById("submitRankingBtn");
+
+            if (allFilled && !allUnique) {
+                errorDiv.classList.add("show");
+                submitBtn.disabled = true;
+            } else {
+                errorDiv.classList.remove("show");
+                submitBtn.disabled = !(allFilled && allUnique);
+            }
+        }
+
+        function submitRanking() {
+            showSummaryScreen();
         }
 
         // ============================================================================
@@ -1282,9 +1550,8 @@
             const summaryScreen = document.getElementById("summaryScreen");
 
             // Update header
+            document.getElementById("summaryStudent").textContent = exerciseData.studentName;
             document.getElementById("summaryGroupNum").textContent = exerciseData.groupNumber;
-            document.getElementById("summaryMembers").textContent =
-                exerciseData.students.join(", ");
 
             // Build summary content
             let html = "";
@@ -1295,21 +1562,20 @@
                         <div class="round-summary-title">${round.title}</div>
 
                         <div class="summary-section">
-                            <div class="summary-section-label">Individual Answers</div>
+                            <div class="summary-section-label">Your Answer</div>
                             <div class="summary-answers">
-                `;
-
-                exerciseData.students.forEach(student => {
-                    const answer = round.individualAnswers[student];
-                    html += `
-                        <div class="summary-answer">
-                            <div class="summary-answer-name">${student}</div>
-                            <div class="summary-answer-text">${answer}</div>
+                                <div class="summary-answer">
+                                    <div class="summary-answer-text">${round.myAnswer}</div>
+                                </div>
+                            </div>
                         </div>
-                    `;
-                });
 
-                html += `
+                        <div class="summary-section">
+                            <div class="summary-section-label">What a Groupmate Said</div>
+                            <div class="summary-answers">
+                                <div class="summary-answer">
+                                    <div class="summary-answer-text">${round.groupmateSaid}</div>
+                                </div>
                             </div>
                         </div>
 
@@ -1323,8 +1589,77 @@
                 `;
             });
 
+            // Add ranking summary
+            html += `
+                <div class="ranking-summary">
+                    <div class="ranking-summary-title">Your Ranking</div>
+            `;
+
+            const cNames = ["Company Objectives", "Customers", "Costs", "Competition", "Channel Members"];
+            const rankLabels = {
+                "1": "1st (Most Important)",
+                "2": "2nd",
+                "3": "3rd",
+                "4": "4th",
+                "5": "5th (Least Important)"
+            };
+
+            cNames.forEach(cName => {
+                const rank = exerciseData.ranking[cName];
+                const label = rankLabels[rank] || "Not ranked";
+                html += `
+                    <div class="ranking-result">
+                        <span>${cName}</span>
+                        <strong>${label}</strong>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+
             document.getElementById("summaryContent").innerHTML = html;
+
+            // Fire webhook and update takeaway note if URL is set
+            if (WEBHOOK_URL) {
+                fireWebhook();
+                document.getElementById("takeawayNote").innerHTML = '<div class="participation-message">✓ Participation recorded</div>';
+            }
+
             showScreen("summaryScreen");
+        }
+
+        // ============================================================================
+        // WEBHOOK
+        // ============================================================================
+
+        function fireWebhook() {
+            if (!WEBHOOK_URL) return;
+
+            const payload = {
+                exercise: "W11-5cs-netflix",
+                studentName: exerciseData.studentName,
+                studentEmail: exerciseData.studentEmail,
+                groupNumber: exerciseData.groupNumber,
+                completedAt: new Date().toISOString(),
+                ranking: exerciseData.ranking,
+                answers: exerciseData.rounds.map(round => ({
+                    title: round.title,
+                    myAnswer: round.myAnswer,
+                    groupmateSaid: round.groupmateSaid,
+                    consensusAnswer: round.consensusAnswer
+                }))
+            };
+
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).catch(err => {
+                // Silently fail if webhook URL is invalid or network error
+                console.log("Webhook not configured or failed");
+            });
         }
 
         // ============================================================================
