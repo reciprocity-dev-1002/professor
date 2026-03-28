@@ -816,6 +816,107 @@
             line-height: 1.6;
         }
 
+        /* Summary Discussion Table */
+        .summary-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 28px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            font-size: 13px;
+        }
+
+        .summary-table th {
+            background: var(--case-dark);
+            color: white;
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .summary-table tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        .summary-table .c-label {
+            font-weight: 700;
+            color: var(--case-primary);
+            white-space: nowrap;
+            min-width: 110px;
+        }
+
+        .summary-table .rank-badge {
+            display: inline-block;
+            background: var(--case-primary);
+            color: white;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .defend-section {
+            background: linear-gradient(135deg, var(--case-dark) 0%, #2A2727 100%);
+            color: white;
+            padding: 28px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        .defend-section .defend-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #E50914;
+            margin-bottom: 8px;
+        }
+
+        .defend-section .defend-prompt {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .defend-section .defend-pick {
+            font-size: 28px;
+            font-weight: 800;
+            color: #E50914;
+            margin-bottom: 16px;
+        }
+
+        .defend-section textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            resize: vertical;
+        }
+
+        .defend-section textarea::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
@@ -968,14 +1069,22 @@
         <!-- Summary Screen -->
         <div class="screen" id="summaryScreen">
             <div class="summary-header">
-                <div class="summary-header-title">Exercise Summary</div>
+                <div class="summary-header-title">Your 5 Cs Summary</div>
                 <div class="summary-header-info">
                     <strong id="summaryStudent">—</strong> | Group <strong id="summaryGroupNum">—</strong>
                 </div>
             </div>
 
-            <div id="summaryContent">
-                <!-- Dynamically populated by JavaScript -->
+            <p style="text-align: center; color: var(--muted); margin-bottom: 24px; font-size: 15px;">
+                Use this table to compare answers with your group. Everyone pull this up on your screen.
+            </p>
+
+            <div id="summaryTable">
+                <!-- Dynamically populated: compact table of all 5 Cs -->
+            </div>
+
+            <div id="rankingSummarySection">
+                <!-- Dynamically populated: ranking + defend your #1 -->
             </div>
 
             <div class="takeaway-section">
@@ -1152,10 +1261,18 @@
             instructionsScreen.innerHTML = `
                 <h1 class="instructions-title">The 5 Cs of Pricing: Netflix Edition</h1>
 
-                <p class="instructions-text">
-                    Netflix's pricing strategy reveals how the 5 Cs of pricing work in the real world.
-                    You'll analyze each C and build consensus with your group.
-                </p>
+                <div style="background: linear-gradient(135deg, #141414 0%, #2A2727 100%); color: white; padding: 28px; border-radius: 12px; margin-bottom: 28px;">
+                    <div style="font-size: 22px; font-weight: 800; color: #E50914; margin-bottom: 14px;">🎬 Quick Netflix Context</div>
+                    <p style="font-size: 15px; line-height: 1.7; margin-bottom: 12px;">
+                        Netflix is the world's largest streaming service with <strong>280+ million subscribers</strong> in 190 countries. For years they had one simple model: pay monthly, no ads, watch everything. That changed in 2022 when they launched an <strong>ad-supported tier</strong> — a major pricing pivot for a company that once swore it would never run ads.
+                    </p>
+                    <p style="font-size: 15px; line-height: 1.7; margin-bottom: 12px;">
+                        Today Netflix runs a <strong>three-tier pricing structure</strong> (see below). They also cracked down on <strong>password sharing</strong> in 2023, forcing households to pay up or split off — another pricing decision with massive implications.
+                    </p>
+                    <p style="font-size: 15px; line-height: 1.7; margin-bottom: 0;">
+                        Your job: use the <strong>5 Cs framework</strong> to figure out <em>why</em> Netflix prices the way it does — and which C drives their strategy the most.
+                    </p>
+                </div>
 
                 <div class="tier-cards">
                     <div class="tier-card">
@@ -1548,77 +1665,65 @@
         // ============================================================================
 
         function showSummaryScreen() {
-            const summaryScreen = document.getElementById("summaryScreen");
-
             // Update header
             document.getElementById("summaryStudent").textContent = exerciseData.studentName;
             document.getElementById("summaryGroupNum").textContent = exerciseData.groupNumber;
 
-            // Build summary content
-            let html = "";
+            // ---- Build the summary table ----
+            const cShortNames = ["Company Obj.", "Customers", "Costs", "Competition", "Channel"];
+            const cFullNames = ["Company Objectives", "Customers", "Costs", "Competition", "Channel Members"];
+            const rankLabels = { "1": "1st", "2": "2nd", "3": "3rd", "4": "4th", "5": "5th" };
 
-            exerciseData.rounds.forEach((round, idx) => {
-                html += `
-                    <div class="round-summary">
-                        <div class="round-summary-title">${round.title}</div>
-
-                        <div class="summary-section">
-                            <div class="summary-section-label">Your Answer</div>
-                            <div class="summary-answers">
-                                <div class="summary-answer">
-                                    <div class="summary-answer-text">${round.myAnswer}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="summary-section">
-                            <div class="summary-section-label">What a Groupmate Said</div>
-                            <div class="summary-answers">
-                                <div class="summary-answer">
-                                    <div class="summary-answer-text">${round.groupmateSaid}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="summary-section">
-                            <div class="summary-consensus">
-                                <div class="summary-consensus-label">✓ Group Consensus</div>
-                                <div class="summary-consensus-text">${round.consensusAnswer}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // Add ranking summary
-            html += `
-                <div class="ranking-summary">
-                    <div class="ranking-summary-title">Your Ranking</div>
+            let tableHTML = `
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>The C</th>
+                            <th>Your Answer</th>
+                            <th>Groupmate Said</th>
+                            <th>Consensus</th>
+                            <th>Rank</th>
+                        </tr>
+                    </thead>
+                    <tbody>
             `;
 
-            const cNames = ["Company Objectives", "Customers", "Costs", "Competition", "Channel Members"];
-            const rankLabels = {
-                "1": "1st (Most Important)",
-                "2": "2nd",
-                "3": "3rd",
-                "4": "4th",
-                "5": "5th (Least Important)"
-            };
-
-            cNames.forEach(cName => {
-                const rank = exerciseData.ranking[cName];
-                const label = rankLabels[rank] || "Not ranked";
-                html += `
-                    <div class="ranking-result">
-                        <span>${cName}</span>
-                        <strong>${label}</strong>
-                    </div>
+            exerciseData.rounds.forEach((round, idx) => {
+                const rank = exerciseData.ranking[cFullNames[idx]] || "—";
+                const rankDisplay = rankLabels[rank] || rank;
+                tableHTML += `
+                    <tr>
+                        <td class="c-label">${cShortNames[idx]}</td>
+                        <td>${round.myAnswer}</td>
+                        <td>${round.groupmateSaid}</td>
+                        <td>${round.consensusAnswer}</td>
+                        <td><span class="rank-badge">${rankDisplay}</span></td>
+                    </tr>
                 `;
             });
 
-            html += `</div>`;
+            tableHTML += `</tbody></table>`;
+            document.getElementById("summaryTable").innerHTML = tableHTML;
 
-            document.getElementById("summaryContent").innerHTML = html;
+            // ---- Build the "Defend Your #1" section ----
+            let topC = "—";
+            cFullNames.forEach(name => {
+                if (exerciseData.ranking[name] === "1") topC = name;
+            });
+
+            const defendHTML = `
+                <div class="defend-section">
+                    <div class="defend-title">🏆 Defend Your #1</div>
+                    <div class="defend-prompt">You ranked this as the most important C for Netflix's pricing:</div>
+                    <div class="defend-pick">${topC}</div>
+                    <div class="defend-prompt">Now tell your group <em>why</em>. Compare rankings — did everyone pick the same #1?</div>
+                    <textarea
+                        id="defendInput"
+                        placeholder="Why is ${topC} the most important C? Be ready to argue your case..."
+                    ></textarea>
+                </div>
+            `;
+            document.getElementById("rankingSummarySection").innerHTML = defendHTML;
 
             // Fire webhook and update takeaway note if URL is set
             if (WEBHOOK_URL) {
