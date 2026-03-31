@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAUNCH IT — Week 9.1 · MKTG 2080</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #12121f;
+    --surface: #1d1d30;
+    --border: #3a3a58;
+    --accent: #f0c040;
+    --accent2: #40c0f0;
+    --text: #e8e8f0;
+    --muted: #8888b0;
+    --green: #40f0a0;
+    --red: #f04060;
+    --orange: #f08040;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+
+  .screen { display: none; min-height: 100vh; position: relative; z-index: 1; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* HEADER */
+  .hdr {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(18,18,31,0.93); backdrop-filter: blur(12px);
+  }
+  .logo { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; color: var(--accent); font-weight: 700; }
+  .badge { font-family: 'Space Mono', monospace; font-size: 11px; padding: 4px 14px; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); letter-spacing: 0.1em; }
+
+  /* HOME */
+  #home { align-items: center; justify-content: center; text-align: center; }
+  .home-inner { max-width: 700px; padding: 60px 32px; }
+
+  .big-title { font-size: clamp(72px, 12vw, 128px); font-weight: 800; line-height: 0.85; letter-spacing: -0.04em; }
+  .big-title span { color: var(--accent); }
+  .home-sub { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); margin: 20px 0 48px; letter-spacing: 0.08em; line-height: 1.8; }
+
+  .start-btn {
+    display: inline-block; padding: 20px 56px;
+    background: var(--accent); color: var(--bg);
+    border: none; border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.04em;
+  }
+  .start-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(240,192,64,0.35); }
+
+  .home-meta { margin-top: 32px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); line-height: 2; }
+
+  /* GAME */
+  #game { }
+  .game-body { flex: 1; padding: 28px 40px; max-width: 1080px; margin: 0 auto; width: 100%; }
+
+  .scenario-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px; padding: 20px 24px; margin-bottom: 24px;
+  }
+  .scenario-tag { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 8px; }
+  .scenario-name { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .scenario-desc { font-size: 16px; color: var(--muted); line-height: 1.7; }
+
+  /* budget */
+  .budget-row {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 20px; margin-bottom: 20px;
+  }
+  .budget-lbl { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--muted); white-space: nowrap; }
+  .budget-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .budget-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+  .budget-fill.over { background: var(--red); }
+  .budget-fill.exact { background: var(--green); }
+  .budget-num { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: var(--accent); min-width: 70px; text-align: right; }
+  .budget-num.over { color: var(--red); }
+  .budget-num.exact { color: var(--green); }
+
+  .levers-lbl { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--muted); margin-bottom: 14px; text-transform: uppercase; }
+
+  .levers-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+
+  .lever { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .lever-name { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
+  .lever-opts { display: flex; flex-direction: column; gap: 6px; }
+
+  .opt {
+    background: transparent; border: 2px solid var(--border);
+    border-radius: 6px; padding: 9px 11px;
+    color: var(--text); font-family: 'Syne', sans-serif; font-size: 15px;
+    cursor: pointer; transition: all 0.15s ease; text-align: left;
+    position: relative;
+  }
+  .opt:hover { border-color: rgba(240,192,64,0.4); color: var(--text); }
+  .opt.selected {
+    background: rgba(240,192,64,0.13);
+    border: 3px solid var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+    box-shadow: 0 0 0 2px rgba(240,192,64,0.2), inset 0 0 12px rgba(240,192,64,0.06);
+  }
+  .opt.selected::before {
+    content: '▶';
+    position: absolute; left: -18px; top: 50%; transform: translateY(-50%);
+    color: var(--accent); font-size: 10px;
+  }
+  .opt-cost { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); display: block; margin-top: 3px; }
+  .opt.selected .opt-cost { color: var(--accent); font-weight: 700; }
+
+  /* bottom action bar */
+  .action-bar {
+    display: flex; gap: 10px; margin-top: 4px;
+  }
+  .clear-btn {
+    flex: 1; padding: 14px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.18s ease; letter-spacing: 0.03em;
+  }
+  .clear-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .toggle-btn {
+    flex: 1; padding: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.18s ease; letter-spacing: 0.03em;
+  }
+  .toggle-btn.hiding { border-color: var(--accent2); color: var(--accent2); background: rgba(64,192,240,0.08); }
+  .toggle-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  .reveal-toggle-btn {
+    flex: 1; padding: 14px;
+    background: rgba(240,64,96,0.08); border: 1px dashed rgba(240,64,96,0.35);
+    color: rgba(240,64,96,0.5); border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.18s ease; letter-spacing: 0.03em;
+  }
+  .reveal-toggle-btn:hover { border-color: var(--red); color: var(--red); background: rgba(240,64,96,0.12); }
+  .reveal-toggle-btn.unlocked {
+    background: rgba(240,64,96,0.15); border: 2px solid var(--red);
+    color: var(--red);
+  }
+
+  /* OUTCOME */
+  #outcome { }
+  .outcome-body { flex: 1; padding: 32px 40px; max-width: 980px; margin: 0 auto; width: 100%; }
+
+  .verdict-block { text-align: center; margin-bottom: 36px; }
+  .verdict { font-size: clamp(44px, 7vw, 80px); font-weight: 800; line-height: 1; margin-bottom: 10px; }
+  .verdict.win { color: var(--green); }
+  .verdict.partial { color: var(--accent); }
+  .verdict.loss { color: var(--red); }
+  .verdict-sub { font-size: 16px; color: var(--muted); max-width: 580px; margin: 0 auto; line-height: 1.7; }
+
+  .score-strip {
+    display: flex; align-items: center; gap: 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 24px; margin-bottom: 24px;
+  }
+  .score-big { font-family: 'Space Mono', monospace; font-size: 36px; font-weight: 700; }
+  .score-big.win { color: var(--green); }
+  .score-big.partial { color: var(--accent); }
+  .score-big.loss { color: var(--red); }
+  .score-detail { font-size: 14px; color: var(--muted); line-height: 1.8; flex: 1; }
+  .score-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 4px; }
+
+  .results-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 24px; }
+  .result-card { border-radius: 8px; padding: 14px; border: 1px solid transparent; animation: fadeUp 0.35s ease both; }
+  .result-card.hit { background: rgba(64,240,160,0.07); border-color: rgba(64,240,160,0.25); }
+  .result-card.neutral { background: rgba(240,192,64,0.07); border-color: rgba(240,192,64,0.25); }
+  .result-card.miss { background: rgba(240,64,96,0.07); border-color: rgba(240,64,96,0.25); }
+  .result-lever { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; margin-bottom: 5px; text-transform: uppercase; }
+  .result-card.hit .result-lever { color: var(--green); }
+  .result-card.neutral .result-lever { color: var(--accent); }
+  .result-card.miss .result-lever { color: var(--red); }
+  .result-choice { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .result-why { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  .debrief {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 4px solid var(--accent2);
+    border-radius: 8px; padding: 20px 24px; margin-bottom: 20px;
+  }
+  .debrief-lbl { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--accent2); margin-bottom: 10px; }
+  .debrief-text { font-size: 15px; line-height: 1.8; }
+
+  .concepts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .concept { background: rgba(64,192,240,0.08); border: 1px solid rgba(64,192,240,0.25); color: var(--accent2); font-family: 'Space Mono', monospace; font-size: 11px; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.08em; }
+
+  .nav-row { display: flex; gap: 10px; }
+  .nav-btn { flex: 1; padding: 13px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 7px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.18s ease; }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .nav-btn.primary:hover { box-shadow: 0 6px 20px rgba(240,192,64,0.28); color: var(--bg); }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  /* PASSWORD GATE */
+  #pw-screen { align-items: center; justify-content: center; text-align: center; }
+  .pw-inner { max-width: 480px; padding: 60px 32px; }
+  .pw-title { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--muted); margin-bottom: 32px; }
+  .pw-logo { font-size: clamp(48px, 8vw, 80px); font-weight: 800; line-height: 0.9; letter-spacing: -0.04em; margin-bottom: 36px; }
+  .pw-logo span { color: var(--accent); }
+  .pw-input {
+    width: 100%; padding: 18px 24px; margin-bottom: 14px;
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: 8px; color: var(--text);
+    font-family: 'Space Mono', monospace; font-size: 22px;
+    letter-spacing: 0.2em; text-align: center; text-transform: uppercase;
+    outline: none; transition: border-color 0.2s ease;
+  }
+  .pw-input:focus { border-color: var(--accent); }
+  .pw-input.shake { animation: shake 0.4s ease; border-color: var(--red); }
+  .pw-err { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--red); letter-spacing: 0.1em; height: 18px; margin-bottom: 14px; }
+  .pw-btn {
+    width: 100%; padding: 18px;
+    background: var(--accent); color: var(--bg);
+    border: none; border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.04em;
+  }
+  .pw-btn:hover { box-shadow: 0 10px 32px rgba(240,192,64,0.35); transform: translateY(-2px); }
+  .pw-hint { margin-top: 20px; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.12em; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)}
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ══ PASSWORD GATE ══ -->
+<div id="pw-screen" class="screen active">
+  <div class="pw-inner">
+    <div class="pw-logo">LAUNCH<span>IT</span></div>
+    <div class="pw-title">MKTG 2080 · WEEK 9.1 · CLASS ACCESS</div>
+    <input class="pw-input" id="pw-input" type="text" placeholder="CLASS PASSWORD"
+      autocomplete="off" spellcheck="false"
+      onkeydown="if(event.key==='Enter')checkPw()">
+    <div class="pw-err" id="pw-err"></div>
+    <button class="pw-btn" onclick="checkPw()">ENTER →</button>
+    <div class="pw-hint">Password provided by Professor Hudnall at start of class</div>
+  </div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div id="home" class="screen">
+  <div class="home-inner">
+    <div class="big-title">LAUNCH<span>IT</span></div>
+    <div class="home-sub">
+      MKTG 2080 · WEEK 9 · CH. 11–12<br>
+      PRODUCT–MARKET FIT GAME · ECUADOR
+    </div>
+    <button class="start-btn" onclick="startGame()">START ROUND →</button>
+    <div class="home-meta">
+      ALL TEAMS · SAME SCENARIO · 8-POINT BUDGET · 5 LEVERS<br>
+      TEAMS WRITE CHOICES ON HANDOUT → REVEAL OUTCOMES ON SCREEN
+    </div>
+  </div>
+</div>
+
+<!-- ══ GAME ══ -->
+<div id="game" class="screen">
+  <div class="hdr">
+    <div class="logo">LAUNCH IT · ECUADOR</div>
+    <div class="badge" id="game-badge">MAKING DECISIONS</div>
+  </div>
+  <div class="game-body">
+
+    <div class="scenario-card">
+      <div class="scenario-tag">THE SCENARIO — ALL TEAMS · READ YOUR HANDOUT FIRST</div>
+      <div class="scenario-name">LumaVida Solar Lantern · Rural Ecuador</div>
+      <div class="scenario-desc">A Quito-based social enterprise has a working solar lantern prototype. Your team decides how to configure and launch it into rural Andean and coastal communities where electricity is unreliable. You have up to <strong style="color:var(--accent)">8 points</strong>. Every choice is a tradeoff.</div>
+    </div>
+
+    <div class="budget-row">
+      <div class="budget-lbl">BUDGET USED</div>
+      <div class="budget-track"><div class="budget-fill" id="bfill" style="width:0%"></div></div>
+      <div class="budget-num" id="bnum">0 / 8</div>
+    </div>
+
+    <div class="levers-lbl">CHOOSE ONE OPTION PER LEVER — UP TO 8 POINTS</div>
+
+    <div class="levers-grid" id="levers-grid"></div>
+
+    <div class="action-bar">
+      <button class="clear-btn" onclick="clearAll()">✕  CLEAR ALL CHOICES</button>
+      <button class="toggle-btn" id="toggle-btn" onclick="toggleVisibility()">HIDE SELECTIONS</button>
+      <button class="reveal-toggle-btn" id="reveal-toggle-btn" onclick="toggleReveal()">🔒 REVEAL OUTCOMES</button>
+    </div>
+    <div id="reveal-panel" style="display:none; margin-top:20px;"></div>
+  </div>
+</div>
+
+<!-- ══ OUTCOME ══ -->
+<div id="outcome" class="screen">
+  <div class="hdr">
+    <div class="logo">LAUNCH IT · ECUADOR</div>
+    <div class="badge">MARKET VERDICT</div>
+  </div>
+  <div class="outcome-body" id="outcome-body"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// GAME DATA — Ecuador / LumaVida
+// Variables are NEW, not from the P&G case.
+// Students must reason from their handout.
+// ══════════════════════════════════════════
+
+const BUDGET = 8;
+
+const LEVERS = [
+  {
+    id: "durability",
+    name: "Durability",
+    options: [
+      { label: "Basic — 1–2 yr lifespan", cost: 1 },
+      { label: "Mid-grade — 3–4 yr", cost: 2 },
+      { label: "Heavy-duty — 5+ yr", cost: 3 },
+    ]
+  },
+  {
+    id: "charging",
+    name: "Charging Method",
+    options: [
+      { label: "Solar panel only", cost: 1 },
+      { label: "Solar + hand crank", cost: 2 },
+      { label: "Solar + USB grid backup", cost: 3 },
+    ]
+  },
+  {
+    id: "light",
+    name: "Light Output",
+    options: [
+      { label: "Single dim mode", cost: 1 },
+      { label: "Two brightness modes", cost: 2 },
+      { label: "Adjustable + reading focus", cost: 3 },
+    ]
+  },
+  {
+    id: "price",
+    name: "Price Point",
+    options: [
+      { label: "Ultra-low — under $5", cost: 1 },
+      { label: "Mid — $5 to $15", cost: 2 },
+      { label: "Premium — $15 to $30", cost: 3 },
+    ]
+  },
+  {
+    id: "purchase",
+    name: "Purchase Unit",
+    options: [
+      { label: "Individual unit", cost: 1 },
+      { label: "Family 2-pack", cost: 2 },
+      { label: "Community bundle (6+)", cost: 3 },
+    ]
+  }
+];
+
+// ── OUTCOMES ───────────────────────────────────────────────────────────────
+// The defensible answer uses 8 pts but spending less is fine:
+// Durability: Mid-grade (2) — heavy-duty is overkill cost, basic won't survive highland humidity
+// Charging: Solar + hand crank (2) — highland cloud cover makes solar-only unreliable; USB backup assumes grid
+// Light: Two brightness modes (2) — families need task light + ambient; adjustable is a premium feature cost
+// Price: Ultra-low (1) — $200-400/mo income, kerosene habit means price is the switching cost barrier
+// Purchase: Individual unit (1) — household decision-making doesn't mean communal purchase; individual lowers entry barrier
+// Total: 2+2+2+1+1 = 8 ✓
+
+const OUTCOMES = {
+  durability: {
+    0: { r: "miss", why: "1–2 years won't survive Andean highland humidity and temperature swings. Customers replace it before it pays back vs. kerosene — kills word-of-mouth and repeat purchase." },
+    1: { r: "hit",  why: "3–4 years is right. Long enough to clearly beat kerosene cost-per-use. Short enough to keep manufacturing cost viable for the price point required." },
+    2: { r: "neutral", why: "5+ years is impressive engineering — but adds cost that forces a price point the market can't absorb. Durability beyond the payback window doesn't change the customer's purchase decision." }
+  },
+  charging: {
+    0: { r: "miss", why: "Solar-only fails Andean highland communities October–February during heavy cloud cover. A product that goes dark for weeks loses the customer back to kerosene permanently." },
+    1: { r: "hit",  why: "Solar + hand crank covers cloudy highland periods without assuming grid access. The crank is a low-cost reliability backstop that fits communities where outages are unpredictable." },
+    2: { r: "miss", why: "USB grid backup assumes reliable electricity access — exactly the problem LumaVida is solving for. It also adds cost and requires a different product line for grid vs. off-grid users." }
+  },
+  light: {
+    0: { r: "miss", why: "Single dim mode fails to serve the real use pattern: bright task light for cooking/homework, dim ambient for evenings. A one-mode lamp gets replaced by kerosene for task work." },
+    1: { r: "hit",  why: "Two modes matches observed household lighting behavior — task and ambient. It's the minimum viable product that actually replaces kerosene across the night rather than just part of it." },
+    2: { r: "neutral", why: "Adjustable + reading focus is genuinely useful — but it's a feature premium that pushes cost up without meaningfully changing adoption in communities where price is the primary barrier." }
+  },
+  price: {
+    0: { r: "hit",  why: "At $200–400/month household income, under $5 is the switching threshold that competes with kerosene's low upfront cost. Higher prices require credit infrastructure that doesn't exist in most target communities." },
+    1: { r: "neutral", why: "$5–$15 is reachable for some households — but it likely requires installment payments LumaVida can't yet offer. It narrows the addressable market significantly." },
+    2: { r: "miss", why: "Premium pricing ($15–$30) requires household income and credit access that the target community doesn't have. This is a different customer than the one on the handout." }
+  },
+  purchase: {
+    0: { r: "hit",  why: "Individual unit lowers the entry barrier to the minimum. Household purchase decisions don't require communal commitment — they require one person to say yes at a price they can manage." },
+    1: { r: "neutral", why: "2-pack makes sense if families have cash for the bundle — but at ultra-low margins it just doubles the unit cost with no behavioral reason families need two at once." },
+    2: { r: "miss", why: "Community bundles (6+) assume collective purchasing infrastructure — cooperatives, credit pools, or NGO intermediaries. These exist in some communities but not reliably enough to build a launch strategy around." }
+  }
+};
+
+const DEBRIEF = "The defensible configuration is mid-grade durability, solar + hand crank, two brightness modes, ultra-low price, and individual units — totaling 8 points. Every choice is forced by the handout context: highland cloud cover eliminates solar-only; income level eliminates premium pricing; the kerosene habit means price is the switching barrier, not features; and individual purchase lowers entry friction without requiring communal infrastructure. Notice: none of these answers come from the P&G case. You had to reason from the Ecuador scenario.";
+
+const CONCEPTS = [
+  "Product–Market Fit (Ch.11)",
+  "Context-Driven Design",
+  "New Product Development (Ch.12)",
+  "Switching Costs (Ch.6)",
+  "Price as Market Access (Ch.14)"
+];
+
+// ══════════════════════════════════════════
+// STATE & RENDER
+// ══════════════════════════════════════════
+let selections = {};
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  selections = {};
+  renderLevers();
+  updateBudget();
+  show('game');
+}
+
+function renderLevers() {
+  const grid = document.getElementById('levers-grid');
+  grid.innerHTML = '';
+  LEVERS.forEach(lever => {
+    const el = document.createElement('div');
+    el.className = 'lever';
+    el.innerHTML = `<div class="lever-name">${lever.name}</div>`;
+    const opts = document.createElement('div');
+    opts.className = 'lever-opts';
+    lever.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.id = `opt-${lever.id}-${i}`;
+      btn.innerHTML = `${opt.label}<span class="opt-cost">${opt.cost} pt${opt.cost > 1 ? 's' : ''}</span>`;
+      btn.onclick = () => select(lever.id, i);
+      opts.appendChild(btn);
+    });
+    el.appendChild(opts);
+    grid.appendChild(el);
+  });
+}
+
+function select(leverId, idx) {
+  // Deselect only the other options within this same lever
+  const lever = LEVERS.find(l => l.id === leverId);
+  lever.options.forEach((_, i) => {
+    const b = document.getElementById(`opt-${leverId}-${i}`);
+    if (b) b.classList.toggle('selected', i === idx);
+  });
+  selections[leverId] = idx;
+  updateBudget();
+}
+
+function updateBudget() {
+  const used = Object.entries(selections).reduce((s, [lid, oi]) => {
+    const l = LEVERS.find(x => x.id === lid);
+    return s + (l ? l.options[oi].cost : 0);
+  }, 0);
+
+  const pct = Math.min((used / BUDGET) * 100, 100);
+  const fill = document.getElementById('bfill');
+  const num = document.getElementById('bnum');
+  const exact = used === BUDGET;
+  const over = used > BUDGET;
+
+  fill.style.width = pct + '%';
+  fill.className = 'budget-fill' + (over ? ' over' : '');
+  num.textContent = `${used} / ${BUDGET}`;
+  num.className = 'budget-num' + (over ? ' over' : '');
+
+  const allPicked = LEVERS.every(l => selections[l.id] !== undefined);
+  document.getElementById('game-badge').textContent =
+    over ? `OVER BUDGET — ${used - BUDGET} PT OVER` :
+    allPicked ? 'ALL LEVERS CHOSEN ✓' :
+    `${used} / ${BUDGET} POINTS USED`;
+}
+
+let hidingSelections = false;
+
+function clearAll() {
+  selections = {};
+  hidingSelections = false;
+  const toggleBtn = document.getElementById('toggle-btn');
+  toggleBtn.textContent = 'HIDE SELECTIONS';
+  toggleBtn.classList.remove('hiding');
+  LEVERS.forEach(l => l.options.forEach((_, i) => {
+    const b = document.getElementById(`opt-${l.id}-${i}`);
+    if (b) { b.classList.remove('selected'); b.style.visibility = ''; }
+  }));
+  updateBudget();
+}
+
+function toggleVisibility() {
+  hidingSelections = !hidingSelections;
+  const toggleBtn = document.getElementById('toggle-btn');
+  toggleBtn.textContent = hidingSelections ? 'SHOW SELECTIONS' : 'HIDE SELECTIONS';
+  toggleBtn.classList.toggle('hiding', hidingSelections);
+  LEVERS.forEach(l => l.options.forEach((_, i) => {
+    const b = document.getElementById(`opt-${l.id}-${i}`);
+    if (b && b.classList.contains('selected')) {
+      b.style.visibility = hidingSelections ? 'hidden' : 'visible';
+    }
+  }));
+}
+
+function toggleReveal() {
+  const btn = document.getElementById('reveal-toggle-btn');
+  const panel = document.getElementById('reveal-panel');
+  const isUnlocked = btn.classList.contains('unlocked');
+
+  if (!isUnlocked) {
+    btn.classList.add('unlocked');
+    btn.textContent = '🔓 HIDE OUTCOMES';
+    renderOutcomePanel(panel);
+    panel.style.display = 'block';
+  } else {
+    btn.classList.remove('unlocked');
+    btn.textContent = '🔒 REVEAL OUTCOMES';
+    panel.style.display = 'none';
+    panel.innerHTML = '';
+  }
+}
+
+function renderOutcomePanel(panel) {
+  if (Object.keys(selections).length === 0) {
+    panel.innerHTML = '<div style="color:var(--muted);font-family:Space Mono,monospace;font-size:13px;padding:16px;text-align:center;">No choices made yet — select levers first.</div>';
+    return;
+  }
+
+  let hits = 0, misses = 0, neutrals = 0;
+  const results = LEVERS.map(lever => {
+    const oi = selections[lever.id];
+    if (oi === undefined) return { lever, opt: null, out: null };
+    const opt = lever.options[oi];
+    const out = OUTCOMES[lever.id][oi];
+    if (out.r === 'hit') hits++;
+    else if (out.r === 'miss') misses++;
+    else neutrals++;
+    return { lever, opt, out };
+  }).filter(r => r.out !== null);
+
+  const score = hits * 2 + neutrals * 1;
+  const maxScore = results.length * 2;
+  const vClass = score >= 8 ? 'win' : score >= 5 ? 'partial' : 'loss';
+  const vText  = score >= 8 ? 'MARKET FIT' : score >= 5 ? 'PARTIAL FIT' : 'PRODUCT FAIL';
+
+  panel.innerHTML = `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;">
+      <div style="display:flex;align-items:center;gap:20px;margin-bottom:20px;">
+        <div>
+          <div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:0.15em;color:var(--muted);margin-bottom:4px;">SCORE</div>
+          <div style="font-family:Space Mono,monospace;font-size:32px;font-weight:700;color:var(--${vClass === 'win' ? 'green' : vClass === 'partial' ? 'accent' : 'red'})">${score} / ${maxScore}</div>
+        </div>
+        <div style="font-size:28px;font-weight:800;color:var(--${vClass === 'win' ? 'green' : vClass === 'partial' ? 'accent' : 'red'})">${vText}</div>
+        <div style="flex:1;font-size:13px;color:var(--muted);line-height:1.7;">
+          <strong style="color:var(--green)">${hits} hit${hits!==1?'s':''}</strong> ·
+          <strong style="color:var(--accent)">${neutrals} neutral${neutrals!==1?'s':''}</strong> ·
+          <strong style="color:var(--red)">${misses} miss${misses!==1?'es':''}</strong>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(${results.length},1fr);gap:10px;margin-bottom:20px;">
+        ${results.map((r,i) => `
+          <div style="border-radius:8px;padding:14px;border:1px solid ${r.out.r==='hit'?'rgba(64,240,160,0.3)':r.out.r==='miss'?'rgba(240,64,96,0.3)':'rgba(240,192,64,0.3)'};background:${r.out.r==='hit'?'rgba(64,240,160,0.07)':r.out.r==='miss'?'rgba(240,64,96,0.07)':'rgba(240,192,64,0.07)'};animation:fadeUp 0.3s ease ${i*0.06}s both;">
+            <div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:0.12em;color:${r.out.r==='hit'?'var(--green)':r.out.r==='miss'?'var(--red)':'var(--accent)'};margin-bottom:5px;text-transform:uppercase;">${r.lever.name} ${r.out.r==='hit'?'✓':r.out.r==='miss'?'✗':'~'}</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px;">${r.opt.label}</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.5;">${r.out.why}</div>
+          </div>`).join('')}
+      </div>
+      <div style="background:rgba(64,192,240,0.06);border:1px solid rgba(64,192,240,0.2);border-left:4px solid var(--accent2);border-radius:8px;padding:18px 22px;">
+        <div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:0.2em;color:var(--accent2);margin-bottom:10px;">PROFESSOR DEBRIEF</div>
+        <div style="font-size:14px;line-height:1.8;">${DEBRIEF}</div>
+      </div>
+    </div>`;
+}
+
+function revealOutcome() {
+  let hits = 0, misses = 0, neutrals = 0;
+  const results = LEVERS.map(lever => {
+    const oi = selections[lever.id];
+    const opt = lever.options[oi];
+    const out = OUTCOMES[lever.id][oi];
+    if (out.r === 'hit') hits++;
+    else if (out.r === 'miss') misses++;
+    else neutrals++;
+    return { lever, opt, out };
+  });
+
+  const score = hits * 2 + neutrals * 1;
+  const maxScore = LEVERS.length * 2;
+  const vClass = score >= 8 ? 'win' : score >= 5 ? 'partial' : 'loss';
+  const vText  = score >= 8 ? 'MARKET FIT' : score >= 5 ? 'PARTIAL FIT' : 'PRODUCT FAIL';
+  const vSub   = score >= 8
+    ? 'Your product decisions align with the customer context. This product reaches launch.'
+    : score >= 5
+    ? 'Some decisions fit — some don\'t. In real launches, one fatal flaw can kill the product.'
+    : 'Critical misalignment between decisions and customer reality. Back to field research.';
+
+  const body = document.getElementById('outcome-body');
+  body.innerHTML = '';
+
+  // Verdict
+  const vBlock = document.createElement('div');
+  vBlock.className = 'verdict-block';
+  vBlock.innerHTML = `<div class="verdict ${vClass}">${vText}</div><div class="verdict-sub">${vSub}</div>`;
+  body.appendChild(vBlock);
+
+  // Score strip
+  const strip = document.createElement('div');
+  strip.className = 'score-strip';
+  strip.innerHTML = `
+    <div>
+      <div class="score-label">SCORE</div>
+      <div class="score-big ${vClass}">${score} / ${maxScore}</div>
+    </div>
+    <div class="score-detail">
+      <strong style="color:var(--green)">${hits} hit${hits!==1?'s':''}</strong> ·
+      <strong style="color:var(--accent)">${neutrals} neutral${neutrals!==1?'s':''}</strong> ·
+      <strong style="color:var(--red)">${misses} miss${misses!==1?'es':''}</strong><br>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;">Tiebreaker: team that best defends their written assumptions wins equal scores</span>
+    </div>`;
+  body.appendChild(strip);
+
+  // Results grid
+  const grid = document.createElement('div');
+  grid.className = 'results-grid';
+  results.forEach((r, i) => {
+    const card = document.createElement('div');
+    card.className = `result-card ${r.out.r}`;
+    card.style.animationDelay = `${i * 0.07}s`;
+    const icon = r.out.r === 'hit' ? '✓' : r.out.r === 'miss' ? '✗' : '~';
+    card.innerHTML = `
+      <div class="result-lever">${r.lever.name} ${icon}</div>
+      <div class="result-choice">${r.opt.label}</div>
+      <div class="result-why">${r.out.why}</div>`;
+    grid.appendChild(card);
+  });
+  body.appendChild(grid);
+
+  // Debrief
+  const deb = document.createElement('div');
+  deb.className = 'debrief';
+  deb.innerHTML = `<div class="debrief-lbl">PROFESSOR DEBRIEF</div><div class="debrief-text">${DEBRIEF}</div>`;
+  body.appendChild(deb);
+
+  // Concepts
+  const pills = document.createElement('div');
+  pills.className = 'concepts';
+  CONCEPTS.forEach(c => {
+    const p = document.createElement('span');
+    p.className = 'concept'; p.textContent = c;
+    pills.appendChild(p);
+  });
+  body.appendChild(pills);
+
+  // Nav
+  const nav = document.createElement('div');
+  nav.className = 'nav-row';
+  nav.innerHTML = `
+    <button class="nav-btn" onclick="startGame()">← Play Again</button>
+    <button class="nav-btn primary" onclick="show('home')">Home</button>`;
+  body.appendChild(nav);
+
+  show('outcome');
+}
+// ── INSTRUCTOR MODE ──────────────────────────────────────
+// Access via: yourlink.html?instructor=true
+// Students see nothing. You see the reveal button.
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const isInstructor = params.get('instructor') === 'true';
+  // Run immediately (script is at end of body, button already exists in DOM)
+  const revBtn = document.getElementById('reveal-toggle-btn');
+  if (revBtn) revBtn.style.display = isInstructor ? '' : 'none';
+})();
+
+// ── PASSWORD GATE ──────────────────────────────────────
+const PW = 'LAUNCH';
+function checkPw() {
+  const val = document.getElementById('pw-input').value.trim().toUpperCase();
+  const err = document.getElementById('pw-err');
+  const inp = document.getElementById('pw-input');
+  if (val === PW) {
+    show('home');
+  } else {
+    err.textContent = 'INCORRECT — try again';
+    inp.classList.remove('shake');
+    void inp.offsetWidth;
+    inp.classList.add('shake');
+    inp.value = '';
+    setTimeout(() => { err.textContent = ''; inp.classList.remove('shake'); }, 1800);
+  }
+}
+
+</script>
+</body>
+</html>
