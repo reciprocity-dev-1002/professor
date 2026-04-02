@@ -82,6 +82,10 @@
       display: block;
     }
 
+    .screen.active.password-screen {
+      display: flex;
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -722,7 +726,7 @@
     <div class="password-card">
       <h2>Welcome</h2>
       <p>Enter the password given in class to begin.</p>
-      <input type="password" id="passwordInput" class="password-input" placeholder="Password">
+      <input type="password" id="passwordInput" class="password-input" placeholder="Password" autocomplete="off" autocorrect="off" autocapitalize="off">
       <div class="password-error" id="passwordError"></div>
       <button onclick="checkPassword()" style="width: 100%;">Enter</button>
     </div>
