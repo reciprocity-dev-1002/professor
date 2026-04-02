@@ -148,7 +148,6 @@
     }
 
     .password-screen {
-      display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
@@ -1351,6 +1350,7 @@
       } else {
         document.getElementById('header').style.display = 'none';
       }
+      window.scrollTo(0, 0);
     }
 
     function goToJoinScreen() { goToScreen('joinScreen'); }
