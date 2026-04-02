@@ -778,24 +778,28 @@
 
       <div class="card">
         <h2>Three Pricing Methods, One Decision</h2>
-        <p>Your job: help StreamLocal pick a price.</p>
-        <p>We'll walk you through three pricing methods. You'll pick a price using each method, discuss with your group, and then recommend one final price to the CFO.</p>
+        <p>Your job: help StreamLocal pick a price for their local streaming service.</p>
+        <p>There are three ways to approach pricing — from least strategic to most. You'll apply all three, then decide which one actually belongs in the board deck.</p>
 
-        <h3 style="margin-top: 24px;">Here's how it works:</h3>
-        <ul style="list-style: none; padding-left: 0;">
-          <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
-            <span style="position: absolute; left: 0; font-weight: 700; color: var(--case-primary);">1</span>
-            <strong>Your Pick</strong> — You choose a price using each method.
-          </li>
-          <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
-            <span style="position: absolute; left: 0; font-weight: 700; color: var(--case-primary);">2</span>
-            <strong>Compare with Your Group</strong> — Stop, share what you picked, and hear what others chose.
-          </li>
-          <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
-            <span style="position: absolute; left: 0; font-weight: 700; color: var(--case-primary);">3</span>
-            <strong>Which Method Wins?</strong> — After all three rounds, you and your group vote on which method to use.
-          </li>
-        </ul>
+        <div style="background: var(--case-light); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 20px 0;">
+          <div style="font-size: 13px; font-weight: 700; color: var(--case-primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">The Strategic Progression</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: white; border-radius: 6px; border: 1px solid var(--border);">
+              <div style="background: #94a3b8; color: white; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">ROUND 1</div>
+              <div><strong>Cost-Plus</strong> — least strategic. Start with your costs, add a markup.</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: white; border-radius: 6px; border: 1px solid var(--border);">
+              <div style="background: var(--case-primary); color: white; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">ROUND 2</div>
+              <div><strong>Competitive</strong> — market-aware. Anchor your price against what competitors charge.</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: white; border-radius: 6px; border: 1px solid #B45309;">
+              <div style="background: #D97706; color: white; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">ROUND 3</div>
+              <div><strong>Value-Based</strong> — most strategic. Price what customers believe it's worth.</div>
+            </div>
+          </div>
+        </div>
+
+        <p style="color: var(--muted); font-size: 14px;">After each round you'll stop and compare with your group. At the end, vote on which method to take to the board.</p>
 
         <button onclick="goToDataBriefing()" style="width: 100%; margin-top: 24px;">Get the Data</button>
       </div>
@@ -914,20 +918,41 @@
     </div>
   </div>
 
-  <!-- Pricing Round 2: Margin-Based -->
+  <!-- Pricing Round 2: Competitive -->
   <div id="pricingRound2Screen" class="screen">
     <div class="container">
       <div class="card">
-        <h2>Round 2: Margin-Based Pricing</h2>
+        <h2>Round 2: Competitive Pricing</h2>
 
         <div class="pricing-method">
           <h4>Method Definition</h4>
-          <p>Start with your target profit margin. Work backward to find the price that delivers it.</p>
-          <div class="formula">Price = Variable Cost ÷ (1 - Target Margin%)</div>
-          <p style="font-size: 12px; color: var(--warning); margin-top: 8px; margin-bottom: 0;"><strong>Note:</strong> This method ignores fixed costs in the per-unit calculation. You need enough volume to cover fixed costs separately.</p>
+          <p>Look at what competitors charge. Set your price based on where you want to sit in the market — above, below, or alongside them.</p>
+          <div class="formula">Your Price = Competitor Price ± Positioning Adjustment</div>
+          <p style="font-size: 12px; color: var(--warning); margin-top: 8px; margin-bottom: 0;"><strong>Watch out:</strong> This method is market-aware but ignores your own costs and the unique value you create.</p>
         </div>
 
-        <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px; margin-top: 24px;">Choose a target margin, see your price, and justify your choice. Then compare with your group.</p>
+        <h3 style="margin-top: 24px;">What the Market Looks Like</h3>
+        <div class="data-grid" style="margin-bottom: 24px;">
+          <div class="data-card">
+            <h4>Streaming Competitors</h4>
+            <ul class="research-list" style="margin-bottom: 0;">
+              <li><strong>Netflix (w/ ads):</strong> $6.99/mo — huge library, <em>zero</em> local content</li>
+              <li><strong>Hulu (w/ ads):</strong> $7.99/mo — national shows, minimal local</li>
+              <li><strong>ESPN+:</strong> $10.99/mo — national sports only, no local teams</li>
+              <li><strong>FuboTV (local sports tier):</strong> $17.99/mo — has local, but packed with extras most don't want</li>
+            </ul>
+          </div>
+          <div class="data-card">
+            <h4>The Gap StreamLocal Can Own</h4>
+            <ul class="research-list" style="margin-bottom: 0;">
+              <li>ESPN+ has sports — but not <em>your</em> local teams</li>
+              <li>FuboTV has local — but charges $18 for a bundle you don't need</li>
+              <li><strong>The unserved sweet spot:</strong> Local sports + local news, $9–$15/mo</li>
+            </ul>
+          </div>
+        </div>
+
+        <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px;">Pick which competitor you're anchoring against, set your price, and explain your positioning. Then compare with your group.</p>
 
         <div id="round2Container"></div>
 
@@ -942,11 +967,11 @@
       <div class="card discussion-gate">
         <div class="discussion-gate-title">STOP — Compare with Your Group</div>
         <div class="discussion-gate-content">
-          <p style="margin-bottom: 16px; font-weight: 500;">Share your price with your group. What did they pick?</p>
+          <p style="margin-bottom: 16px; font-weight: 500;">Share your price with your group. What did they anchor against?</p>
 
           <div class="discussion-question">
-            <label for="round2GroupSaid">What price did most of your group choose, and why?</label>
-            <textarea id="round2GroupSaid" placeholder="E.g., Most of our group picked $8.50 because..." onchange="checkRound2Discussion()"></textarea>
+            <label for="round2GroupSaid">What price did most of your group choose, and which competitor did they anchor against?</label>
+            <textarea id="round2GroupSaid" placeholder="E.g., Most of our group picked $11.99 because we anchored below FuboTV..." onchange="checkRound2Discussion()"></textarea>
             <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Min. 20 characters</div>
           </div>
 
@@ -983,29 +1008,31 @@
 
         <div class="pricing-method">
           <h4>Method Definition</h4>
-          <p>Start with what customers are willing to pay. Price to the value they perceive, not what it costs you.</p>
+          <p>Ignore your costs. Ignore competitors. Price to what customers believe StreamLocal is <em>worth to them</em>. The most strategic method — and the hardest to execute.</p>
         </div>
+
+        <p style="color: var(--muted); font-size: 14px; margin-top: 16px; margin-bottom: 20px;">Here's the trade-off: a higher price captures fewer subscribers, but more revenue per subscriber. You need to pick a target segment — then defend it.</p>
 
         <div class="data-grid" style="margin-bottom: 24px;">
           <div class="data-card">
-            <h4>What Customers Will Pay</h4>
+            <h4>WTP Segments (of 50,000 target subscribers)</h4>
             <ul class="research-list" style="margin-bottom: 0;">
-              <li><strong>60%</strong> → $5–8/mo</li>
-              <li><strong>25%</strong> → $9–12/mo</li>
-              <li><strong>10%</strong> → $13–16/mo</li>
-              <li><strong>5%</strong> → $17+/mo</li>
+              <li><strong>$5–8/mo</strong> — 60% of market → ~30,000 subscribers</li>
+              <li><strong>$9–12/mo</strong> — 25% of market → ~12,500 subscribers</li>
+              <li><strong>$13–16/mo</strong> — 10% of market → ~5,000 subscribers</li>
+              <li><strong>$17+/mo</strong> — 5% of market → ~2,500 subscribers</li>
             </ul>
           </div>
           <div class="data-card">
-            <h4>Most Valued Features</h4>
+            <h4>What They Value Most</h4>
             <ul class="research-list" style="margin-bottom: 0;">
-              <li><strong>Local sports:</strong> 78% value it</li>
-              <li><strong>Local news:</strong> 52% value it</li>
+              <li><strong>Local sports:</strong> 78% say essential</li>
+              <li><strong>Local news:</strong> 52% say essential</li>
+              <li><strong>On-demand library:</strong> 41% say essential</li>
+              <li style="margin-top: 8px; font-style: italic; color: var(--muted);">Hint: the segments willing to pay more tend to care most about live local sports.</li>
             </ul>
           </div>
         </div>
-
-        <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px;">Pick a price, then explain which customer segment you're targeting and why. Then compare with your group.</p>
 
         <div id="round3Container"></div>
 
@@ -1067,9 +1094,9 @@
             <h4>Cost-Plus</h4>
             <p>All costs + markup</p>
           </div>
-          <div class="method-card" onclick="selectMethod('margin-based', event)">
-            <h4>Margin-Based</h4>
-            <p>Target profit % works backward</p>
+          <div class="method-card" onclick="selectMethod('competitive', event)">
+            <h4>Competitive</h4>
+            <p>Anchor to what competitors charge</p>
           </div>
           <div class="method-card" onclick="selectMethod('value-based', event)">
             <h4>Value-Based</h4>
@@ -1108,8 +1135,8 @@
             <div class="price-large">$<span id="yourCostPlus">9.75</span>/mo</div>
           </div>
           <div class="price-card">
-            <h4>Margin-Based</h4>
-            <div class="price-large">$<span id="yourMargin">7.00</span>/mo</div>
+            <h4>Competitive</h4>
+            <div class="price-large">$<span id="yourMargin">11.99</span>/mo</div>
           </div>
           <div class="price-card">
             <h4>Value-Based</h4>
@@ -1133,9 +1160,9 @@
               <td>All costs + markup = profit</td>
             </tr>
             <tr>
-              <td><strong>Margin-Based</strong></td>
-              <td>$<span id="compMB">7.00</span></td>
-              <td>Customer pays you % profit on cost</td>
+              <td><strong>Competitive</strong></td>
+              <td>$<span id="compMB">11.99</span></td>
+              <td>Anchored against what rivals charge</td>
             </tr>
             <tr>
               <td><strong>Value-Based</strong></td>
@@ -1146,7 +1173,7 @@
         </table>
 
         <div class="reflection-prompt">
-          <strong>Why does value-based pricing produce a higher price than cost-based?</strong> What does this tell you about how marketers should think about pricing?
+          <strong>Notice the progression:</strong> Cost-plus is anchored to your costs. Competitive is anchored to your rivals. Value-based is anchored to your customer. Which anchor is most favorable to StreamLocal — and why does moving up the ladder usually produce a higher price?
         </div>
 
         <div class="consensus-card">
@@ -1160,7 +1187,8 @@
             <textarea id="finalJustification" placeholder="We recommend StreamLocal charge $___/month because..." onchange="checkFinalRecommendation()"></textarea>
             <div id="justificationCounter" style="font-size: 12px; color: var(--muted); margin-top: 4px;">0 / 40 characters</div>
           </div>
-          <button id="goSummaryBtn" onclick="goToSummary()" disabled style="width: 100%;">See Final Summary</button>
+          <p style="font-size:13px; color:var(--muted); margin-bottom:8px; text-align:center;">Submitting this exercise records your participation and case work for today's class.</p>
+          <button id="goSummaryBtn" onclick="goToSummary()" disabled style="width: 100%;">Submit &amp; Record Participation →</button>
         </div>
       </div>
     </div>
@@ -1205,8 +1233,8 @@
               <td>$<span id="summaryCP">9.75</span></td>
             </tr>
             <tr>
-              <td><strong>Margin-Based</strong></td>
-              <td>$<span id="summaryMB">7.00</span></td>
+              <td><strong>Competitive</strong></td>
+              <td>$<span id="summaryMB">11.99</span></td>
             </tr>
             <tr>
               <td><strong>Value-Based</strong></td>
@@ -1260,7 +1288,7 @@
       studentEmail: '',
       groupNum: null,
       round1: { markup: 30, price: null, justification: '', groupSaid: '', wouldChange: false, changeReason: '' },
-      round2: { margin: 50, price: null, justification: '', groupSaid: '', wouldChange: false, changeReason: '' },
+      round2: { competitorAnchor: 'espn', price: null, justification: '', groupSaid: '', wouldChange: false, changeReason: '' },
       round3: { price: null, justification: '', groupSaid: '', wouldChange: false, changeReason: '' },
       methodVote: null,
       groupMethodRec: '',
@@ -1273,6 +1301,22 @@
     const VARIABLE_MONTHLY = 3.50;
     const TARGET_SUBSCRIBERS = 50000;
     const FIXED_PER_SUB = FIXED_ANNUAL / TARGET_SUBSCRIBERS / 12; // $4.00
+
+    // Competitor data for Round 2
+    const COMPETITORS = {
+      netflix:  { name: 'Netflix (w/ ads)',     price: 6.99,  note: 'Massive library, zero local content' },
+      hulu:     { name: 'Hulu (w/ ads)',         price: 7.99,  note: 'National shows, minimal local' },
+      espn:     { name: 'ESPN+',                 price: 10.99, note: 'National sports only, no local teams' },
+      fubotv:   { name: 'FuboTV (local tier)',   price: 17.99, note: 'Has local, but overloaded with extras' },
+    };
+
+    // WTP segments for Round 3
+    const WTP_SEGMENTS = [
+      { label: '$5–8/mo',  pct: 60, subs: 30000, minPrice: 5,  maxPrice: 8  },
+      { label: '$9–12/mo', pct: 25, subs: 12500, minPrice: 9,  maxPrice: 12 },
+      { label: '$13–16/mo',pct: 10, subs: 5000,  minPrice: 13, maxPrice: 16 },
+      { label: '$17+/mo',  pct: 5,  subs: 2500,  minPrice: 17, maxPrice: 30 },
+    ];
 
     // ============ Password Gate ============
     function checkPassword() {
@@ -1355,8 +1399,11 @@
       return baseCost * (1 + markupPercent / 100);
     }
 
-    function calculateMarginBasedPrice(marginPercent) {
-      return VARIABLE_MONTHLY / (1 - marginPercent / 100);
+    function getCompetitorReachableSubs(price) {
+      // Returns how many WTP segments can afford this price
+      let subs = 0;
+      WTP_SEGMENTS.forEach(seg => { if (price <= seg.maxPrice) subs += seg.subs; });
+      return subs;
     }
 
     // ============ Round 1: Cost-Plus ============
@@ -1453,71 +1500,87 @@
       goPricingRound2();
     }
 
-    // ============ Round 2: Margin-Based ============
+    // ============ Round 2: Competitive ============
     function renderRound2() {
       const container = document.getElementById('round2Container');
       container.innerHTML = '';
 
-      if (!state.round2.price) {
-        state.round2.price = calculateMarginBasedPrice(state.round2.margin);
-      }
+      const compRows = Object.entries(COMPETITORS).map(([key, c]) => `
+        <tr>
+          <td><strong>${c.name}</strong></td>
+          <td style="font-weight: 700; color: var(--case-primary);">$${c.price.toFixed(2)}/mo</td>
+          <td style="font-size: 13px; color: var(--muted);">${c.note}</td>
+        </tr>
+      `).join('');
+
+      const defaultPrice = state.round2.price || 11.99;
 
       const section = document.createElement('div');
       section.className = 'student-pricing-section';
       section.innerHTML = `
         <div style="margin-bottom: 16px;">
+          <table class="comparison-table" style="margin-bottom: 20px;">
+            <thead><tr><th>Competitor</th><th>Price</th><th>What's Missing</th></tr></thead>
+            <tbody>${compRows}</tbody>
+          </table>
           <div class="input-group">
-            <label>Target Margin (%)</label>
-            <div class="calculator-row">
-              <select class="margin-select" id="round2Margin" onchange="updateMarginBasedPrice()">
-                <option value="30">30%</option>
-                <option value="40">40%</option>
-                <option value="50" selected>50%</option>
-                <option value="60">60%</option>
-                <option value="70">70%</option>
-                <option value="80">80%</option>
-              </select>
-            </div>
+            <label>Which competitor are you anchoring against?</label>
+            <select id="round2Anchor" onchange="updateCompetitivePrice()">
+              <option value="netflix">Netflix (w/ ads) — $6.99</option>
+              <option value="hulu">Hulu (w/ ads) — $7.99</option>
+              <option value="espn" selected>ESPN+ — $10.99</option>
+              <option value="fubotv">FuboTV (local tier) — $17.99</option>
+            </select>
           </div>
-          <div class="price-display">
-            Price: $<span id="round2PriceDisplay">7.00</span>/month
+          <div class="input-group" style="margin-top: 12px;">
+            <label>Your Price ($/month)</label>
+            <input type="number" id="round2Price" class="price-input" placeholder="e.g., 11.99" step="0.01" min="3" max="30" value="${defaultPrice}" onchange="updateCompetitivePrice()">
           </div>
+          <div id="round2PositioningNote" class="price-display" style="font-size: 13px; margin-bottom: 12px;"></div>
           <div class="input-group">
-            <label>Your Justification (1-2 sentences)</label>
-            <textarea id="round2Justification" class="justification-input" placeholder="Why this margin?" onchange="checkRound2Complete()"></textarea>
+            <label>Your Justification — why this price relative to that competitor?</label>
+            <textarea id="round2Justification" class="justification-input" placeholder="We priced at $__ because compared to [competitor]..." onchange="checkRound2Complete()"></textarea>
           </div>
         </div>
       `;
       container.appendChild(section);
-      updateMarginBasedDisplay();
+      updateCompetitivePrice();
     }
 
-    function updateMarginBasedPrice() {
-      const margin = parseInt(document.getElementById('round2Margin').value);
-      const price = calculateMarginBasedPrice(margin);
-      state.round2.margin = margin;
+    function updateCompetitivePrice() {
+      const anchor = document.getElementById('round2Anchor')?.value;
+      const priceInput = document.getElementById('round2Price')?.value;
+      const price = parseFloat(priceInput);
+      if (!anchor || isNaN(price)) return;
+
+      const comp = COMPETITORS[anchor];
+      state.round2.competitorAnchor = anchor;
       state.round2.price = parseFloat(price.toFixed(2));
-      document.getElementById('round2PriceDisplay').textContent = price.toFixed(2);
+
+      const diff = price - comp.price;
+      let note = '';
+      if (Math.abs(diff) < 0.50) {
+        note = `⚖️ You're matching ${comp.name} ($${comp.price}) — pricing at parity.`;
+      } else if (diff > 0) {
+        note = `↑ You're pricing $${diff.toFixed(2)} <strong>above</strong> ${comp.name} ($${comp.price}) — you're betting your local content justifies the premium.`;
+      } else {
+        note = `↓ You're pricing $${Math.abs(diff).toFixed(2)} <strong>below</strong> ${comp.name} ($${comp.price}) — you're competing on price.`;
+      }
+      const noteEl = document.getElementById('round2PositioningNote');
+      if (noteEl) noteEl.innerHTML = note;
       checkRound2Complete();
-    }
-
-    function updateMarginBasedDisplay() {
-      const margin = state.round2.margin || 50;
-      const price = calculateMarginBasedPrice(margin);
-      state.round2.price = parseFloat(price.toFixed(2));
-      document.getElementById('round2PriceDisplay').textContent = price.toFixed(2);
     }
 
     function checkRound2Complete() {
       const just = document.getElementById('round2Justification')?.value.trim();
-      if (just) {
-        state.round2.justification = just;
-      }
-      document.getElementById('round2SubmitBtn').disabled = !just;
+      const price = document.getElementById('round2Price')?.value;
+      if (just) state.round2.justification = just;
+      document.getElementById('round2SubmitBtn').disabled = !(just && price);
     }
 
     function submitRound2() {
       state.round2.justification = document.getElementById('round2Justification').value.trim();
+      state.round2.price = parseFloat(document.getElementById('round2Price').value);
       goToScreen('round2DiscussionScreen');
     }
 
@@ -1552,23 +1615,57 @@
       const container = document.getElementById('round3Container');
       container.innerHTML = '';
 
+      const segmentOptions = WTP_SEGMENTS.map((seg, i) => `
+        <div class="radio-option" style="align-items: flex-start; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: white;">
+          <input type="radio" id="seg${i}" name="round3Segment" value="${i}" onchange="updateSegmentChoice()" style="margin-top: 2px;">
+          <label for="seg${i}" style="margin: 0; font-weight: 400; line-height: 1.4;">
+            <strong>${seg.label}</strong> &nbsp;·&nbsp; ${seg.pct}% of market &nbsp;·&nbsp; ~${seg.subs.toLocaleString()} subscribers
+          </label>
+        </div>
+      `).join('');
+
       const section = document.createElement('div');
       section.className = 'student-pricing-section';
       section.innerHTML = `
         <div style="margin-bottom: 16px;">
           <div class="input-group">
-            <label>Which price? (Enter 5–16 to match the WTP segments)</label>
-            <div class="calculator-row">
-              <input type="number" id="round3Price" class="price-input" placeholder="e.g., 10.99" step="0.01" min="5" max="16" onchange="updateValueBasedPrice()">
-            </div>
+            <label style="font-size: 15px; font-weight: 700;">Step 1: Pick your target segment</label>
+            <p style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">Higher price = fewer subscribers but more revenue per subscriber. Which segment are you designing the price for?</p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">${segmentOptions}</div>
           </div>
+
+          <div id="round3TradeoffBox" style="display: none; background: linear-gradient(135deg, rgba(245,158,11,0.1) 0%, rgba(245,158,11,0.05) 100%); border-left: 4px solid var(--case-accent); border-radius: 6px; padding: 14px; margin: 16px 0; font-size: 14px;"></div>
+
+          <div class="input-group" style="margin-top: 16px;">
+            <label style="font-size: 15px; font-weight: 700;">Step 2: Set your price</label>
+            <input type="number" id="round3Price" class="price-input" placeholder="Enter your price ($/mo)" step="0.01" min="5" max="30" onchange="updateValueBasedPrice()">
+          </div>
+
           <div class="input-group">
-            <label>Your Justification (1-2 sentences)</label>
-            <textarea id="round3Justification" class="justification-input" placeholder="Which customer segment are you targeting and why?" onchange="checkRound3Complete()"></textarea>
+            <label>Step 3: Defend the trade-off</label>
+            <textarea id="round3Justification" class="justification-input" placeholder="I'm targeting the [segment] because... I'm willing to give up the larger [segment] because..." onchange="checkRound3Complete()" style="min-height: 80px;"></textarea>
           </div>
         </div>
       `;
       container.appendChild(section);
+    }
+
+    function updateSegmentChoice() {
+      const selected = document.querySelector('input[name="round3Segment"]:checked');
+      if (!selected) return;
+      const seg = WTP_SEGMENTS[parseInt(selected.value)];
+      state.round3.segment = selected.value;
+
+      // Show trade-off box
+      const otherSubs = TARGET_SUBSCRIBERS - seg.subs;
+      const box = document.getElementById('round3TradeoffBox');
+      box.style.display = 'block';
+      box.innerHTML = `
+        <strong>Targeting ${seg.label}:</strong> You can reach ~${seg.subs.toLocaleString()} subscribers (${seg.pct}% of market).<br>
+        <span style="color: var(--warning);">⚠ You're leaving ~${otherSubs.toLocaleString()} potential subscribers on the table</span> — the ${100 - seg.pct}% who won't pay this much.<br>
+        <span style="color: var(--success); font-size: 13px;">✓ But those ${seg.subs.toLocaleString()} subscribers value what you offer enough to pay a premium for it.</span>
+      `;
+      checkRound3Complete();
     }
 
     function updateValueBasedPrice() {
@@ -1582,11 +1679,12 @@
     function checkRound3Complete() {
       const price = document.getElementById('round3Price')?.value.trim();
       const just = document.getElementById('round3Justification')?.value.trim();
+      const segment = document.querySelector('input[name="round3Segment"]:checked');
       if (price && just) {
         state.round3.price = parseFloat(price);
         state.round3.justification = just;
       }
-      document.getElementById('round3SubmitBtn').disabled = !(price && just);
+      document.getElementById('round3SubmitBtn').disabled = !(price && just && segment);
     }
 
     function submitRound3() {
@@ -1628,7 +1726,7 @@
         event.currentTarget.classList.add('selected');
       }
       document.getElementById('methodVoteMessage').style.display = 'block';
-      const methodNames = { 'cost-plus': 'Cost-Plus', 'margin-based': 'Margin-Based', 'value-based': 'Value-Based' };
+      const methodNames = { 'cost-plus': 'Cost-Plus', 'competitive': 'Competitive', 'value-based': 'Value-Based' };
       document.getElementById('methodVoteText').textContent = methodNames[method];
       checkMethodVote();
     }
@@ -1670,7 +1768,7 @@
       document.getElementById('summaryMB').textContent = state.round2.price.toFixed(2);
       document.getElementById('summaryVB').textContent = (state.round3.price || 10.99).toFixed(2);
 
-      const methodNames = { 'cost-plus': 'Cost-Plus', 'margin-based': 'Margin-Based', 'value-based': 'Value-Based' };
+      const methodNames = { 'cost-plus': 'Cost-Plus', 'competitive': 'Competitive', 'value-based': 'Value-Based' };
       document.getElementById('summaryMethodVote').textContent = methodNames[state.methodVote] || '—';
 
       document.getElementById('summaryGroupMethod').textContent = methodNames[state.methodVote] || '—';
@@ -1705,8 +1803,8 @@
             price: state.round1.price,
             justification: state.round1.justification
           },
-          marginBased: {
-            margin: state.round2.margin,
+          competitive: {
+            competitorAnchor: state.round2.competitorAnchor,
             price: state.round2.price,
             justification: state.round2.justification
           },
