@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W12.1 — Value or Rent?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --border: #e2e5eb;
+  --text: #1a1d23;
+  --muted: #6b7280;
+  --accent: #2B5F8E;
+  --accent-light: #e8f0f9;
+  --value: #1D6349;
+  --value-light: #e6f4ee;
+  --rent: #B03A2E;
+  --rent-light: #fcecea;
+  --unsure: #6B7280;
+  --unsure-light: #f3f4f6;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── SHARED LAYOUT ── */
+.page-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+.week-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.screen-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.screen-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+/* ── FORM ── */
+.field {
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--accent);
+  background: white;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+.btn-primary:hover:not(:disabled) { background: #234d75; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-full { width: 100%; }
+
+/* ── PASSWORD SCREEN ── */
+#pw-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.pw-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.pw-box .week-tag { text-align: center; }
+.pw-box .screen-title { font-size: 24px; margin-bottom: 12px; }
+
+.pw-input-wrap {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0 12px;
+}
+
+.pw-input-wrap input {
+  flex: 1;
+  padding: 12px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  text-align: center;
+  background: var(--bg);
+}
+
+.pw-input-wrap input:focus { border-color: var(--accent); background: white; }
+
+.pw-err {
+  color: var(--rent);
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 20px;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.shake { animation: shake 0.4s ease; }
+
+/* ── HOW-TO BANNER ── */
+.howto {
+  background: var(--accent-light);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.howto-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.howto-list {
+  list-style: none;
+  counter-reset: steps;
+}
+
+.howto-list li {
+  counter-increment: steps;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  padding: 3px 0 3px 28px;
+  position: relative;
+}
+
+.howto-list li::before {
+  content: counter(steps);
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ── SORT CARDS ── */
+.sort-progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sort-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.buckets-legend {
+  display: flex;
+  gap: 10px;
+}
+
+.bucket-dot {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-value { background: var(--value); }
+.dot-rent { background: var(--rent); }
+.dot-unsure { background: var(--unsure); }
+
+/* Each policy card */
+.policy-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.policy-card.sorted-value {
+  border-color: var(--value);
+  background: var(--value-light);
+}
+
+.policy-card.sorted-rent {
+  border-color: var(--rent);
+  background: var(--rent-light);
+}
+
+.policy-card.sorted-unsure {
+  border-color: var(--unsure);
+  background: var(--unsure-light);
+}
+
+.policy-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.policy-body {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+
+.bucket-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bucket-btn {
+  padding: 7px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.15s;
+}
+
+.bucket-btn-value {
+  border-color: var(--value);
+  color: var(--value);
+}
+.bucket-btn-value:hover, .bucket-btn-value.selected {
+  background: var(--value);
+  color: white;
+}
+
+.bucket-btn-rent {
+  border-color: var(--rent);
+  color: var(--rent);
+}
+.bucket-btn-rent:hover, .bucket-btn-rent.selected {
+  background: var(--rent);
+  color: white;
+}
+
+.bucket-btn-unsure {
+  border-color: var(--unsure);
+  color: var(--unsure);
+}
+.bucket-btn-unsure:hover, .bucket-btn-unsure.selected {
+  background: var(--unsure);
+  color: white;
+}
+
+.bucket-label {
+  display: none;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.sorted-value .bucket-label { display: block; color: var(--value); }
+.sorted-rent .bucket-label { display: block; color: var(--rent); }
+.sorted-unsure .bucket-label { display: block; color: var(--unsure); }
+
+/* ── SHARE GATE ── */
+.share-gate {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.share-gate .stop-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #F0C040;
+  margin-bottom: 12px;
+}
+
+.share-gate h2 {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.share-gate p {
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.65;
+  max-width: 480px;
+  margin: 0 auto 24px;
+}
+
+.share-gate .btn {
+  background: #F0C040;
+  color: #1a1d23;
+  font-size: 13px;
+}
+
+.share-gate .btn:hover { background: #d4a800; }
+
+/* ── MOVE SCREEN ── */
+.move-card-select {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.move-card-select:hover { border-color: var(--accent); }
+.move-card-select.picked { border-color: var(--accent); background: var(--accent-light); }
+
+.move-card-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s;
+}
+
+.move-card-select.picked .move-card-radio {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.move-card-select.picked .move-card-radio::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+}
+
+.move-card-info { flex: 1; }
+
+.move-card-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.move-card-bucket {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mc-value { color: var(--value); }
+.mc-rent { color: var(--rent); }
+.mc-unsure { color: var(--unsure); }
+
+.move-defense-wrap {
+  display: none;
+  margin-top: 20px;
+}
+
+.move-defense-wrap.visible { display: block; }
+
+.char-count {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  margin-top: 4px;
+}
+
+.char-count.ok { color: var(--value); font-weight: 700; }
+
+/* ── SUMMARY ── */
+.summary-group {
+  margin-bottom: 28px;
+}
+
+.summary-group-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.sg-value { background: var(--value-light); color: var(--value); }
+.sg-rent   { background: var(--rent-light); color: var(--rent); }
+.sg-unsure { background: var(--unsure-light); color: var(--unsure); }
+
+.summary-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+
+.summary-item-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.summary-item-body {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.moved-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  background: var(--accent-light);
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-left: 8px;
+}
+
+.defense-box {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.defense-box strong {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.debrief-box {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 28px;
+}
+
+.debrief-box h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #F0C040;
+  margin-bottom: 10px;
+}
+
+.debrief-box p {
+  font-size: 13px;
+  color: #ccc;
+  line-height: 1.7;
+}
+
+.student-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ PASSWORD ═══════════════════════════ -->
+<div id="pw-screen" class="screen active">
+  <div class="pw-box">
+    <div class="week-tag">Week 12 · Exercise 1</div>
+    <div class="screen-title">Value or Rent?</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;">
+      Apple's App Store — is it a service or a toll booth?<br>You're about to argue both sides.
+    </p>
+    <div class="pw-input-wrap">
+      <input type="text" id="pw-input" maxlength="10" placeholder="CLASS PASSWORD" autocomplete="off"
+        onkeydown="if(event.key==='Enter') checkPw()">
+      <button class="btn btn-primary" onclick="checkPw()">GO</button>
+    </div>
+    <div class="pw-err" id="pw-err"></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;">Password given in class · Chapter 15</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JOIN ═══════════════════════════ -->
+<div id="join-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 12 · Exercise 1</div>
+    <div class="screen-title">Let's get you set up</div>
+    <div class="screen-sub">Each person in your group picks a different card set. Choose your number carefully — two people with the same number will see the same cards.</div>
+
+    <div class="card">
+      <div class="field">
+        <label>Your First Name</label>
+        <input type="text" id="j-name" placeholder="First name only">
+      </div>
+      <div class="field">
+        <label>Your UC Email</label>
+        <input type="email" id="j-email" placeholder="m.lastname@mail.uc.edu">
+      </div>
+      <div class="field">
+        <label>Group Number</label>
+        <select id="j-group">
+          <option value="">— pick your group —</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Your Card Set (1–5)</label>
+        <select id="j-position">
+          <option value="">— each person picks a different number —</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-full" id="join-btn" onclick="doJoin()" disabled>Get My Cards →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INSTRUCTIONS ═══════════════════════════ -->
+<div id="instructions-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 12 · Exercise 1</div>
+    <div class="screen-title">The Setup</div>
+    <div class="screen-sub">Before you sort anything, read this.</div>
+
+    <div class="howto" style="margin-bottom:20px;">
+      <div class="howto-title">What's happening here</div>
+      <ul class="howto-list">
+        <li>You've been assigned 5 App Store policy cards that only you can see right now.</li>
+        <li>Sort each card: does this policy create value, extract rent, or are you genuinely unsure?</li>
+        <li>After sorting, share your cards and your reasoning with your group one at a time.</li>
+        <li>As a group, pick one card that could honestly go in either bucket — then defend the move.</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <p style="font-size:13px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Two Buckets</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:var(--value-light);border-radius:8px;padding:14px;">
+          <div style="font-size:12px;font-weight:800;color:var(--value);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">✓ Value Creation</div>
+          <div style="font-size:12px;color:#444;line-height:1.6;">Apple provides something real: security, reach, tools, trust. The fee is payment for a service developers couldn't build themselves.</div>
+        </div>
+        <div style="background:var(--rent-light);border-radius:8px;padding:14px;">
+          <div style="font-size:12px;font-weight:800;color:var(--rent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">$ Power Extraction</div>
+          <div style="font-size:12px;color:#444;line-height:1.6;">Apple is using its control over the channel to extract rent — charging fees, blocking alternatives, or tilting the rules in its own favor.</div>
+        </div>
+      </div>
+      <div style="background:var(--unsure-light);border-radius:8px;padding:14px;margin-top:12px;">
+        <div style="font-size:12px;font-weight:800;color:var(--unsure);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">? Not Sure</div>
+        <div style="font-size:12px;color:#444;">Use this when a policy genuinely could go either way. You'll need to defend every "Not Sure" to your group.</div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-full" onclick="showSort()">I'm ready — show me my cards →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SORT ═══════════════════════════ -->
+<div id="sort-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 12 · Exercise 1</div>
+    <div class="screen-title">Sort Your Cards</div>
+    <div class="screen-sub">These are your 5 cards. No one else has this exact set. Sort each one before you discuss anything with your group.</div>
+
+    <div class="sort-progress">
+      <div class="sort-count"><span id="sorted-count">0</span> of 5 sorted</div>
+      <div class="buckets-legend">
+        <div class="bucket-dot"><div class="dot dot-value"></div> Value</div>
+        <div class="bucket-dot"><div class="dot dot-rent"></div> Rent</div>
+        <div class="bucket-dot"><div class="dot dot-unsure"></div> Unsure</div>
+      </div>
+    </div>
+
+    <div id="sort-cards-list"></div>
+
+    <button class="btn btn-primary btn-full" id="to-share-btn" onclick="show('share-screen')" disabled style="margin-top:8px;">
+      All sorted — share with my group →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SHARE GATE ═══════════════════════════ -->
+<div id="share-screen" class="screen">
+  <div class="page-wrap">
+    <div class="share-gate">
+      <div class="stop-tag">Stop · Group Discussion</div>
+      <h2>Share your cards with your group</h2>
+      <p>Take turns reading each card aloud and telling your group which bucket you put it in — and why. Your group will probably disagree on at least one. That disagreement is the point. Don't move on until everyone has shared all their cards.</p>
+      <button class="btn" onclick="show('move-screen')">My group is done talking →</button>
+    </div>
+
+    <div class="card">
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;"><strong style="color:var(--text);">What to talk about:</strong> When someone puts a card in "Power Extraction," ask — does Apple get anything real from this? When someone puts it in "Value Creation," ask — could a developer get this anywhere else, or only through Apple? The hardest cards are the ones that could honestly go either way.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ MOVE ═══════════════════════════ -->
+<div id="move-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 12 · Exercise 1 — Group Consensus</div>
+    <div class="screen-title">Move One Card</div>
+    <div class="screen-sub">After discussing with your group — pick one card from your set that you could argue belongs in the <em>opposite</em> bucket. Then write one sentence defending the move. This should be the card your group argued about most.</div>
+
+    <div id="move-cards-list"></div>
+
+    <div class="move-defense-wrap" id="defense-wrap">
+      <div class="field">
+        <label>Defend the move — one sentence</label>
+        <textarea id="defense-text" rows="3"
+          placeholder="Explain why this card could actually belong in the other bucket..."
+          oninput="checkDefense()"></textarea>
+        <div class="char-count" id="defense-count">0 / 30 minimum</div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px;text-align:center;">Submitting this exercise records your participation and case work for today's class.</p>
+      <button class="btn btn-primary btn-full" id="move-submit-btn" onclick="submitMove()" disabled>Submit &amp; Record Participation →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SUMMARY ═══════════════════════════ -->
+<div id="summary-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 12 · Exercise 1 — Summary</div>
+    <div class="screen-title">Your Group's Decisions</div>
+    <div id="student-tag" class="student-tag"></div>
+
+    <div id="summary-body"></div>
+
+    <div class="debrief-box">
+      <h3>Debrief: Why this question matters</h3>
+      <p>The hardest part of the Apple/Epic case is that both sides are partly right. Apple does provide real infrastructure: security reviews, payment rails, global distribution, and a trusted brand. Those are genuine services. But Apple is also the <em>only</em> way onto the iPhone — and that monopoly position means it can charge whatever it wants for those services. The 30% fee isn't just a price; it's a gatekeeping tax. The real question isn't whether Apple provides value. It's whether Apple's control over the channel gives it the power to extract more value than it creates — and whether that's good for the ecosystem, or just good for Apple.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JAVASCRIPT ═══════════════════════════ -->
+<script>
+/* ── CONFIG ── */
+const PW = 'RENT30';
+const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
+
+/* ── STATE ── */
+let state = {
+  name: '',
+  email: '',
+  group: null,
+  position: null,
+  myCards: [],
+  sorts: {}, // cardId → 'value' | 'rent' | 'unsure'
+  movedCardId: null,
+  defense: '',
+};
+
+/* ── 18 APP STORE POLICY CARDS ── */
+const ALL_CARDS = [
+  {
+    id: 1,
+    title: "The 30% Cut",
+    body: "Apple takes 30 cents out of every dollar spent inside an app — on subscriptions, in-app purchases, and digital goods. Developers say this makes it nearly impossible to compete with Apple's own apps, which pay themselves nothing. This is the fee that started the war with Epic."
+  },
+  {
+    id: 2,
+    title: "The Security Review",
+    body: "Every app must pass Apple's review process before it goes live in the App Store. Apple checks for malware, privacy violations, and policy problems. Reviews can take days, and Apple can reject any app at any time — often without a detailed explanation."
+  },
+  {
+    id: 3,
+    title: "No Competing App Stores",
+    body: "On an iPhone, the only place you can download apps is Apple's App Store. Apple does not allow competing stores on iOS. This means Apple is the only gatekeeper to over 1.8 billion active devices worldwide — there is no alternative."
+  },
+  {
+    id: 4,
+    title: "Mandatory Apple Checkout",
+    body: "Any app that sells digital goods — subscriptions, coins, skins, upgrades — must use Apple's payment system. Developers cannot build their own checkout or offer a cheaper price through a different processor. This is the rule Epic deliberately broke inside Fortnite."
+  },
+  {
+    id: 5,
+    title: "Small Business Program",
+    body: "Developers earning less than $1 million per year pay only 15% commission instead of 30%. Apple launched this program in 2020 during the height of the Epic lawsuit. Critics call it a public relations move; supporters say it meaningfully helps smaller app creators."
+  },
+  {
+    id: 6,
+    title: "Editorial Featuring",
+    body: "Apple's editorial team can place any app on the front page of the App Store. A feature from Apple can drive millions of new downloads in days. There is no guaranteed path to getting featured — Apple picks who gets the spotlight and who doesn't."
+  },
+  {
+    id: 7,
+    title: "Subscription Revenue After Year One",
+    body: "For subscription apps, Apple's commission drops from 30% to 15% after a customer has been subscribed for more than one year. Apple frames this as rewarding long-term customer relationships. Developers acknowledge the reduction but argue the first-year rate still isn't justified."
+  },
+  {
+    id: 8,
+    title: "Annual Developer Fee",
+    body: "Every developer must pay $99 per year for the right to be in the App Store — whether they make money or not. For small or first-time developers, this is the cost of admission to reach iPhone users at all. Miss the payment, and your apps get pulled."
+  },
+  {
+    id: 9,
+    title: "No Sideloading",
+    body: "On an iPhone, you cannot install apps from outside the App Store. On Android, you can install apps from any source. Apple calls this a safety feature. Critics say it removes user choice and locks competitors out of the iOS ecosystem entirely."
+  },
+  {
+    id: 10,
+    title: "Apple Can Remove Any App",
+    body: "Apple can remove any app from the App Store at any time, for any reason. This happened to Fortnite in 2020 within hours of Epic's payment stunt. When an app is removed, every iPhone user in the world instantly loses the ability to download it."
+  },
+  {
+    id: 11,
+    title: "Privacy and Trust Marketing",
+    body: "Apple actively markets the App Store as safer and more private than uncontrolled alternatives. Apple does not sell user data from App Store activity. This privacy reputation is a real advantage for consumers — and Apple uses it to justify the fees developers pay."
+  },
+  {
+    id: 12,
+    title: "Free Developer Tools",
+    body: "Apple gives developers free access to crash reports, performance analytics, A/B testing tools, and device testing frameworks. These tools are only available inside Apple's ecosystem. A developer who leaves Apple to build for Android loses access to all of them."
+  },
+  {
+    id: 13,
+    title: "No Linking to Outside Payment",
+    body: "For years, apps couldn't even mention that a lower price existed outside the app. A federal court ruling forced Apple to allow some apps to link out to external payment pages. Apple fought this rule in court and still controls exactly how and where those links can appear."
+  },
+  {
+    id: 14,
+    title: "Inconsistent App Review",
+    body: "Apple's review process doesn't always apply its rules the same way. Some apps get rejected for content that nearly identical approved apps already have. Small developers without a direct line to Apple's review team have no reliable way to challenge or appeal a rejection."
+  },
+  {
+    id: 15,
+    title: "Country and Category Bans",
+    body: "Apple removes entire categories of apps in certain countries, sometimes at the request of local governments. Apple removed thousands of apps from the Chinese App Store at the Chinese government's request. Individual developers affected by these decisions have no vote and no recourse."
+  },
+  {
+    id: 16,
+    title: "Access to 1.8 Billion Devices",
+    body: "The App Store gives developers instant access to over 1.8 billion active Apple devices worldwide. For many app companies, being kicked off the App Store would mean losing the majority of their customers overnight. That reach is exactly what gives Apple its negotiating power."
+  },
+  {
+    id: 17,
+    title: "Server and Distribution Infrastructure",
+    body: "Apple runs all the technical infrastructure for delivering apps and updates to users — servers, bandwidth, and global distribution at scale. Developers don't have to build or pay for this separately. Apple cites this infrastructure as part of why the 30% fee is fair."
+  },
+  {
+    id: 18,
+    title: "Anti-Steering Rules",
+    body: "Apple's rules long prevented developers from mentioning that cheaper options existed outside the app — not even a URL was allowed. Regulators in the US, EU, and South Korea called this anticompetitive. Apple changed these rules only when legally forced to, and still fights to limit what developers can say."
+  }
+];
+
+/* ── UTILS ── */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function seededShuffle(arr, seed) {
+  let s = Math.abs(seed * 1664525 + 1013904223) | 0;
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    s = (Math.abs(s) * 1664525 + 1013904223) | 0;
+    const j = Math.abs(s) % (i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getMyCards(group, position) {
+  const shuffled = seededShuffle(ALL_CARDS, group * 100);
+  const offset = ((position - 1) * 4) % ALL_CARDS.length;
+  const cards = [];
+  for (let i = 0; i < 5; i++) {
+    cards.push(shuffled[(offset + i) % ALL_CARDS.length]);
+  }
+  return cards;
+}
+
+/* ── PASSWORD ── */
+function checkPw() {
+  const val = document.getElementById('pw-input').value.trim().toUpperCase();
+  const err = document.getElementById('pw-err');
+  const inp = document.getElementById('pw-input');
+  if (val === PW) {
+    show('join-screen');
+    setupJoinListeners();
+  } else {
+    err.textContent = 'Incorrect — try again';
+    inp.classList.remove('shake');
+    void inp.offsetWidth;
+    inp.classList.add('shake');
+    inp.value = '';
+    setTimeout(() => { err.textContent = ''; inp.classList.remove('shake'); }, 1800);
+  }
+}
+
+/* ── JOIN ── */
+function setupJoinListeners() {
+  ['j-name', 'j-email', 'j-group', 'j-position'].forEach(id => {
+    document.getElementById(id).addEventListener('input', checkJoinReady);
+    document.getElementById(id).addEventListener('change', checkJoinReady);
+  });
+}
+
+function checkJoinReady() {
+  const name = document.getElementById('j-name').value.trim();
+  const email = document.getElementById('j-email').value.trim();
+  const group = document.getElementById('j-group').value;
+  const pos = document.getElementById('j-position').value;
+  const ok = name.length > 0 && email.includes('@') && group && pos;
+  document.getElementById('join-btn').disabled = !ok;
+}
+
+function doJoin() {
+  state.name = document.getElementById('j-name').value.trim();
+  state.email = document.getElementById('j-email').value.trim();
+  state.group = parseInt(document.getElementById('j-group').value);
+  state.position = parseInt(document.getElementById('j-position').value);
+  state.myCards = getMyCards(state.group, state.position);
+  show('instructions-screen');
+}
+
+/* ── SORT ── */
+function showSort() {
+  renderSortCards();
+  show('sort-screen');
+}
+
+function renderSortCards() {
+  const list = document.getElementById('sort-cards-list');
+  list.innerHTML = '';
+  state.myCards.forEach(card => {
+    const sorted = state.sorts[card.id];
+    const cls = sorted ? `sorted-${sorted}` : '';
+    const labelText = sorted === 'value' ? '✓ Value Creation' : sorted === 'rent' ? '$ Power Extraction' : '? Not Sure';
+    list.innerHTML += `
+      <div class="policy-card ${cls}" id="pc-${card.id}">
+        <div class="bucket-label">${sorted ? labelText : ''}</div>
+        <div class="policy-title">${card.title}</div>
+        <div class="policy-body">${card.body}</div>
+        <div class="bucket-btns">
+          <button class="bucket-btn bucket-btn-value ${sorted === 'value' ? 'selected' : ''}"
+            onclick="sortCard(${card.id}, 'value')">✓ Value Creation</button>
+          <button class="bucket-btn bucket-btn-rent ${sorted === 'rent' ? 'selected' : ''}"
+            onclick="sortCard(${card.id}, 'rent')">$ Power Extraction</button>
+          <button class="bucket-btn bucket-btn-unsure ${sorted === 'unsure' ? 'selected' : ''}"
+            onclick="sortCard(${card.id}, 'unsure')">? Not Sure</button>
+        </div>
+      </div>`;
+  });
+}
+
+function sortCard(cardId, bucket) {
+  state.sorts[cardId] = bucket;
+  renderSortCards();
+  const sorted = Object.keys(state.sorts).length;
+  document.getElementById('sorted-count').textContent = sorted;
+  document.getElementById('to-share-btn').disabled = sorted < state.myCards.length;
+}
+
+/* ── MOVE SCREEN ── */
+function renderMoveCards() {
+  const list = document.getElementById('move-cards-list');
+  list.innerHTML = '';
+  state.myCards.forEach(card => {
+    const bucket = state.sorts[card.id];
+    const bucketLabel = bucket === 'value' ? 'Value Creation' : bucket === 'rent' ? 'Power Extraction' : 'Not Sure';
+    const cls = `mc-${bucket}`;
+    const picked = state.movedCardId === card.id ? 'picked' : '';
+    list.innerHTML += `
+      <div class="move-card-select ${picked}" id="mc-${card.id}" onclick="pickMoveCard(${card.id})">
+        <div class="move-card-radio"></div>
+        <div class="move-card-info">
+          <div class="move-card-title">${card.title}</div>
+          <div class="move-card-bucket ${cls}">Currently: ${bucketLabel}</div>
+        </div>
+      </div>`;
+  });
+}
+
+function pickMoveCard(cardId) {
+  state.movedCardId = cardId;
+  renderMoveCards();
+  document.getElementById('defense-wrap').classList.add('visible');
+  document.getElementById('defense-text').focus();
+}
+
+function checkDefense() {
+  const txt = document.getElementById('defense-text').value;
+  state.defense = txt;
+  const count = txt.trim().length;
+  const el = document.getElementById('defense-count');
+  el.textContent = count < 30 ? `${count} / 30 minimum` : `${count} characters ✓`;
+  el.className = 'char-count' + (count >= 30 ? ' ok' : '');
+  document.getElementById('move-submit-btn').disabled = count < 30 || !state.movedCardId;
+}
+
+function submitMove() {
+  const payload = {
+    exercise: 'W12.1 — Value or Rent?',
+    name: state.name,
+    email: state.email,
+    group: state.group,
+    cardSet: state.position,
+    sorts: state.sorts,
+    movedCardId: state.movedCardId,
+    movedCardTitle: (state.myCards.find(c => c.id === state.movedCardId) || {}).title || '',
+    defense: state.defense,
+    timestamp: new Date().toISOString()
+  };
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {
+    console.log('Webhook delivery attempt made (may fail silently)');
+  });
+  renderSummary();
+  show('summary-screen');
+}
+
+/* ── SUMMARY ── */
+function renderSummary() {
+  document.getElementById('student-tag').textContent =
+    `${state.name} · Group ${state.group} · Card Set ${state.position}`;
+
+  const buckets = { value: [], rent: [], unsure: [] };
+  state.myCards.forEach(c => {
+    buckets[state.sorts[c.id]].push(c);
+  });
+
+  const movedCard = state.myCards.find(c => c.id === state.movedCardId);
+  const movedBucket = state.sorts[state.movedCardId];
+  const oppLabel = movedBucket === 'value' ? 'Power Extraction' : movedBucket === 'rent' ? 'Value Creation' : 'the other bucket';
+
+  let html = '';
+
+  [
+    { key: 'value', label: '✓ Value Creation', cls: 'sg-value' },
+    { key: 'rent', label: '$ Power Extraction', cls: 'sg-rent' },
+    { key: 'unsure', label: '? Not Sure', cls: 'sg-unsure' },
+  ].forEach(({ key, label, cls }) => {
+    if (buckets[key].length === 0) return;
+    html += `<div class="summary-group"><div class="summary-group-title ${cls}">${label}</div>`;
+    buckets[key].forEach(card => {
+      const isMoved = card.id === state.movedCardId;
+      html += `
+        <div class="summary-item">
+          <div class="summary-item-title">
+            ${card.title}
+            ${isMoved ? `<span class="moved-badge">↔ Moved to ${oppLabel}</span>` : ''}
+          </div>
+          ${isMoved ? `
+            <div class="defense-box">
+              <strong>Group's defense for moving this card</strong>
+              ${state.defense}
+            </div>` : ''}
+        </div>`;
+    });
+    html += '</div>';
+  });
+
+  document.getElementById('summary-body').innerHTML = html;
+
+}
+
+/* ── KEYBOARD ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('pw-screen').classList.contains('active')) {
+    checkPw();
+  }
+});
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', () => {
+  // Move screen render trigger
+  document.getElementById('move-screen').addEventListener('click', function onFirst() {
+    renderMoveCards();
+    this.removeEventListener('click', onFirst);
+  });
+
+  // Show move screen trigger via share screen button
+  // (share gate's button calls show('move-screen') directly)
+  const origShow = window.show;
+  const _show = function(id) {
+    origShow(id);
+    if (id === 'move-screen') renderMoveCards();
+  };
+  // patch show for move screen
+  document.querySelectorAll('[onclick]').forEach(el => {
+    if (el.getAttribute('onclick') && el.getAttribute('onclick').includes("'move-screen'")) {
+      el.onclick = () => { show('move-screen'); renderMoveCards(); };
+    }
+  });
+});
+</script>
+</body>
+</html>

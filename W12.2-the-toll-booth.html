@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W12.2 — The Toll Booth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --border: #e2e5eb;
+  --text: #1a1d23;
+  --muted: #6b7280;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+
+  /* Company colors */
+  --apple:    #2B5F8E;
+  --apple-lt: #e8f0f9;
+  --ticket:   #7B3F8C;
+  --ticket-lt:#f3ebf7;
+  --subway:   #C49A00;
+  --subway-lt:#fdf9e6;
+  --deere:    #2D7A35;
+  --deere-lt: #e8f5ea;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── LAYOUT ── */
+.page-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+.week-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.screen-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.screen-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+/* ── FORM ── */
+.field { margin-bottom: 18px; }
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: #2B5F8E;
+  background: white;
+}
+
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+}
+
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-dark { background: #1a1d23; color: white; }
+.btn-dark:hover:not(:disabled) { background: #2d3139; }
+
+/* ── PASSWORD ── */
+#pw-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.pw-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.pw-input-wrap {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0 12px;
+}
+
+.pw-input-wrap input {
+  flex: 1;
+  padding: 12px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  text-align: center;
+  background: var(--bg);
+}
+
+.pw-input-wrap input:focus { border-color: var(--apple); background: white; }
+
+.pw-err { color: #B03A2E; font-size: 13px; font-weight: 600; min-height: 20px; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.shake { animation: shake 0.4s ease; }
+
+/* ── ROUND PROGRESS ── */
+.round-progress {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.round-pip {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+
+.round-pip.done { background: #1a1d23; }
+.round-pip.active-apple   { background: var(--apple); }
+.round-pip.active-ticket  { background: var(--ticket); }
+.round-pip.active-subway  { background: var(--subway); }
+.round-pip.active-deere   { background: var(--deere); }
+
+/* ── COMPANY HEADER ── */
+.company-header {
+  padding: 16px 24px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  color: white;
+  margin-bottom: 0;
+}
+
+.company-header .round-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.company-header h2 {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.company-header .company-frame {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.ch-apple   { background: var(--apple); }
+.ch-ticket  { background: var(--ticket); }
+.ch-subway  { background: var(--subway); color: #1a1d23; }
+.ch-deere   { background: var(--deere); }
+
+/* ── CONTEXT CARD ── */
+.context-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.context-p {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+.context-p:last-child { margin-bottom: 0; }
+
+/* ── CONCEPT MC ── */
+.concept-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 14px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.concept-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.concept-opt:hover { border-color: #aaa; }
+.concept-opt.selected { border-color: var(--apple); background: var(--apple-lt); }
+.concept-opt.selected-ticket { border-color: var(--ticket); background: var(--ticket-lt); }
+.concept-opt.selected-subway { border-color: var(--subway); background: var(--subway-lt); }
+.concept-opt.selected-deere  { border-color: var(--deere);  background: var(--deere-lt); }
+
+.concept-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all 0.15s;
+}
+
+.concept-opt.selected .concept-radio,
+.concept-opt.selected-ticket .concept-radio,
+.concept-opt.selected-subway .concept-radio,
+.concept-opt.selected-deere .concept-radio {
+  background: #1a1d23;
+  border-color: #1a1d23;
+  box-shadow: inset 0 0 0 4px white;
+}
+
+.concept-text { flex: 1; }
+.concept-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.concept-def  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ── TYPED SECTION ── */
+.typed-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 14px;
+}
+
+.typed-section.locked {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.char-count { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+.char-count.ok { color: #1D6349; font-weight: 700; }
+
+/* ── STOP GATE ── */
+.stop-gate {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 14px;
+  display: none;
+}
+
+.stop-gate.visible { display: block; }
+
+.stop-gate .stop-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #F0C040;
+  margin-bottom: 8px;
+}
+
+.stop-gate h3 {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.stop-gate p {
+  font-size: 13px;
+  color: #bbb;
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.stop-gate .btn-gate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background: #F0C040;
+  color: #1a1d23;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* ── VERDICT ── */
+.verdict-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 14px;
+}
+
+.verdict-section.locked { opacity: 0.45; pointer-events: none; }
+
+.verdict-opts { display: flex; gap: 8px; }
+
+.verdict-btn {
+  flex: 1;
+  padding: 12px 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.verdict-btn:hover { border-color: #aaa; color: var(--text); }
+.verdict-btn.v-def  { border-color: #1D6349; color: #1D6349; background: #e6f4ee; }
+.verdict-btn.v-not  { border-color: #B03A2E; color: #B03A2E; background: #fcecea; }
+.verdict-btn.v-dep  { border-color: #C49A00; color: #C49A00; background: #fdf9e6; }
+
+/* ── SUMMARY ── */
+.summary-round {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+
+.summary-round-header {
+  padding: 12px 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.summary-round-header.sh-subway { color: #1a1d23; }
+
+.srh-left h3 { font-size: 16px; font-weight: 800; }
+.srh-left span { font-size: 11px; opacity: 0.8; font-weight: 600; }
+
+.verdict-pill {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.2);
+}
+
+.summary-round-body { padding: 18px 20px; }
+
+.sr-field {
+  margin-bottom: 14px;
+}
+
+.sr-field-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.sr-field-value {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.sr-field-value.concept-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.ct-apple   { background: var(--apple-lt); color: var(--apple); }
+.ct-ticket  { background: var(--ticket-lt); color: var(--ticket); }
+.ct-subway  { background: var(--subway-lt); color: var(--subway); }
+.ct-deere   { background: var(--deere-lt); color: var(--deere); }
+
+.student-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.debrief-box {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-top: 24px;
+}
+
+.debrief-box h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #F0C040;
+  margin-bottom: 14px;
+}
+
+.debrief-company {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #333;
+}
+.debrief-company:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.debrief-company strong {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #F0C040;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.debrief-company p {
+  font-size: 13px;
+  color: #bbb;
+  line-height: 1.65;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ PASSWORD ═══════════════════════════ -->
+<div id="pw-screen" class="screen active">
+  <div class="pw-box">
+    <div class="week-tag" style="color:var(--apple);">Week 12 · Exercise 2</div>
+    <div class="screen-title" style="margin-top:4px;">The Toll Booth</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;">
+      Same framework. Four companies. Every one of them charges a toll.
+    </p>
+    <div class="pw-input-wrap">
+      <input type="text" id="pw-input" maxlength="10" placeholder="CLASS PASSWORD" autocomplete="off"
+        onkeydown="if(event.key==='Enter') checkPw()">
+      <button class="btn btn-dark" style="width:auto;padding:12px 18px;" onclick="checkPw()">GO</button>
+    </div>
+    <div class="pw-err" id="pw-err"></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;">Password given in class · Chapter 15</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JOIN ═══════════════════════════ -->
+<div id="join-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag" style="color:var(--apple);">Week 12 · Exercise 2</div>
+    <div class="screen-title">Get set up</div>
+    <div class="screen-sub">Four rounds, four companies, same four questions each time. You'll discuss with your group between rounds.</div>
+    <div class="card">
+      <div class="field">
+        <label>Your First Name</label>
+        <input type="text" id="j-name" placeholder="First name only">
+      </div>
+      <div class="field">
+        <label>Your UC Email</label>
+        <input type="email" id="j-email" placeholder="m.lastname@mail.uc.edu">
+      </div>
+      <div class="field">
+        <label>Group Number</label>
+        <select id="j-group">
+          <option value="">— pick your group —</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </div>
+      <button class="btn btn-dark" id="join-btn" onclick="doJoin()" disabled>Let's go →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INSTRUCTIONS ═══════════════════════════ -->
+<div id="instructions-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag" style="color:var(--apple);">Week 12 · Exercise 2</div>
+    <div class="screen-title">How This Works</div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <p style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:12px;">Four Rounds · Same Questions Each Time</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+        <div style="background:#f0f4f9;border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:800;color:var(--apple);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Round 1</div>
+          <div style="font-size:14px;font-weight:700;">Apple App Store</div>
+        </div>
+        <div style="background:#f4eef8;border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:800;color:var(--ticket);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Round 2</div>
+          <div style="font-size:14px;font-weight:700;">Ticketmaster</div>
+        </div>
+        <div style="background:#fdf9e6;border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:800;color:var(--subway);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Round 3</div>
+          <div style="font-size:14px;font-weight:700;">Subway</div>
+        </div>
+        <div style="background:#ecf5ed;border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:800;color:var(--deere);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Round 4</div>
+          <div style="font-size:14px;font-weight:700;">John Deere</div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;">In each round: read the company's story, pick the channel concept that best fits what they're doing, type your reasoning, stop and talk to your group, answer one more question, then your group agrees on a verdict. Once you lock a round, you can't go back.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <p style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:12px;">The Five Concepts You'll Choose From</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Vertical Channel Conflict</span> <span style="font-size:12px;color:var(--muted);">— disagreement between different levels of the channel (e.g., manufacturer vs. retailer)</span></div>
+        <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Horizontal Channel Conflict</span> <span style="font-size:12px;color:var(--muted);">— disagreement between members at the same channel level</span></div>
+        <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Coercive Channel Power</span> <span style="font-size:12px;color:var(--muted);">— one member forces compliance by threatening penalties or withholding access</span></div>
+        <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Franchise Channel Control</span> <span style="font-size:12px;color:var(--muted);">— the franchisor sets binding rules that franchisees must follow under contract</span></div>
+        <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Direct Channel Disruption</span> <span style="font-size:12px;color:var(--muted);">— a company bypasses traditional intermediaries to control the path to the customer</span></div>
+      </div>
+    </div>
+
+    <button class="btn btn-dark" onclick="startRound(1)">Start Round 1 — Apple →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ROUND TEMPLATE (rendered by JS) ═══════════════════════════ -->
+<div id="round-screen" class="screen">
+  <div class="page-wrap">
+    <div id="round-progress-bar" class="round-progress">
+      <div class="round-pip" id="pip-1"></div>
+      <div class="round-pip" id="pip-2"></div>
+      <div class="round-pip" id="pip-3"></div>
+      <div class="round-pip" id="pip-4"></div>
+    </div>
+
+    <!-- Company header -->
+    <div id="r-company-header" class="company-header">
+      <div class="round-label" id="r-round-label"></div>
+      <h2 id="r-company-name"></h2>
+      <div class="company-frame" id="r-frame"></div>
+    </div>
+
+    <!-- Context -->
+    <div class="context-card" id="r-context"></div>
+
+    <!-- Step 1: Concept MC -->
+    <div class="concept-section">
+      <div class="section-label">Step 1 — Which channel concept best describes what this company is doing?</div>
+      <div id="concept-opts"></div>
+    </div>
+
+    <!-- Step 2: First typed prompt -->
+    <div class="typed-section" id="typed1-section">
+      <div class="section-label" id="typed1-label">Step 2 — Explain your pick</div>
+      <div class="field" style="margin-bottom:0;">
+        <textarea id="typed1-text" rows="3" placeholder="" oninput="onTyped1()"></textarea>
+        <div class="char-count" id="typed1-count">0 / 30 minimum</div>
+      </div>
+    </div>
+
+    <!-- Stop gate -->
+    <div class="stop-gate" id="stop-gate">
+      <div class="stop-tag">Stop · Group Discussion</div>
+      <h3>Share your concept pick with your group</h3>
+      <p>Each person: say which concept you picked and read your reasoning aloud. Does your group agree? If not, take 90 seconds and try to convince each other. You can keep your own answer — but you need to have heard theirs.</p>
+      <button class="btn-gate" onclick="acknowledgeGate()">My group discussed it — continue →</button>
+    </div>
+
+    <!-- Step 3: Follow-up -->
+    <div class="typed-section locked" id="typed2-section">
+      <div class="section-label" id="typed2-label">Step 3 — After discussing with your group</div>
+      <div class="field" style="margin-bottom:0;">
+        <textarea id="typed2-text" rows="3" placeholder="" oninput="onTyped2()"></textarea>
+        <div class="char-count" id="typed2-count">0 / 30 minimum</div>
+      </div>
+    </div>
+
+    <!-- Step 4: Verdict -->
+    <div class="verdict-section locked" id="verdict-section">
+      <div class="section-label">Step 4 — Your group's verdict</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Agree on one answer before anyone clicks.</p>
+      <div class="verdict-opts">
+        <button class="verdict-btn" id="v-def" onclick="pickVerdict('defensible')">✓ Defensible</button>
+        <button class="verdict-btn" id="v-not" onclick="pickVerdict('not-defensible')">✗ Not Defensible</button>
+        <button class="verdict-btn" id="v-dep" onclick="pickVerdict('it-depends')">~ It Depends</button>
+      </div>
+    </div>
+
+    <!-- Next button -->
+    <p id="participation-note" style="display:none;font-size:13px;color:var(--muted);margin-top:6px;text-align:center;">Submitting this exercise records your participation and case work for today's class.</p>
+    <button class="btn btn-dark" id="next-round-btn" onclick="nextRound()" disabled style="margin-top:6px;">
+      <span id="next-round-label">Lock this round →</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SUMMARY ═══════════════════════════ -->
+<div id="summary-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag" style="color:var(--apple);">Week 12 · Exercise 2 — Summary</div>
+    <div class="screen-title">All Four Rounds</div>
+    <div id="student-tag" class="student-tag"></div>
+    <div id="summary-body"></div>
+
+    <div class="debrief-box">
+      <h3>Debrief: The Framework in Four Companies</h3>
+      <div class="debrief-company">
+        <strong>Apple — Coercive Channel Power</strong>
+        <p>Apple doesn't just participate in a channel — it built the channel and then locked the door. The App Store is coercive because developers have no alternative route to iPhone users. The 30% fee, the review process, and the no-sideloading rule all flow from that single chokehold. The question isn't whether Apple provides value — it does. The question is whether any company should have that kind of unilateral power over a $2 trillion ecosystem.</p>
+      </div>
+      <div class="debrief-company">
+        <strong>Ticketmaster — Coercive Channel Power + Vertical Conflict</strong>
+        <p>Ticketmaster controls access to the venue, which is the only legal channel to the fan. The venue signs an exclusive contract; the fan has no choice. When Ticketmaster also owns the promoter (Live Nation), vertical conflict is built into the business model — the same company is competing with itself at every level. The Taylor Swift collapse wasn't a technology failure. It was a channel power failure.</p>
+      </div>
+      <div class="debrief-company">
+        <strong>Subway — Vertical Channel Conflict + Franchise Control</strong>
+        <p>The $5 Footlong was a marketing win at the corporate level and a financial loss at the franchisee level. Corporate sets the price; franchisees pay the cost. That's textbook vertical channel conflict — two different levels of the channel with opposite incentives. Franchise contracts give Subway the legal right to enforce pricing. But legal authority and smart channel management are not the same thing.</p>
+      </div>
+      <div class="debrief-company">
+        <strong>John Deere — Vertical Channel Conflict + Coercive Power</strong>
+        <p>John Deere extended its channel control past the point of sale and into the customer's barn — years after the transaction. The software lock isn't a safety feature. It's a mechanism for routing service revenue through authorized dealers indefinitely. Farmers who are locked out of their own equipment during harvest season have zero negotiating power. That's coercive channel power operating through product design rather than a contract.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JAVASCRIPT ═══════════════════════════ -->
+<script>
+const PW = 'TOLLBT';
+const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
+
+/* ── ROUNDS DATA ── */
+const ROUNDS = [
+  {
+    id: 1,
+    company: 'Apple App Store',
+    colorClass: 'ch-apple',
+    accentVar: '--apple',
+    accentLtVar: '--apple-lt',
+    conceptSelectedClass: 'selected',
+    ctClass: 'ct-apple',
+    shClass: '',
+    pipActive: 'active-apple',
+    frame: '"Channels create value — but controlling the channel also creates power."',
+    context: `
+      <p class="context-p">Apple built the App Store in 2008 as a curated marketplace where iPhone users could safely download apps. Developers who joined got instant access to hundreds of millions of customers. In exchange, Apple set the rules — the biggest of which was a 30% commission on every dollar spent inside an app. For context, a credit card company charges around 2–3%. Apple charges thirty.</p>
+      <p class="context-p">The App Store is more than a storefront — it is the <em>only</em> storefront on an iPhone. Apple does not allow competing app stores on iOS. There is no alternative distribution method. This means that if a developer wants to reach iPhone users, they must go through Apple. They must accept Apple's review. They must use Apple's payment system. They must follow Apple's rules, which Apple can change at any time. No negotiation. No appeal process with teeth.</p>
+      <p class="context-p">In 2020, Epic Games — maker of Fortnite — deliberately violated Apple's payment rules inside its game. It offered players a 20% discount if they paid Epic directly instead of going through Apple's checkout. Apple removed Fortnite from the App Store within hours and threatened to terminate Epic's developer account entirely — which would have prevented Epic from updating any app on iOS. Epic called it retaliation. Apple called it enforcement. Both were right.</p>`,
+    typed1Label: 'Step 2 — In one sentence, explain why you chose that concept for Apple.',
+    typed1Placeholder: 'e.g., Apple has coercive power because developers have no alternative channel to reach iPhone users...',
+    gateText: 'Share your concept pick with your group. Does everyone agree? If not — take 90 seconds and argue. Then keep going.',
+    typed2Label: 'Step 3 — After discussing with your group: Who benefits most from Apple\'s channel control, and who pays the highest price for it?',
+    typed2Placeholder: 'Think about developers, consumers, Apple itself, and competitors...',
+    verdictPrompt: 'Is Apple\'s channel control defensible?',
+  },
+  {
+    id: 2,
+    company: 'Ticketmaster',
+    colorClass: 'ch-ticket',
+    accentVar: '--ticket',
+    accentLtVar: '--ticket-lt',
+    conceptSelectedClass: 'selected-ticket',
+    ctClass: 'ct-ticket',
+    shClass: '',
+    pipActive: 'active-ticket',
+    frame: '"Channel control always creates brand risk."',
+    context: `
+      <p class="context-p">Ticketmaster is the largest ticket-selling platform in the United States. It handles events for major arenas, professional sports leagues, and touring concert acts. Most large venues have exclusive contracts with Ticketmaster — which means if you want to see a show at that venue, Ticketmaster is the only official place to buy your ticket. There is no competing platform. There is no other option. You pay Ticketmaster's fees, or you don't go.</p>
+      <p class="context-p">And the fees are significant. Ticketmaster adds service charges, facility charges, and order processing fees that can push the final price 20–30% above the face value printed on the ticket. Some of that money goes back to the venue; most of it stays with Ticketmaster. Because venues are locked into exclusive contracts, they have little incentive to negotiate fee structures on behalf of fans. In 2022, when Taylor Swift announced the Eras Tour, demand crashed Ticketmaster's website and millions of verified fans were locked out. Tickets that sold for $49 on Ticketmaster appeared on resale sites for over $5,000 within minutes. The public backlash was enormous.</p>
+      <p class="context-p">After the Swift debacle, Congress held hearings. Several states passed or considered laws limiting Ticketmaster's market power. What made the situation worse was the structure of Ticketmaster's parent company, Live Nation: it is simultaneously one of the largest concert promoters in the country. This means Live Nation often controls the artist's tour deal, the venue's booking contract, and the fan's only ticket-buying channel — all at once. Critics say this is vertical integration used as a weapon. Ticketmaster says it's efficiency. The Senate Judiciary Committee was not convinced.</p>`,
+    typed1Label: 'Step 2 — In one sentence, explain why you chose that concept for Ticketmaster.',
+    typed1Placeholder: 'e.g., Ticketmaster uses coercive power because fans and venues have no realistic alternative...',
+    gateText: 'Share your concept pick with your group. You might disagree — especially between coercive power and vertical conflict. Figure out which fits better and why.',
+    typed2Label: 'Step 3 — After discussing with your group: If Ticketmaster lost its exclusive venue contracts tomorrow, what would actually change for fans?',
+    typed2Placeholder: 'Would prices drop? Would a competitor appear? Would venues behave differently?...',
+    verdictPrompt: 'Is Ticketmaster\'s channel control defensible?',
+  },
+  {
+    id: 3,
+    company: 'Subway',
+    colorClass: 'ch-subway',
+    accentVar: '--subway',
+    accentLtVar: '--subway-lt',
+    conceptSelectedClass: 'selected-subway',
+    ctClass: 'ct-subway',
+    shClass: 'summary-round-header sh-subway',
+    pipActive: 'active-subway',
+    frame: '"Channel control always creates brand risk."',
+    context: `
+      <p class="context-p">Subway is the largest fast food chain in the world by number of locations — nearly 40,000 stores in over 100 countries. But Subway doesn't own most of those stores. Almost every location you've ever walked into is owned by an independent franchisee: a private individual or small business that paid for the legal right to use Subway's name, recipes, signage, and systems. Subway corporate sets the standards. Franchisees run the stores.</p>
+      <p class="context-p">In the mid-2000s, Subway launched one of the most recognizable promotions in fast food history: the $5 Footlong. It became a cultural moment. Customers loved it. Traffic surged. The campaign was a genuine marketing success — from Subway corporate's perspective. The problem was that Subway set the price; franchisees paid the ingredient costs. When food costs increased, many franchise owners were losing money on every single $5 sandwich they sold. The deal that made the brand famous was quietly destroying the people who ran the stores. Some franchisees refused to participate. Some started cutting corners on ingredient quality — which hurt the brand in a different way.</p>
+      <p class="context-p">The conflict exposed a fundamental tension baked into franchise channel structures. Subway corporate controls brand decisions, marketing, pricing promotions, and operational standards. Franchisees sign contracts giving Subway that legal authority. But the franchisee absorbs the daily operational costs — labor, ingredients, rent, utilities. When corporate makes a pricing decision that works at the brand level but fails at the store level, the franchisee has no real recourse. Subway has the right to enforce it. Whether that's smart channel management is a separate question from whether it's legally allowed.</p>`,
+    typed1Label: 'Step 2 — In one sentence, explain why you chose that concept for Subway.',
+    typed1Placeholder: 'e.g., The $5 Footlong created vertical channel conflict because corporate gained marketing wins while franchisees absorbed the financial loss...',
+    gateText: 'Share your pick with your group. Subway is tricky — it could be franchise control OR vertical conflict. The distinction matters. Figure it out.',
+    typed2Label: 'Step 3 — After discussing with your group: Whose problem is the $5 Footlong conflict to fix — Subway corporate or the franchisee? Why?',
+    typed2Placeholder: 'Who has the power to change this? Who has the incentive? Are those the same person?...',
+    verdictPrompt: 'Is Subway\'s channel control defensible?',
+  },
+  {
+    id: 4,
+    company: 'John Deere',
+    colorClass: 'ch-deere',
+    accentVar: '--deere',
+    accentLtVar: '--deere-lt',
+    conceptSelectedClass: 'selected-deere',
+    ctClass: 'ct-deere',
+    shClass: '',
+    pipActive: 'active-deere',
+    frame: '"Channel strategies require tradeoffs between value creation, control, and brand trust."',
+    context: `
+      <p class="context-p">John Deere is a 185-year-old company headquartered in Moline, Illinois — one of the most recognized manufacturing brands in American history. If you've ever seen green-and-yellow farm equipment working in a field, it was probably a John Deere. The company sells its tractors, combines, and planters through a network of authorized independent dealers. A farmer buys a machine from a dealer, who is licensed and trained by Deere. After the sale, that dealer is supposed to be the farmer's primary point of service and support.</p>
+      <p class="context-p">Here's where the channel conflict gets unusual. Modern John Deere equipment is full of software — computers that monitor every aspect of how the machine performs. When something goes wrong, the onboard system throws a diagnostic code. On most other equipment, a skilled mechanic could read that code and fix the problem. On a John Deere, reading that code — even just to understand what's broken — requires a proprietary software tool called Service ADVISOR. Only authorized dealers have it. Farmers and independent mechanics are locked out. If a tractor breaks down during planting season and the nearest dealer is three days out, the farmer waits. During those three days, a farm can lose tens of thousands of dollars in missed work.</p>
+      <p class="context-p">Farmers pushed back for years. The issue became one of the most visible examples of the national "right to repair" debate. In 2023, under significant pressure from the American Farm Bureau, John Deere signed a Memorandum of Understanding giving farmers more access to repair tools and documentation. Critics said the agreement didn't go far enough and contained no legal enforcement mechanism. John Deere's position was that software restrictions protect proprietary technology and ensure repairs are done safely. Farmers said the real issue was simpler: Deere was using software to route repair revenue back through the dealer channel, long after the original sale was complete.</p>`,
+    typed1Label: 'Step 2 — In one sentence, explain why you chose that concept for John Deere.',
+    typed1Placeholder: 'e.g., John Deere creates vertical channel conflict by using software to force farmers back through the dealer channel for repairs...',
+    gateText: 'Share your concept pick with your group. John Deere could fit multiple concepts — narrow it to the one that best explains the core mechanism of control.',
+    typed2Label: 'Step 3 — After discussing with your group: Is John Deere\'s repair lockout a channel decision or a product design decision? Does the difference matter?',
+    typed2Placeholder: 'If it\'s product design, who\'s responsible? If it\'s a channel decision, can it be changed without redesigning the product?...',
+    verdictPrompt: 'Is John Deere\'s channel control defensible?',
+  }
+];
+
+const CONCEPTS = [
+  { id: 'vertical',   name: 'Vertical Channel Conflict',  def: 'Disagreement between different levels of the channel — e.g., manufacturer vs. retailer' },
+  { id: 'horizontal', name: 'Horizontal Channel Conflict', def: 'Disagreement between members at the same channel level — e.g., two retailers competing' },
+  { id: 'coercive',   name: 'Coercive Channel Power',     def: 'One channel member forces compliance by threatening penalties or withholding access' },
+  { id: 'franchise',  name: 'Franchise Channel Control',  def: 'The franchisor sets binding rules that franchisees must follow under contract' },
+  { id: 'direct',     name: 'Direct Channel Disruption',  def: 'A company bypasses traditional intermediaries to control the path to the customer' },
+];
+
+/* ── STATE ── */
+let state = {
+  name: '', email: '', group: null,
+  currentRound: 1,
+  rounds: {
+    1: { concept: null, typed1: '', gateAcked: false, typed2: '', verdict: null, locked: false },
+    2: { concept: null, typed1: '', gateAcked: false, typed2: '', verdict: null, locked: false },
+    3: { concept: null, typed1: '', gateAcked: false, typed2: '', verdict: null, locked: false },
+    4: { concept: null, typed1: '', gateAcked: false, typed2: '', verdict: null, locked: false },
+  }
+};
+
+/* ── UTILS ── */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function getVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+/* ── PASSWORD ── */
+function checkPw() {
+  const val = document.getElementById('pw-input').value.trim().toUpperCase();
+  const err = document.getElementById('pw-err');
+  const inp = document.getElementById('pw-input');
+  if (val === PW) {
+    show('join-screen');
+    setupJoinListeners();
+  } else {
+    err.textContent = 'Incorrect — try again';
+    inp.classList.remove('shake');
+    void inp.offsetWidth;
+    inp.classList.add('shake');
+    inp.value = '';
+    setTimeout(() => { err.textContent = ''; inp.classList.remove('shake'); }, 1800);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('pw-screen').classList.contains('active')) checkPw();
+});
+
+/* ── JOIN ── */
+function setupJoinListeners() {
+  ['j-name', 'j-email', 'j-group'].forEach(id => {
+    document.getElementById(id).addEventListener('input', checkJoinReady);
+    document.getElementById(id).addEventListener('change', checkJoinReady);
+  });
+}
+
+function checkJoinReady() {
+  const name = document.getElementById('j-name').value.trim();
+  const email = document.getElementById('j-email').value.trim();
+  const group = document.getElementById('j-group').value;
+  document.getElementById('join-btn').disabled = !(name && email.includes('@') && group);
+}
+
+function doJoin() {
+  state.name = document.getElementById('j-name').value.trim();
+  state.email = document.getElementById('j-email').value.trim();
+  state.group = parseInt(document.getElementById('j-group').value);
+  show('instructions-screen');
+}
+
+/* ── ROUND RENDERING ── */
+function startRound(n) {
+  state.currentRound = n;
+  renderRound(n);
+  show('round-screen');
+}
+
+function renderRound(n) {
+  const round = ROUNDS[n - 1];
+  const rs = state.rounds[n];
+
+  // Progress pips
+  for (let i = 1; i <= 4; i++) {
+    const pip = document.getElementById(`pip-${i}`);
+    pip.className = 'round-pip';
+    if (i < n) pip.classList.add('done');
+    else if (i === n) pip.classList.add(round.pipActive);
+  }
+
+  // Company header
+  document.getElementById('r-company-header').className = `company-header ${round.colorClass}`;
+  document.getElementById('r-round-label').textContent = `Round ${n} of 4`;
+  document.getElementById('r-company-name').textContent = round.company;
+  document.getElementById('r-frame').textContent = round.frame;
+
+  // Context
+  document.getElementById('r-context').innerHTML = round.context;
+
+  // Concept options
+  const optsEl = document.getElementById('concept-opts');
+  optsEl.innerHTML = '';
+  CONCEPTS.forEach(c => {
+    const sel = rs.concept === c.id ? round.conceptSelectedClass : '';
+    optsEl.innerHTML += `
+      <div class="concept-opt ${sel}" id="copt-${c.id}" onclick="pickConcept('${c.id}')">
+        <div class="concept-radio"></div>
+        <div class="concept-text">
+          <div class="concept-name">${c.name}</div>
+          <div class="concept-def">${c.def}</div>
+        </div>
+      </div>`;
+  });
+
+  // Typed 1
+  document.getElementById('typed1-section').className = 'typed-section' + (rs.concept ? '' : ' locked');
+  document.getElementById('typed1-label').textContent = round.typed1Label;
+  document.getElementById('typed1-text').value = rs.typed1;
+  document.getElementById('typed1-text').placeholder = round.typed1Placeholder;
+  updateCharCount('typed1-text', 'typed1-count');
+
+  // Stop gate
+  const gate = document.getElementById('stop-gate');
+  gate.className = 'stop-gate' + (rs.typed1.trim().length >= 30 && !rs.gateAcked ? ' visible' : '');
+  gate.querySelector('p').textContent = round.gateText;
+
+  // Typed 2
+  document.getElementById('typed2-section').className = 'typed-section' + (!rs.gateAcked ? ' locked' : '');
+  document.getElementById('typed2-label').textContent = round.typed2Label;
+  document.getElementById('typed2-text').value = rs.typed2;
+  document.getElementById('typed2-text').placeholder = round.typed2Placeholder;
+  updateCharCount('typed2-text', 'typed2-count');
+
+  // Verdict
+  document.getElementById('verdict-section').className = 'verdict-section' + (rs.typed2.trim().length >= 30 ? '' : ' locked');
+  ['v-def', 'v-not', 'v-dep'].forEach(id => document.getElementById(id).className = 'verdict-btn');
+  if (rs.verdict === 'defensible')    document.getElementById('v-def').classList.add('v-def');
+  if (rs.verdict === 'not-defensible') document.getElementById('v-not').classList.add('v-not');
+  if (rs.verdict === 'it-depends')    document.getElementById('v-dep').classList.add('v-dep');
+
+  // Next button
+  const nextBtn = document.getElementById('next-round-btn');
+  nextBtn.disabled = !rs.verdict;
+  document.getElementById('next-round-label').textContent =
+    n < 4 ? `Lock Round ${n} — start Round ${n + 1} →` : 'Submit & Record Participation →';
+  const note = document.getElementById('participation-note');
+  if (note) note.style.display = n === 4 ? 'block' : 'none';
+}
+
+function updateCharCount(textId, countId) {
+  const txt = document.getElementById(textId).value.trim().length;
+  const el = document.getElementById(countId);
+  el.textContent = txt < 30 ? `${txt} / 30 minimum` : `${txt} characters ✓`;
+  el.className = 'char-count' + (txt >= 30 ? ' ok' : '');
+}
+
+function pickConcept(cid) {
+  state.rounds[state.currentRound].concept = cid;
+  renderRound(state.currentRound);
+}
+
+function onTyped1() {
+  const val = document.getElementById('typed1-text').value;
+  state.rounds[state.currentRound].typed1 = val;
+  updateCharCount('typed1-text', 'typed1-count');
+  const rs = state.rounds[state.currentRound];
+  const gate = document.getElementById('stop-gate');
+  if (val.trim().length >= 30 && !rs.gateAcked) {
+    gate.classList.add('visible');
+  }
+}
+
+function acknowledgeGate() {
+  state.rounds[state.currentRound].gateAcked = true;
+  document.getElementById('stop-gate').classList.remove('visible');
+  document.getElementById('typed2-section').classList.remove('locked');
+  document.getElementById('typed2-text').focus();
+}
+
+function onTyped2() {
+  const val = document.getElementById('typed2-text').value;
+  state.rounds[state.currentRound].typed2 = val;
+  updateCharCount('typed2-text', 'typed2-count');
+  if (val.trim().length >= 30) {
+    document.getElementById('verdict-section').classList.remove('locked');
+  }
+}
+
+function pickVerdict(v) {
+  state.rounds[state.currentRound].verdict = v;
+  ['v-def', 'v-not', 'v-dep'].forEach(id => document.getElementById(id).className = 'verdict-btn');
+  if (v === 'defensible')    { document.getElementById('v-def').classList.add('v-def'); }
+  if (v === 'not-defensible'){ document.getElementById('v-not').classList.add('v-not'); }
+  if (v === 'it-depends')    { document.getElementById('v-dep').classList.add('v-dep'); }
+  document.getElementById('next-round-btn').disabled = false;
+}
+
+function nextRound() {
+  state.rounds[state.currentRound].locked = true;
+  const n = state.currentRound;
+  if (n < 4) {
+    startRound(n + 1);
+  } else {
+    const payload = {
+      exercise: 'W12.2 — The Toll Booth',
+      name: state.name,
+      email: state.email,
+      group: state.group,
+      rounds: Object.fromEntries(
+        ROUNDS.map((r, i) => [r.company, {
+          concept: state.rounds[i + 1].concept,
+          reasoning: state.rounds[i + 1].typed1,
+          followup: state.rounds[i + 1].typed2,
+          verdict: state.rounds[i + 1].verdict
+        }])
+      ),
+      timestamp: new Date().toISOString()
+    };
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => {
+      console.log('Webhook delivery attempt made (may fail silently)');
+    });
+    renderSummary();
+    show('summary-screen');
+  }
+}
+
+/* ── SUMMARY ── */
+function renderSummary() {
+  document.getElementById('student-tag').textContent =
+    `${state.name} · Group ${state.group}`;
+
+  const verdictLabel = {
+    'defensible': '✓ Defensible',
+    'not-defensible': '✗ Not Defensible',
+    'it-depends': '~ It Depends',
+  };
+
+  const conceptName = id => (CONCEPTS.find(c => c.id === id) || { name: '—' }).name;
+
+  let html = '';
+  ROUNDS.forEach((round, i) => {
+    const n = i + 1;
+    const rs = state.rounds[n];
+    const vLabel = verdictLabel[rs.verdict] || '—';
+    const shClass = round.shClass || 'summary-round-header';
+    html += `
+      <div class="summary-round">
+        <div class="${shClass} ${round.colorClass}">
+          <div class="srh-left">
+            <span>Round ${n}</span>
+            <h3>${round.company}</h3>
+          </div>
+          <div class="verdict-pill">${vLabel}</div>
+        </div>
+        <div class="summary-round-body">
+          <div class="sr-field">
+            <div class="sr-field-label">Concept Identified</div>
+            <span class="sr-field-value concept-tag ${round.ctClass}">${conceptName(rs.concept)}</span>
+          </div>
+          <div class="sr-field">
+            <div class="sr-field-label">Your Reasoning</div>
+            <div class="sr-field-value">${rs.typed1 || '—'}</div>
+          </div>
+          <div class="sr-field">
+            <div class="sr-field-label">After Group Discussion</div>
+            <div class="sr-field-value">${rs.typed2 || '—'}</div>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  document.getElementById('summary-body').innerHTML = html;
+
+}
+</script>
+</body>
+</html>
