@@ -1,856 +1,1151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LAUNCH IT — Week 9.1 · MKTG 2080</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Launch It — Ecuador | MKTG 2080</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #12121f;
-    --surface: #1d1d30;
-    --border: #3a3a58;
-    --accent: #f0c040;
-    --accent2: #40c0f0;
-    --text: #e8e8f0;
-    --muted: #8888b0;
-    --green: #40f0a0;
-    --red: #f04060;
-    --orange: #f08040;
-  }
+    :root {
+      --bg: #0d0d0f;
+      --surface: #16181d;
+      --surface2: #1e2028;
+      --border: rgba(255,255,255,0.08);
+      --text: #e8e8f0;
+      --muted: #7a7a90;
+      --accent: #7c6bff;
+      --accent-glow: rgba(124,107,255,0.18);
+      --hit: #40c080;
+      --miss: #e05050;
+      --neutral: #f0b040;
+      --font: 'Syne', sans-serif;
+      --mono: 'Space Mono', monospace;
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.5;
+    }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    min-height: 100vh;
-  }
+    /* ── screens ── */
+    .screen { display: none; min-height: 100vh; padding: 2rem 1rem; }
+    .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 0;
-  }
+    .inner { width: 100%; max-width: 680px; }
 
-  .screen { display: none; min-height: 100vh; position: relative; z-index: 1; flex-direction: column; }
-  .screen.active { display: flex; }
+    /* ── logo ── */
+    .logo {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-align: center;
+      margin-bottom: 0.2rem;
+    }
+    .logo span { color: var(--accent); }
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      margin-bottom: 2rem;
+    }
 
-  /* HEADER */
-  .hdr {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 40px;
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(18,18,31,0.93); backdrop-filter: blur(12px);
-  }
-  .logo { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; color: var(--accent); font-weight: 700; }
-  .badge { font-family: 'Space Mono', monospace; font-size: 11px; padding: 4px 14px; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); letter-spacing: 0.1em; }
+    /* ── card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
 
-  /* HOME */
-  #home { align-items: center; justify-content: center; text-align: center; }
-  .home-inner { max-width: 700px; padding: 60px 32px; }
+    /* ── form ── */
+    .field-label {
+      display: block;
+      font-size: 0.75rem;
+      font-family: var(--mono);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 1rem;
+      padding: 0.65rem 0.9rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    select option { background: var(--surface2); }
+    textarea { resize: vertical; min-height: 80px; font-size: 0.95rem; }
 
-  .big-title { font-size: clamp(72px, 12vw, 128px); font-weight: 800; line-height: 0.85; letter-spacing: -0.04em; }
-  .big-title span { color: var(--accent); }
-  .home-sub { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); margin: 20px 0 48px; letter-spacing: 0.08em; line-height: 1.8; }
+    /* ── buttons ── */
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      border: none;
+      font-family: var(--font);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover:not(:disabled) { opacity: 0.88; }
 
-  .start-btn {
-    display: inline-block; padding: 20px 56px;
-    background: var(--accent); color: var(--bg);
-    border: none; border-radius: 8px;
-    font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.04em;
-  }
-  .start-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(240,192,64,0.35); }
+    /* ── error line ── */
+    .err {
+      color: var(--miss);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      text-align: center;
+      min-height: 1.2em;
+      margin-top: -0.5rem;
+      margin-bottom: 0.75rem;
+    }
 
-  .home-meta { margin-top: 32px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); line-height: 2; }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+      40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)}
+    }
+    .shake { animation: shake 0.4s ease; }
 
-  /* GAME */
-  #game { }
-  .game-body { flex: 1; padding: 28px 40px; max-width: 1080px; margin: 0 auto; width: 100%; }
+    /* ── role grid ── */
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+    @media (max-width: 520px) { .role-grid { grid-template-columns: 1fr; } }
 
-  .scenario-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
-    border-radius: 8px; padding: 20px 24px; margin-bottom: 24px;
-  }
-  .scenario-tag { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 8px; }
-  .scenario-name { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
-  .scenario-desc { font-size: 16px; color: var(--muted); line-height: 1.7; }
+    .role-card {
+      border-radius: 12px;
+      border: 2px solid;
+      padding: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.15s;
+      user-select: none;
+    }
+    .role-card:hover { transform: translateY(-2px); }
 
-  /* budget */
-  .budget-row {
-    display: flex; align-items: center; gap: 16px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 8px; padding: 14px 20px; margin-bottom: 20px;
-  }
-  .budget-lbl { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--muted); white-space: nowrap; }
-  .budget-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-  .budget-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.35s cubic-bezier(0.34,1.56,0.64,1); }
-  .budget-fill.over { background: var(--red); }
-  .budget-fill.exact { background: var(--green); }
-  .budget-num { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: var(--accent); min-width: 70px; text-align: right; }
-  .budget-num.over { color: var(--red); }
-  .budget-num.exact { color: var(--green); }
+    .role-name { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.2rem; }
+    .role-tagline { font-family: var(--mono); font-size: 0.72rem; opacity: 0.65; margin-bottom: 0; }
 
-  .levers-lbl { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--muted); margin-bottom: 14px; text-transform: uppercase; }
+    .role-details { display: none; margin-top: 0.85rem; }
+    .role-card.expanded .role-details { display: block; }
 
-  .levers-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+    .role-lens {
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+    .role-cares {
+      list-style: none;
+      margin-bottom: 1rem;
+    }
+    .role-cares li {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--text);
+      padding: 0.3rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      line-height: 1.4;
+    }
+    .role-cares li::before { content: "→ "; opacity: 0.45; }
 
-  .lever { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
-  .lever-name { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
-  .lever-opts { display: flex; flex-direction: column; gap: 6px; }
+    .btn-choose {
+      width: 100%;
+      padding: 0.55rem 1rem;
+      border-radius: 7px;
+      border: 1px solid currentColor;
+      background: transparent;
+      font-family: var(--font);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-choose:hover { background: currentColor; color: #111; }
 
-  .opt {
-    background: transparent; border: 2px solid var(--border);
-    border-radius: 6px; padding: 9px 11px;
-    color: var(--text); font-family: 'Syne', sans-serif; font-size: 15px;
-    cursor: pointer; transition: all 0.15s ease; text-align: left;
-    position: relative;
-  }
-  .opt:hover { border-color: rgba(240,192,64,0.4); color: var(--text); }
-  .opt.selected {
-    background: rgba(240,192,64,0.13);
-    border: 3px solid var(--accent);
-    color: var(--accent);
-    font-weight: 700;
-    box-shadow: 0 0 0 2px rgba(240,192,64,0.2), inset 0 0 12px rgba(240,192,64,0.06);
-  }
-  .opt.selected::before {
-    content: '▶';
-    position: absolute; left: -18px; top: 50%; transform: translateY(-50%);
-    color: var(--accent); font-size: 10px;
-  }
-  .opt-cost { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); display: block; margin-top: 3px; }
-  .opt.selected .opt-cost { color: var(--accent); font-weight: 700; }
+    /* ── progress bar ── */
+    .progress-bar { display: flex; gap: 5px; margin-bottom: 1.5rem; }
+    .progress-step { flex: 1; height: 4px; border-radius: 2px; background: var(--border); transition: background 0.3s; }
+    .progress-step.done { background: var(--accent); }
+    .progress-step.active { background: rgba(124,107,255,0.45); }
 
-  /* bottom action bar */
-  .action-bar {
-    display: flex; gap: 10px; margin-top: 4px;
-  }
-  .clear-btn {
-    flex: 1; padding: 14px;
-    background: transparent; border: 1px solid var(--border);
-    color: var(--muted); border-radius: 8px;
-    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600;
-    cursor: pointer; transition: all 0.18s ease; letter-spacing: 0.03em;
-  }
-  .clear-btn:hover { border-color: var(--red); color: var(--red); }
+    /* ── phase pips ── */
+    .phase-pips { display: flex; gap: 5px; margin-bottom: 1.1rem; }
+    .phase-pip { flex: 1; height: 3px; border-radius: 2px; background: var(--border); }
+    .phase-pip.on { background: var(--accent); }
 
-  .toggle-btn {
-    flex: 1; padding: 14px;
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); border-radius: 8px;
-    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600;
-    cursor: pointer; transition: all 0.18s ease; letter-spacing: 0.03em;
-  }
-  .toggle-btn.hiding { border-color: var(--accent2); color: var(--accent2); background: rgba(64,192,240,0.08); }
-  .toggle-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+    /* ── lever screen ── */
+    .lever-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .lever-num { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); margin-bottom: 0.15rem; }
+    .lever-name { font-size: 1.25rem; font-weight: 800; }
+    .budget-pill {
+      flex-shrink: 0;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.3rem 0.85rem;
+      white-space: nowrap;
+    }
+    .budget-pill span { color: var(--accent); font-weight: 700; }
 
-  .reveal-toggle-btn {
-    flex: 1; padding: 14px;
-    background: rgba(240,64,96,0.08); border: 1px dashed rgba(240,64,96,0.35);
-    color: rgba(240,64,96,0.5); border-radius: 8px;
-    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600;
-    cursor: pointer; transition: all 0.18s ease; letter-spacing: 0.03em;
-  }
-  .reveal-toggle-btn:hover { border-color: var(--red); color: var(--red); background: rgba(240,64,96,0.12); }
-  .reveal-toggle-btn.unlocked {
-    background: rgba(240,64,96,0.15); border: 2px solid var(--red);
-    color: var(--red);
-  }
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      padding: 0.22rem 0.65rem;
+      border-radius: 99px;
+      border: 1px solid;
+      margin-bottom: 1rem;
+    }
+    .role-dot { width: 7px; height: 7px; border-radius: 50%; }
 
-  /* OUTCOME */
-  #outcome { }
-  .outcome-body { flex: 1; padding: 32px 40px; max-width: 980px; margin: 0 auto; width: 100%; }
+    .option-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 0.93rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .option-btn:hover:not(.locked) { border-color: var(--accent); }
+    .option-btn.selected { border-color: var(--accent); background: var(--accent-glow); }
+    .option-btn.locked { cursor: not-allowed; opacity: 0.4; }
+    .opt-info { flex: 1; }
+    .opt-label { font-weight: 700; margin-bottom: 0.1rem; }
+    .opt-desc { font-size: 0.82rem; color: var(--muted); }
+    .cost-pill {
+      flex-shrink: 0;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.15rem 0.55rem;
+    }
 
-  .verdict-block { text-align: center; margin-bottom: 36px; }
-  .verdict { font-size: clamp(44px, 7vw, 80px); font-weight: 800; line-height: 1; margin-bottom: 10px; }
-  .verdict.win { color: var(--green); }
-  .verdict.partial { color: var(--accent); }
-  .verdict.loss { color: var(--red); }
-  .verdict-sub { font-size: 16px; color: var(--muted); max-width: 580px; margin: 0 auto; line-height: 1.7; }
+    .rationale-row { margin-bottom: 1rem; }
+    .rationale-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.35rem;
+    }
+    .rationale-lbl { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .char-count { font-family: var(--mono); font-size: 0.72rem; }
+    .char-count.ok { color: var(--hit); }
+    .char-count.low { color: var(--muted); }
 
-  .score-strip {
-    display: flex; align-items: center; gap: 24px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 18px 24px; margin-bottom: 24px;
-  }
-  .score-big { font-family: 'Space Mono', monospace; font-size: 36px; font-weight: 700; }
-  .score-big.win { color: var(--green); }
-  .score-big.partial { color: var(--accent); }
-  .score-big.loss { color: var(--red); }
-  .score-detail { font-size: 14px; color: var(--muted); line-height: 1.8; flex: 1; }
-  .score-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 4px; }
+    /* ── gate ── */
+    .gate-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .gate-icon { font-size: 2.8rem; margin-bottom: 0.9rem; }
+    .gate-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .gate-body { color: var(--muted); font-size: 0.93rem; margin-bottom: 0.25rem; }
+    .gate-lever-name { color: var(--accent); font-weight: 700; }
+    .gate-hint { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .pick-preview {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+    .pick-preview-label { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin-bottom: 0.2rem; }
+    .pick-preview-value { font-weight: 700; font-size: 0.93rem; margin-bottom: 0.2rem; }
+    .pick-preview-rationale { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); font-style: italic; }
 
-  .results-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 24px; }
-  .result-card { border-radius: 8px; padding: 14px; border: 1px solid transparent; animation: fadeUp 0.35s ease both; }
-  .result-card.hit { background: rgba(64,240,160,0.07); border-color: rgba(64,240,160,0.25); }
-  .result-card.neutral { background: rgba(240,192,64,0.07); border-color: rgba(240,192,64,0.25); }
-  .result-card.miss { background: rgba(240,64,96,0.07); border-color: rgba(240,64,96,0.25); }
-  .result-lever { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; margin-bottom: 5px; text-transform: uppercase; }
-  .result-card.hit .result-lever { color: var(--green); }
-  .result-card.neutral .result-lever { color: var(--accent); }
-  .result-card.miss .result-lever { color: var(--red); }
-  .result-choice { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-  .result-why { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    /* ── home scenario ── */
+    .scenario-box {
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 1.1rem 1.2rem;
+      font-size: 0.93rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.65rem; margin-bottom: 1.25rem; }
+    .stat-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      text-align: center;
+    }
+    .stat-val { display: block; font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+    .stat-lbl { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
 
-  .debrief {
-    background: var(--surface); border: 1px solid var(--border);
-    border-left: 4px solid var(--accent2);
-    border-radius: 8px; padding: 20px 24px; margin-bottom: 20px;
-  }
-  .debrief-lbl { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--accent2); margin-bottom: 10px; }
-  .debrief-text { font-size: 15px; line-height: 1.8; }
+    /* ── summary ── */
+    .verdict-banner {
+      border-radius: 12px;
+      border-left: 4px solid;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .verdict-lbl { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); margin-bottom: 0.2rem; }
+    .verdict-text { font-size: 1.7rem; font-weight: 800; }
+    .verdict-sub { font-family: var(--mono); font-size: 0.82rem; margin-top: 0.2rem; }
 
-  .concepts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-  .concept { background: rgba(64,192,240,0.08); border: 1px solid rgba(64,192,240,0.25); color: var(--accent2); font-family: 'Space Mono', monospace; font-size: 11px; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.08em; }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.65rem;
+    }
 
-  .nav-row { display: flex; gap: 10px; }
-  .nav-btn { flex: 1; padding: 13px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 7px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.18s ease; }
-  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .nav-btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-  .nav-btn.primary:hover { box-shadow: 0 6px 20px rgba(240,192,64,0.28); color: var(--bg); }
+    .outcome-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .outcome-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.3rem; }
+    .outcome-lever-name { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin-bottom: 0.1rem; }
+    .outcome-pick { font-weight: 700; font-size: 0.9rem; }
+    .outcome-my-pick { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); margin-top: 0.15rem; }
+    .verdict-chip {
+      flex-shrink: 0;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 5px;
+      white-space: nowrap;
+    }
+    .chip-hit { background: rgba(64,192,128,0.15); color: var(--hit); }
+    .chip-miss { background: rgba(224,80,80,0.15); color: var(--miss); }
+    .chip-neutral { background: rgba(240,176,64,0.15); color: var(--neutral); }
+    .outcome-why { font-size: 0.83rem; color: var(--muted); line-height: 1.55; margin-top: 0.3rem; }
 
-  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .debrief-card {
+      background: rgba(124,107,255,0.06);
+      border: 1px solid rgba(124,107,255,0.22);
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .debrief-lbl { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); margin-bottom: 0.45rem; }
+    .debrief-text { font-size: 0.93rem; line-height: 1.65; }
 
-  /* PASSWORD GATE */
-  #pw-screen { align-items: center; justify-content: center; text-align: center; }
-  .pw-inner { max-width: 480px; padding: 60px 32px; }
-  .pw-title { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--muted); margin-bottom: 32px; }
-  .pw-logo { font-size: clamp(48px, 8vw, 80px); font-weight: 800; line-height: 0.9; letter-spacing: -0.04em; margin-bottom: 36px; }
-  .pw-logo span { color: var(--accent); }
-  .pw-input {
-    width: 100%; padding: 18px 24px; margin-bottom: 14px;
-    background: var(--surface); border: 2px solid var(--border);
-    border-radius: 8px; color: var(--text);
-    font-family: 'Space Mono', monospace; font-size: 22px;
-    letter-spacing: 0.2em; text-align: center; text-transform: uppercase;
-    outline: none; transition: border-color 0.2s ease;
-  }
-  .pw-input:focus { border-color: var(--accent); }
-  .pw-input.shake { animation: shake 0.4s ease; border-color: var(--red); }
-  .pw-err { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--red); letter-spacing: 0.1em; height: 18px; margin-bottom: 14px; }
-  .pw-btn {
-    width: 100%; padding: 18px;
-    background: var(--accent); color: var(--bg);
-    border: none; border-radius: 8px;
-    font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.04em;
-  }
-  .pw-btn:hover { box-shadow: 0 10px 32px rgba(240,192,64,0.35); transform: translateY(-2px); }
-  .pw-hint { margin-top: 20px; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.12em; }
-  @keyframes shake {
-    0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)}
-  }
+    .concepts-wrap { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.5rem; }
+    .concept-chip {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.28rem 0.65rem;
+      border-radius: 99px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
 
-  /* JOIN SCREEN */
-  #join-screen { align-items: center; justify-content: center; }
-  .join-wrap { max-width: 480px; width: 100%; padding: 60px 32px; }
-  .join-title { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
-  .join-sub { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 32px; }
-  .join-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; }
-  .join-field { margin-bottom: 18px; }
-  .join-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 8px; }
-  .join-input, .join-select {
-    width: 100%; padding: 13px 16px;
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: 7px; color: var(--text);
-    font-family: 'Syne', sans-serif; font-size: 16px;
-    outline: none; transition: border-color 0.2s ease;
-  }
-  .join-input:focus, .join-select:focus { border-color: var(--accent); }
-  .join-select option { background: var(--surface); }
-  .join-btn {
-    width: 100%; padding: 16px; margin-top: 8px;
-    background: var(--accent); color: var(--bg);
-    border: none; border-radius: 8px;
-    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.03em;
-    opacity: 0.45; pointer-events: none;
-  }
-  .join-btn.ready { opacity: 1; pointer-events: auto; }
-  .join-btn.ready:hover { box-shadow: 0 10px 32px rgba(240,192,64,0.35); transform: translateY(-2px); }
-  .submit-btn {
-    width: 100%; padding: 16px; margin-top: 12px;
-    background: var(--accent); color: var(--bg);
-    border: none; border-radius: 8px;
-    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.03em;
-  }
-  .submit-btn:hover { box-shadow: 0 10px 32px rgba(240,192,64,0.35); transform: translateY(-2px); }
-  .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+    .submitted-msg {
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--hit);
+      padding: 1rem 0 0.5rem;
+    }
 
-</style>
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    .footnote { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 1rem; }
+
+    .consensus-heading { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .consensus-sub { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-bottom: 1rem; }
+  </style>
 </head>
 <body>
 
-<!-- ══ PASSWORD GATE ══ -->
+<!-- ═══════════════════════════════════ -->
+<!--  PASSWORD SCREEN                    -->
+<!-- ═══════════════════════════════════ -->
 <div id="pw-screen" class="screen active">
-  <div class="pw-inner">
-    <div class="pw-logo">LAUNCH<span>IT</span></div>
-    <div class="pw-title">MKTG 2080 · WEEK 9.1 · CLASS ACCESS</div>
-    <input class="pw-input" id="pw-input" type="text" placeholder="CLASS PASSWORD"
-      autocomplete="off" spellcheck="false"
-      onkeydown="if(event.key==='Enter')checkPw()">
-    <div class="pw-err" id="pw-err"></div>
-    <button class="pw-btn" onclick="checkPw()">ENTER →</button>
-    <div class="pw-hint">Password provided by Professor Hudnall at start of class</div>
+  <div class="inner">
+    <div class="logo">Launch<span>It</span></div>
+    <div class="subtitle">MKTG 2080 · Ecuador Market Entry</div>
+    <div class="card" id="pw-card">
+      <div class="card-title">Class Password</div>
+      <label class="field-label" for="pw-input">Enter today's password to begin</label>
+      <input type="text" id="pw-input" placeholder="PASSWORD"
+             autocomplete="off"
+             oninput="this.value=this.value.toUpperCase()"
+             onkeydown="if(event.key==='Enter')checkPw()">
+      <div class="err" id="pw-err"></div>
+      <button class="btn btn-primary" onclick="checkPw()">Continue &rarr;</button>
+    </div>
+    <div class="footnote">MKTG 2080 &middot; UC Blue Ash</div>
   </div>
 </div>
 
-<!-- ══ JOIN ══ -->
+<!-- ═══════════════════════════════════ -->
+<!--  JOIN SCREEN                        -->
+<!-- ═══════════════════════════════════ -->
 <div id="join-screen" class="screen">
-  <div class="join-wrap">
-    <div class="join-title">LAUNCH<span style="color:var(--accent)">IT</span></div>
-    <div class="join-sub">MKTG 2080 · WEEK 9.1 · GET SET UP</div>
-    <div class="join-card">
-      <div class="join-field">
-        <label class="join-label">Your First Name</label>
-        <input class="join-input" id="j-name" type="text" placeholder="First name only" oninput="updateJoinBtn()">
-      </div>
-      <div class="join-field">
-        <label class="join-label">Your UC Email</label>
-        <input class="join-input" id="j-email" type="email" placeholder="m.lastname@mail.uc.edu" oninput="updateJoinBtn()">
-      </div>
-      <div class="join-field">
-        <label class="join-label">Group Number</label>
-        <select class="join-select" id="j-group" onchange="updateJoinBtn()">
-          <option value="">— pick your group —</option>
-          <option>1</option><option>2</option><option>3</option>
-          <option>4</option><option>5</option><option>6</option>
-          <option>7</option><option>8</option><option>9</option><option>10</option>
-        </select>
-      </div>
-      <button class="join-btn" id="join-btn" onclick="doJoin()">Let's go →</button>
+  <div class="inner">
+    <div class="logo">Launch<span>It</span></div>
+    <div class="subtitle">MKTG 2080 &middot; Ecuador Market Entry</div>
+    <div class="card">
+      <div class="card-title">Join the Exercise</div>
+      <label class="field-label" for="j-name">Full Name</label>
+      <input type="text" id="j-name" placeholder="First Last" autocomplete="name">
+      <label class="field-label" for="j-email">UC Email</label>
+      <input type="email" id="j-email" placeholder="m.last@mail.uc.edu" autocomplete="email">
+      <label class="field-label" for="j-group">Group Number</label>
+      <select id="j-group">
+        <option value="">— Select your group —</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+        <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+      </select>
+      <div class="err" id="join-err"></div>
+      <button class="btn btn-primary" onclick="doJoin()">Choose Your Role &rarr;</button>
     </div>
   </div>
 </div>
 
-<!-- ══ HOME ══ -->
-<div id="home" class="screen">
-  <div class="home-inner">
-    <div class="big-title">LAUNCH<span>IT</span></div>
-    <div class="home-sub">
-      MKTG 2080 · WEEK 9 · CH. 11–12<br>
-      PRODUCT–MARKET FIT GAME · ECUADOR
+<!-- ═══════════════════════════════════ -->
+<!--  ROLE SCREEN                        -->
+<!-- ═══════════════════════════════════ -->
+<div id="role-screen" class="screen">
+  <div class="inner">
+    <div class="logo">Launch<span>It</span></div>
+    <div class="subtitle">Choose your role for this exercise</div>
+    <div class="card">
+      <div class="card-title">Who are you on this team?</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.25rem;line-height:1.6">
+        Click a card to learn more, then choose your role. Each student picks independently &mdash;
+        your role shapes how you think about every decision.
+      </p>
+      <div class="role-grid" id="role-grid"></div>
     </div>
-    <button class="start-btn" onclick="startGame()">START ROUND →</button>
-    <div class="home-meta">
-      ALL TEAMS · SAME SCENARIO · 8-POINT BUDGET · 5 LEVERS<br>
-      TEAMS WRITE CHOICES ON HANDOUT → REVEAL OUTCOMES ON SCREEN
+    <div class="err" id="role-err"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!--  HOME SCREEN                        -->
+<!-- ═══════════════════════════════════ -->
+<div id="home-screen" class="screen">
+  <div class="inner">
+    <div class="logo">Launch<span>It</span></div>
+    <div class="subtitle">Ecuador Market Entry &middot; 8-Point Budget</div>
+    <div class="stat-row">
+      <div class="stat-box"><span class="stat-val">8</span><span class="stat-lbl">Point Budget</span></div>
+      <div class="stat-box"><span class="stat-val">5</span><span class="stat-lbl">Decisions</span></div>
+      <div class="stat-box"><span class="stat-val">1</span><span class="stat-lbl">Right Config</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">The Scenario</div>
+      <div class="scenario-box">
+        Your team is launching a solar lantern for rural Andean communities in Ecuador.
+        Target customers earn <strong>$200&ndash;$400/month</strong>, have
+        <strong>no reliable electricity grid</strong>, and currently pay for kerosene.
+        Cloud cover is heavy from <strong>October through February</strong>.
+        You have <strong>8 points</strong> to spend across 5 product decisions.
+        Every point is a tradeoff.
+      </div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.25rem;line-height:1.6">
+        For each decision: (1) make your own pick and explain your reasoning,
+        (2) discuss with your group, then (3) lock in a group answer together.
+        Your role shapes what you should prioritize.
+      </p>
+      <div id="home-role-badge" style="margin-bottom:1.25rem;"></div>
+      <button class="btn btn-primary" onclick="startLevers()">Begin Exercise &rarr;</button>
     </div>
   </div>
 </div>
 
-<!-- ══ GAME ══ -->
-<div id="game" class="screen">
-  <div class="hdr">
-    <div class="logo">LAUNCH IT · ECUADOR</div>
-    <div class="badge" id="game-badge">MAKING DECISIONS</div>
-  </div>
-  <div class="game-body">
-
-    <div class="scenario-card">
-      <div class="scenario-tag">THE SCENARIO — ALL TEAMS · READ YOUR HANDOUT FIRST</div>
-      <div class="scenario-name">LumaVida Solar Lantern · Rural Ecuador</div>
-      <div class="scenario-desc">A Quito-based social enterprise has a working solar lantern prototype. Your team decides how to configure and launch it into rural Andean and coastal communities where electricity is unreliable. You have up to <strong style="color:var(--accent)">8 points</strong>. Every choice is a tradeoff.</div>
-    </div>
-
-    <div class="budget-row">
-      <div class="budget-lbl">BUDGET USED</div>
-      <div class="budget-track"><div class="budget-fill" id="bfill" style="width:0%"></div></div>
-      <div class="budget-num" id="bnum">0 / 8</div>
-    </div>
-
-    <div class="levers-lbl">CHOOSE ONE OPTION PER LEVER — UP TO 8 POINTS</div>
-
-    <div class="levers-grid" id="levers-grid"></div>
-
-    <div class="action-bar">
-      <button class="clear-btn" onclick="clearAll()">✕  CLEAR ALL CHOICES</button>
-      <button class="toggle-btn" id="toggle-btn" onclick="toggleVisibility()">HIDE SELECTIONS</button>
-      <button class="reveal-toggle-btn" id="reveal-toggle-btn" onclick="toggleReveal()">🔒 REVEAL OUTCOMES</button>
-    </div>
-    <div id="reveal-panel" style="display:none; margin-top:20px;"></div>
-    <div id="student-submit-row" style="display:none; margin-top:14px;">
-      <button class="submit-btn" onclick="revealOutcome()">Submit & See Results →</button>
-    </div>
-  </div>
+<!-- ═══════════════════════════════════ -->
+<!--  LEVER SCREEN                       -->
+<!-- ═══════════════════════════════════ -->
+<div id="lever-screen" class="screen">
+  <div class="inner" id="lever-inner"></div>
 </div>
 
-<!-- ══ OUTCOME ══ -->
-<div id="outcome" class="screen">
-  <div class="hdr">
-    <div class="logo">LAUNCH IT · ECUADOR</div>
-    <div class="badge">MARKET VERDICT</div>
+<!-- ═══════════════════════════════════ -->
+<!--  SUMMARY SCREEN                     -->
+<!-- ═══════════════════════════════════ -->
+<div id="summary-screen" class="screen">
+  <div class="inner">
+    <div class="logo">Launch<span>It</span></div>
+    <div class="subtitle" id="sum-sub"></div>
+
+    <div class="verdict-banner" id="verdict-banner">
+      <div class="verdict-lbl">GROUP VERDICT</div>
+      <div class="verdict-text" id="verdict-text"></div>
+      <div class="verdict-sub" id="verdict-sub"></div>
+    </div>
+
+    <div class="section-label">Decision Breakdown</div>
+    <div id="outcomes-list"></div>
+
+    <hr class="divider">
+
+    <div class="section-label">The Defensible Configuration</div>
+    <div class="debrief-card">
+      <div class="debrief-lbl">PROFESSOR DEBRIEF</div>
+      <div class="debrief-text" id="debrief-text"></div>
+    </div>
+
+    <div class="section-label">Concepts in Play</div>
+    <div class="concepts-wrap" id="concepts-wrap"></div>
+
+    <button class="btn btn-primary" id="submit-btn" onclick="submitResults()">
+      Submit &amp; Record Participation &rarr;
+    </button>
+    <div class="submitted-msg" id="submitted-msg" style="display:none;"></div>
+    <div class="footnote">Wait for your professor's signal before submitting.</div>
   </div>
-  <div class="outcome-body" id="outcome-body"></div>
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// GAME DATA — Ecuador / LumaVida
-// Variables are NEW, not from the P&G case.
-// Students must reason from their handout.
-// ══════════════════════════════════════════
+// ══════════════════════════════════════
+//  CONSTANTS
+// ══════════════════════════════════════
 
-const BUDGET = 8;
+var PW          = 'LAUNCH';
+var WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
+var BUDGET      = 8;
+var MIN_CHARS   = 30;
 
-const LEVERS = [
+var ROLES = [
   {
-    id: "durability",
-    name: "Durability",
-    options: [
-      { label: "Basic — 1–2 yr lifespan", cost: 1 },
-      { label: "Mid-grade — 3–4 yr", cost: 2 },
-      { label: "Heavy-duty — 5+ yr", cost: 3 },
+    id: 'marketing', name: 'Marketing Director',
+    tagline: 'Customer access is everything',
+    color: '#f0c040', bg: 'rgba(240,192,64,0.07)', border: '#f0c040',
+    lens: "If it's not accessible, it won't sell.",
+    cares: [
+      'Price — can the target customer actually afford it?',
+      'Purchase unit — does the format match how they buy?',
+      'Switching cost — what gets them off kerosene?'
     ]
   },
   {
-    id: "charging",
-    name: "Charging Method",
-    options: [
-      { label: "Solar panel only", cost: 1 },
-      { label: "Solar + hand crank", cost: 2 },
-      { label: "Solar + USB grid backup", cost: 3 },
+    id: 'engineer', name: 'Product Engineer',
+    tagline: 'It has to work in the field',
+    color: '#40c0f0', bg: 'rgba(64,192,240,0.07)', border: '#40c0f0',
+    lens: "A product that fails in year two destroys trust faster than any competitor.",
+    cares: [
+      'Durability — will it survive highland humidity?',
+      "Charging — what happens when the sun doesn't show for weeks?",
+      'Light output — does it replace kerosene across all use cases?'
     ]
   },
   {
-    id: "light",
-    name: "Light Output",
-    options: [
-      { label: "Single dim mode", cost: 1 },
-      { label: "Two brightness modes", cost: 2 },
-      { label: "Adjustable + reading focus", cost: 3 },
+    id: 'finance', name: 'Finance Lead',
+    tagline: 'Every point is a tradeoff',
+    color: '#40f0a0', bg: 'rgba(64,240,160,0.07)', border: '#40f0a0',
+    lens: 'We have 8 points. Every unspent point is a missed upgrade.',
+    cares: [
+      'Budget allocation — are we spending where it moves adoption?',
+      'Cost-price tension — can we hit ultra-low AND mid-grade?',
+      'Payback window — does the customer get ROI before the product dies?'
     ]
   },
   {
-    id: "price",
-    name: "Price Point",
-    options: [
-      { label: "Ultra-low — under $5", cost: 1 },
-      { label: "Mid — $5 to $15", cost: 2 },
-      { label: "Premium — $15 to $30", cost: 3 },
-    ]
-  },
-  {
-    id: "purchase",
-    name: "Purchase Unit",
-    options: [
-      { label: "Individual unit", cost: 1 },
-      { label: "Family 2-pack", cost: 2 },
-      { label: "Community bundle (6+)", cost: 3 },
+    id: 'researcher', name: 'Field Researcher',
+    tagline: 'The handout is your only source',
+    color: '#f08040', bg: 'rgba(240,128,64,0.07)', border: '#f08040',
+    lens: "If you can't point to it in the handout, it's an assumption.",
+    cares: [
+      'Context fidelity — every choice must be grounded in Ecuador',
+      "Assumption testing — what are we assuming that's not in the data?",
+      'Customer reality — $200\u2013400/mo income, cloud cover Oct\u2013Feb, no grid'
     ]
   }
 ];
 
-// ── OUTCOMES ───────────────────────────────────────────────────────────────
-// The defensible answer uses 8 pts but spending less is fine:
-// Durability: Mid-grade (2) — heavy-duty is overkill cost, basic won't survive highland humidity
-// Charging: Solar + hand crank (2) — highland cloud cover makes solar-only unreliable; USB backup assumes grid
-// Light: Two brightness modes (2) — families need task light + ambient; adjustable is a premium feature cost
-// Price: Ultra-low (1) — $200-400/mo income, kerosene habit means price is the switching cost barrier
-// Purchase: Individual unit (1) — household decision-making doesn't mean communal purchase; individual lowers entry barrier
-// Total: 2+2+2+1+1 = 8 ✓
+var LEVERS = [
+  {
+    id: 'durability', name: 'Durability',
+    question: 'How long should this lantern last?',
+    options: [
+      { label: 'Basic',       desc: '1\u20132 year lifespan',  cost: 1 },
+      { label: 'Mid-grade',   desc: '3\u20134 year lifespan',  cost: 2 },
+      { label: 'Heavy-duty',  desc: '5+ year lifespan',        cost: 3 }
+    ]
+  },
+  {
+    id: 'charging', name: 'Charging Method',
+    question: 'How does the lantern recharge?',
+    options: [
+      { label: 'Solar panel only',        desc: 'Works when sun is available',   cost: 1 },
+      { label: 'Solar + hand crank',      desc: 'Backup for cloudy periods',      cost: 2 },
+      { label: 'Solar + USB grid backup', desc: 'Backup via power grid',          cost: 3 }
+    ]
+  },
+  {
+    id: 'light', name: 'Light Output',
+    question: 'What light modes should the lantern offer?',
+    options: [
+      { label: 'Single dim mode',            desc: 'Basic ambient light only',      cost: 1 },
+      { label: 'Two brightness modes',       desc: 'Task light + ambient',          cost: 2 },
+      { label: 'Adjustable + reading focus', desc: 'Full controllable range',       cost: 3 }
+    ]
+  },
+  {
+    id: 'price', name: 'Price Point',
+    question: 'What should the lantern cost?',
+    options: [
+      { label: 'Ultra-low', desc: 'Under $5',    cost: 1 },
+      { label: 'Mid-range', desc: '$5 to $15',   cost: 2 },
+      { label: 'Premium',   desc: '$15 to $30',  cost: 3 }
+    ]
+  },
+  {
+    id: 'purchase', name: 'Purchase Unit',
+    question: 'What is the unit of sale?',
+    options: [
+      { label: 'Individual unit',    desc: 'Single lantern',             cost: 1 },
+      { label: 'Family 2-pack',      desc: 'Two lanterns bundled',       cost: 2 },
+      { label: 'Community bundle',   desc: '6+ units packaged together', cost: 3 }
+    ]
+  }
+];
 
-const OUTCOMES = {
+var OUTCOMES = {
   durability: {
-    0: { r: "miss", why: "1–2 years won't survive Andean highland humidity and temperature swings. Customers replace it before it pays back vs. kerosene — kills word-of-mouth and repeat purchase." },
-    1: { r: "hit",  why: "3–4 years is right. Long enough to clearly beat kerosene cost-per-use. Short enough to keep manufacturing cost viable for the price point required." },
-    2: { r: "neutral", why: "5+ years is impressive engineering — but adds cost that forces a price point the market can't absorb. Durability beyond the payback window doesn't change the customer's purchase decision." }
+    0: { r: 'miss',    why: "1\u20132 years won't survive Andean highland humidity. Customers will feel burned, and kerosene wins back their trust." },
+    1: { r: 'hit',     why: "3\u20134 years beats kerosene's cost-per-use and gives the product time to prove itself in this market." },
+    2: { r: 'neutral', why: "5+ year durability forces a price point the target market can't absorb at launch. Over-engineered for the segment." }
   },
   charging: {
-    0: { r: "miss", why: "Solar-only fails Andean highland communities October–February during heavy cloud cover. A product that goes dark for weeks loses the customer back to kerosene permanently." },
-    1: { r: "hit",  why: "Solar + hand crank covers cloudy highland periods without assuming grid access. The crank is a low-cost reliability backstop that fits communities where outages are unpredictable." },
-    2: { r: "miss", why: "USB grid backup assumes reliable electricity access — exactly the problem LumaVida is solving for. It also adds cost and requires a different product line for grid vs. off-grid users." }
+    0: { r: 'miss', why: 'Solar-only fails Oct\u2013Feb in the Andean highlands. Cloud cover kills reliability exactly when kerosene looks better.' },
+    1: { r: 'hit',  why: 'Solar + hand crank covers cloudy periods without assuming grid access. Matches the actual infrastructure reality.' },
+    2: { r: 'miss', why: 'USB backup assumes reliable electricity \u2014 exactly the problem this product is trying to solve. Contradicts the use case.' }
   },
   light: {
-    0: { r: "miss", why: "Single dim mode fails to serve the real use pattern: bright task light for cooking/homework, dim ambient for evenings. A one-mode lamp gets replaced by kerosene for task work." },
-    1: { r: "hit",  why: "Two modes matches observed household lighting behavior — task and ambient. It's the minimum viable product that actually replaces kerosene across the night rather than just part of it." },
-    2: { r: "neutral", why: "Adjustable + reading focus is genuinely useful — but it's a feature premium that pushes cost up without meaningfully changing adoption in communities where price is the primary barrier." }
+    0: { r: 'miss',    why: 'Single mode fails the task + ambient use pattern. Families need different light for cooking, reading, and sleeping.' },
+    1: { r: 'hit',     why: 'Two modes matches real household behavior without the cost premium of a fully adjustable range.' },
+    2: { r: 'neutral', why: 'Adjustable light is a feature premium that pushes cost while serving the same use cases as two-mode.' }
   },
   price: {
-    0: { r: "hit",  why: "At $200–400/month household income, under $5 is the switching threshold that competes with kerosene's low upfront cost. Higher prices require credit infrastructure that doesn't exist in most target communities." },
-    1: { r: "neutral", why: "$5–$15 is reachable for some households — but it likely requires installment payments LumaVida can't yet offer. It narrows the addressable market significantly." },
-    2: { r: "miss", why: "Premium pricing ($15–$30) requires household income and credit access that the target community doesn't have. This is a different customer than the one on the handout." }
+    0: { r: 'hit',     why: "Under $5 competes directly with kerosene's low upfront cost and removes the barrier to first purchase." },
+    1: { r: 'neutral', why: '$5\u2013$15 is reachable for some households, but requires installment options not yet established in this channel.' },
+    2: { r: 'miss',    why: "Premium pricing requires income and credit access the target market doesn't have. Wrong price for this segment." }
   },
   purchase: {
-    0: { r: "hit",  why: "Individual unit lowers the entry barrier to the minimum. Household purchase decisions don't require communal commitment — they require one person to say yes at a price they can manage." },
-    1: { r: "neutral", why: "2-pack makes sense if families have cash for the bundle — but at ultra-low margins it just doubles the unit cost with no behavioral reason families need two at once." },
-    2: { r: "miss", why: "Community bundles (6+) assume collective purchasing infrastructure — cooperatives, credit pools, or NGO intermediaries. These exist in some communities but not reliably enough to build a launch strategy around." }
+    0: { r: 'hit',     why: 'Individual unit lowers the entry barrier to its minimum. One person, one decision, one purchase.' },
+    1: { r: 'neutral', why: '2-pack doubles the upfront cost without a clear behavioral or cultural justification in this market.' },
+    2: { r: 'miss',    why: 'Community bundles assume cooperative purchasing infrastructure \u2014 behaviors not yet established in this context.' }
   }
 };
 
-const DEBRIEF = "The defensible configuration is mid-grade durability, solar + hand crank, two brightness modes, ultra-low price, and individual units — totaling 8 points. Every choice is forced by the handout context: highland cloud cover eliminates solar-only; income level eliminates premium pricing; the kerosene habit means price is the switching barrier, not features; and individual purchase lowers entry friction without requiring communal infrastructure. Notice: none of these answers come from the P&G case. You had to reason from the Ecuador scenario.";
+var DEBRIEF = 'The defensible configuration is mid-grade durability, solar + hand crank, two brightness modes, ultra-low price, and individual units \u2014 8 points total. This is the only build that hits the market\u2019s income constraint, solves the charging gap without assuming grid access, and matches actual household usage patterns. The lesson: product design is context-driven. A premium lantern built for IKEA shoppers fails completely here.';
 
-const CONCEPTS = [
-  "Product–Market Fit (Ch.11)",
-  "Context-Driven Design",
-  "New Product Development (Ch.12)",
-  "Switching Costs (Ch.6)",
-  "Price as Market Access (Ch.14)"
+var CONCEPTS = [
+  'Product\u2013Market Fit (Ch.11)',
+  'Context-Driven Design',
+  'New Product Development (Ch.12)',
+  'Switching Costs (Ch.6)',
+  'Price as Market Access (Ch.14)'
 ];
 
-const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
-const state = { name: '', email: '', group: null };
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
 
-function updateJoinBtn() {
-  const name  = document.getElementById('j-name').value.trim();
-  const email = document.getElementById('j-email').value.trim();
-  const group = document.getElementById('j-group').value;
-  document.getElementById('join-btn').classList.toggle('ready', name.length > 0 && email.includes('@') && group !== '');
-}
+var S = {
+  name: '', email: '', groupNum: '', role: null,
+  leverIdx: 0,
+  phase: 0,
+  myPicks: {},
+  myRationale: {},
+  groupPicks: {},
+  submitted: false
+};
 
-function doJoin() {
-  const name  = document.getElementById('j-name').value.trim();
-  const email = document.getElementById('j-email').value.trim();
-  const group = document.getElementById('j-group').value;
-  if (!name || !email.includes('@') || !group) return;
-  state.name  = name;
-  state.email = email;
-  state.group = parseInt(group);
-  show('home');
-}
-
-// ══════════════════════════════════════════
-// STATE & RENDER
-// ══════════════════════════════════════════
-let selections = {};
+// ══════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════
 
 function show(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
 }
 
-function startGame() {
-  selections = {};
-  renderLevers();
-  updateBudget();
-  show('game');
-}
+// ══════════════════════════════════════
+//  PASSWORD
+// ══════════════════════════════════════
 
-function renderLevers() {
-  const grid = document.getElementById('levers-grid');
-  grid.innerHTML = '';
-  LEVERS.forEach(lever => {
-    const el = document.createElement('div');
-    el.className = 'lever';
-    el.innerHTML = `<div class="lever-name">${lever.name}</div>`;
-    const opts = document.createElement('div');
-    opts.className = 'lever-opts';
-    lever.options.forEach((opt, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'opt';
-      btn.id = `opt-${lever.id}-${i}`;
-      btn.innerHTML = `${opt.label}<span class="opt-cost">${opt.cost} pt${opt.cost > 1 ? 's' : ''}</span>`;
-      btn.onclick = () => select(lever.id, i);
-      opts.appendChild(btn);
-    });
-    el.appendChild(opts);
-    grid.appendChild(el);
-  });
-}
-
-function select(leverId, idx) {
-  // Deselect only the other options within this same lever
-  const lever = LEVERS.find(l => l.id === leverId);
-  lever.options.forEach((_, i) => {
-    const b = document.getElementById(`opt-${leverId}-${i}`);
-    if (b) b.classList.toggle('selected', i === idx);
-  });
-  selections[leverId] = idx;
-  updateBudget();
-}
-
-function updateBudget() {
-  const used = Object.entries(selections).reduce((s, [lid, oi]) => {
-    const l = LEVERS.find(x => x.id === lid);
-    return s + (l ? l.options[oi].cost : 0);
-  }, 0);
-
-  const pct = Math.min((used / BUDGET) * 100, 100);
-  const fill = document.getElementById('bfill');
-  const num = document.getElementById('bnum');
-  const exact = used === BUDGET;
-  const over = used > BUDGET;
-
-  fill.style.width = pct + '%';
-  fill.className = 'budget-fill' + (over ? ' over' : '');
-  num.textContent = `${used} / ${BUDGET}`;
-  num.className = 'budget-num' + (over ? ' over' : '');
-
-  const allPicked = LEVERS.every(l => selections[l.id] !== undefined);
-  document.getElementById('game-badge').textContent =
-    over ? `OVER BUDGET — ${used - BUDGET} PT OVER` :
-    allPicked ? 'ALL LEVERS CHOSEN ✓' :
-    `${used} / ${BUDGET} POINTS USED`;
-
-  const submitRow = document.getElementById('student-submit-row');
-  if (submitRow) submitRow.style.display = (allPicked && !over) ? 'block' : 'none';
-}
-
-let hidingSelections = false;
-
-function clearAll() {
-  selections = {};
-  hidingSelections = false;
-  const toggleBtn = document.getElementById('toggle-btn');
-  toggleBtn.textContent = 'HIDE SELECTIONS';
-  toggleBtn.classList.remove('hiding');
-  LEVERS.forEach(l => l.options.forEach((_, i) => {
-    const b = document.getElementById(`opt-${l.id}-${i}`);
-    if (b) { b.classList.remove('selected'); b.style.visibility = ''; }
-  }));
-  updateBudget();
-}
-
-function toggleVisibility() {
-  hidingSelections = !hidingSelections;
-  const toggleBtn = document.getElementById('toggle-btn');
-  toggleBtn.textContent = hidingSelections ? 'SHOW SELECTIONS' : 'HIDE SELECTIONS';
-  toggleBtn.classList.toggle('hiding', hidingSelections);
-  LEVERS.forEach(l => l.options.forEach((_, i) => {
-    const b = document.getElementById(`opt-${l.id}-${i}`);
-    if (b && b.classList.contains('selected')) {
-      b.style.visibility = hidingSelections ? 'hidden' : 'visible';
-    }
-  }));
-}
-
-function toggleReveal() {
-  const btn = document.getElementById('reveal-toggle-btn');
-  const panel = document.getElementById('reveal-panel');
-  const isUnlocked = btn.classList.contains('unlocked');
-
-  if (!isUnlocked) {
-    btn.classList.add('unlocked');
-    btn.textContent = '🔓 HIDE OUTCOMES';
-    renderOutcomePanel(panel);
-    panel.style.display = 'block';
-  } else {
-    btn.classList.remove('unlocked');
-    btn.textContent = '🔒 REVEAL OUTCOMES';
-    panel.style.display = 'none';
-    panel.innerHTML = '';
-  }
-}
-
-function renderOutcomePanel(panel) {
-  if (Object.keys(selections).length === 0) {
-    panel.innerHTML = '<div style="color:var(--muted);font-family:Space Mono,monospace;font-size:13px;padding:16px;text-align:center;">No choices made yet — select levers first.</div>';
-    return;
-  }
-
-  let hits = 0, misses = 0, neutrals = 0;
-  const results = LEVERS.map(lever => {
-    const oi = selections[lever.id];
-    if (oi === undefined) return { lever, opt: null, out: null };
-    const opt = lever.options[oi];
-    const out = OUTCOMES[lever.id][oi];
-    if (out.r === 'hit') hits++;
-    else if (out.r === 'miss') misses++;
-    else neutrals++;
-    return { lever, opt, out };
-  }).filter(r => r.out !== null);
-
-  const score = hits * 2 + neutrals * 1;
-  const maxScore = results.length * 2;
-  const vClass = score >= 8 ? 'win' : score >= 5 ? 'partial' : 'loss';
-  const vText  = score >= 8 ? 'MARKET FIT' : score >= 5 ? 'PARTIAL FIT' : 'PRODUCT FAIL';
-
-  panel.innerHTML = `
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;">
-      <div style="display:flex;align-items:center;gap:20px;margin-bottom:20px;">
-        <div>
-          <div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:0.15em;color:var(--muted);margin-bottom:4px;">SCORE</div>
-          <div style="font-family:Space Mono,monospace;font-size:32px;font-weight:700;color:var(--${vClass === 'win' ? 'green' : vClass === 'partial' ? 'accent' : 'red'})">${score} / ${maxScore}</div>
-        </div>
-        <div style="font-size:28px;font-weight:800;color:var(--${vClass === 'win' ? 'green' : vClass === 'partial' ? 'accent' : 'red'})">${vText}</div>
-        <div style="flex:1;font-size:13px;color:var(--muted);line-height:1.7;">
-          <strong style="color:var(--green)">${hits} hit${hits!==1?'s':''}</strong> ·
-          <strong style="color:var(--accent)">${neutrals} neutral${neutrals!==1?'s':''}</strong> ·
-          <strong style="color:var(--red)">${misses} miss${misses!==1?'es':''}</strong>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(${results.length},1fr);gap:10px;margin-bottom:20px;">
-        ${results.map((r,i) => `
-          <div style="border-radius:8px;padding:14px;border:1px solid ${r.out.r==='hit'?'rgba(64,240,160,0.3)':r.out.r==='miss'?'rgba(240,64,96,0.3)':'rgba(240,192,64,0.3)'};background:${r.out.r==='hit'?'rgba(64,240,160,0.07)':r.out.r==='miss'?'rgba(240,64,96,0.07)':'rgba(240,192,64,0.07)'};animation:fadeUp 0.3s ease ${i*0.06}s both;">
-            <div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:0.12em;color:${r.out.r==='hit'?'var(--green)':r.out.r==='miss'?'var(--red)':'var(--accent)'};margin-bottom:5px;text-transform:uppercase;">${r.lever.name} ${r.out.r==='hit'?'✓':r.out.r==='miss'?'✗':'~'}</div>
-            <div style="font-size:13px;font-weight:600;margin-bottom:6px;">${r.opt.label}</div>
-            <div style="font-size:12px;color:var(--muted);line-height:1.5;">${r.out.why}</div>
-          </div>`).join('')}
-      </div>
-      <div style="background:rgba(64,192,240,0.06);border:1px solid rgba(64,192,240,0.2);border-left:4px solid var(--accent2);border-radius:8px;padding:18px 22px;">
-        <div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:0.2em;color:var(--accent2);margin-bottom:10px;">PROFESSOR DEBRIEF</div>
-        <div style="font-size:14px;line-height:1.8;">${DEBRIEF}</div>
-      </div>
-    </div>`;
-}
-
-function revealOutcome() {
-  let hits = 0, misses = 0, neutrals = 0;
-  const results = LEVERS.map(lever => {
-    const oi = selections[lever.id];
-    const opt = lever.options[oi];
-    const out = OUTCOMES[lever.id][oi];
-    if (out.r === 'hit') hits++;
-    else if (out.r === 'miss') misses++;
-    else neutrals++;
-    return { lever, opt, out };
-  });
-
-  const score = hits * 2 + neutrals * 1;
-  const maxScore = LEVERS.length * 2;
-  const vClass = score >= 8 ? 'win' : score >= 5 ? 'partial' : 'loss';
-  const vText  = score >= 8 ? 'MARKET FIT' : score >= 5 ? 'PARTIAL FIT' : 'PRODUCT FAIL';
-  const vSub   = score >= 8
-    ? 'Your product decisions align with the customer context. This product reaches launch.'
-    : score >= 5
-    ? 'Some decisions fit — some don\'t. In real launches, one fatal flaw can kill the product.'
-    : 'Critical misalignment between decisions and customer reality. Back to field research.';
-
-  const body = document.getElementById('outcome-body');
-  body.innerHTML = '';
-
-  // Verdict
-  const vBlock = document.createElement('div');
-  vBlock.className = 'verdict-block';
-  vBlock.innerHTML = `<div class="verdict ${vClass}">${vText}</div><div class="verdict-sub">${vSub}</div>`;
-  body.appendChild(vBlock);
-
-  // Score strip
-  const strip = document.createElement('div');
-  strip.className = 'score-strip';
-  strip.innerHTML = `
-    <div>
-      <div class="score-label">SCORE</div>
-      <div class="score-big ${vClass}">${score} / ${maxScore}</div>
-    </div>
-    <div class="score-detail">
-      <strong style="color:var(--green)">${hits} hit${hits!==1?'s':''}</strong> ·
-      <strong style="color:var(--accent)">${neutrals} neutral${neutrals!==1?'s':''}</strong> ·
-      <strong style="color:var(--red)">${misses} miss${misses!==1?'es':''}</strong><br>
-      <span style="font-family:'Space Mono',monospace;font-size:11px;">Tiebreaker: team that best defends their written assumptions wins equal scores</span>
-    </div>`;
-  body.appendChild(strip);
-
-  // Results grid
-  const grid = document.createElement('div');
-  grid.className = 'results-grid';
-  results.forEach((r, i) => {
-    const card = document.createElement('div');
-    card.className = `result-card ${r.out.r}`;
-    card.style.animationDelay = `${i * 0.07}s`;
-    const icon = r.out.r === 'hit' ? '✓' : r.out.r === 'miss' ? '✗' : '~';
-    card.innerHTML = `
-      <div class="result-lever">${r.lever.name} ${icon}</div>
-      <div class="result-choice">${r.opt.label}</div>
-      <div class="result-why">${r.out.why}</div>`;
-    grid.appendChild(card);
-  });
-  body.appendChild(grid);
-
-  // Debrief
-  const deb = document.createElement('div');
-  deb.className = 'debrief';
-  deb.innerHTML = `<div class="debrief-lbl">PROFESSOR DEBRIEF</div><div class="debrief-text">${DEBRIEF}</div>`;
-  body.appendChild(deb);
-
-  // Concepts
-  const pills = document.createElement('div');
-  pills.className = 'concepts';
-  CONCEPTS.forEach(c => {
-    const p = document.createElement('span');
-    p.className = 'concept'; p.textContent = c;
-    pills.appendChild(p);
-  });
-  body.appendChild(pills);
-
-  // Participation note
-  const partNote = document.createElement('p');
-  partNote.style.cssText = 'text-align:center; font-size:12px; color:rgba(255,255,255,0.5); margin:8px 0 4px; letter-spacing:0.04em;';
-  partNote.textContent = 'Submitting this exercise records your participation and case work for today\'s class.';
-  body.appendChild(partNote);
-
-  // Submit button — fires webhook, then reveals nav
-  const submitBtn = document.createElement('button');
-  submitBtn.className = 'submit-btn';
-  submitBtn.textContent = 'Submit & Record Participation →';
-  submitBtn.onclick = function() {
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting…';
-    const payload = {
-      exercise: 'W9.1 — Launch It',
-      name: state.name,
-      email: state.email,
-      group: state.group,
-      selections: Object.fromEntries(
-        LEVERS.map(lever => [lever.id, {
-          choice: lever.options[selections[lever.id]]?.label || '—',
-          cost:   lever.options[selections[lever.id]]?.cost  || 0,
-          result: OUTCOMES[lever.id][selections[lever.id]]?.r || '—'
-        }])
-      ),
-      score,
-      maxScore,
-      verdict: vText,
-      timestamp: new Date().toISOString()
-    };
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).catch(() => {
-      console.log('Webhook delivery attempt made (may fail silently)');
-    });
-    submitBtn.textContent = 'Submitted ✓';
-    const nav = document.createElement('div');
-    nav.className = 'nav-row';
-    nav.style.marginTop = '12px';
-    nav.innerHTML = `
-      <button class="nav-btn" onclick="startGame()">← Play Again</button>
-      <button class="nav-btn primary" onclick="show('home')">Home</button>`;
-    body.appendChild(nav);
-  };
-  body.appendChild(submitBtn);
-
-  show('outcome');
-}
-// ── INSTRUCTOR MODE ──────────────────────────────────────
-// Access via: yourlink.html?instructor=true
-// Students see nothing. You see the reveal button.
-(function() {
-  const params = new URLSearchParams(window.location.search);
-  const isInstructor = params.get('instructor') === 'true';
-  // Run immediately (script is at end of body, button already exists in DOM)
-  const revBtn = document.getElementById('reveal-toggle-btn');
-  if (revBtn) revBtn.style.display = isInstructor ? '' : 'none';
-})();
-
-// ── PASSWORD GATE ──────────────────────────────────────
-const PW = 'LAUNCH';
 function checkPw() {
-  const val = document.getElementById('pw-input').value.trim().toUpperCase();
-  const err = document.getElementById('pw-err');
-  const inp = document.getElementById('pw-input');
+  var val = document.getElementById('pw-input').value.trim().toUpperCase();
   if (val === PW) {
     show('join-screen');
   } else {
-    err.textContent = 'INCORRECT — try again';
-    inp.classList.remove('shake');
-    void inp.offsetWidth;
-    inp.classList.add('shake');
-    inp.value = '';
-    setTimeout(() => { err.textContent = ''; inp.classList.remove('shake'); }, 1800);
+    var err = document.getElementById('pw-err');
+    err.textContent = 'Incorrect password \u2014 try again.';
+    var card = document.getElementById('pw-card');
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
   }
 }
 
+// ══════════════════════════════════════
+//  JOIN
+// ══════════════════════════════════════
+
+function doJoin() {
+  var name  = document.getElementById('j-name').value.trim();
+  var email = document.getElementById('j-email').value.trim();
+  var group = document.getElementById('j-group').value;
+  var err   = document.getElementById('join-err');
+
+  if (!name)                          { err.textContent = 'Please enter your name.'; return; }
+  if (!email || !email.includes('@')) { err.textContent = 'Please enter a valid email.'; return; }
+  if (!group)                         { err.textContent = 'Please select your group.'; return; }
+
+  S.name = name; S.email = email; S.groupNum = group;
+  err.textContent = '';
+  buildRoleGrid();
+  show('role-screen');
+}
+
+// ══════════════════════════════════════
+//  ROLE SELECTION
+// ══════════════════════════════════════
+
+function buildRoleGrid() {
+  var grid = document.getElementById('role-grid');
+  grid.innerHTML = '';
+  ROLES.forEach(function(role) {
+    var card = document.createElement('div');
+    card.className = 'role-card';
+    card.id = 'rc-' + role.id;
+    card.style.borderColor = role.border;
+    card.style.background  = role.bg;
+    card.innerHTML =
+      '<div class="role-name" style="color:' + role.color + '">' + role.name + '</div>' +
+      '<div class="role-tagline" style="color:' + role.color + '">' + role.tagline + '</div>' +
+      '<div class="role-details">' +
+        '<p class="role-lens">&ldquo;' + role.lens + '&rdquo;</p>' +
+        '<ul class="role-cares">' + role.cares.map(function(c){ return '<li>' + c + '</li>'; }).join('') + '</ul>' +
+        '<button class="btn-choose" style="color:' + role.color + ';border-color:' + role.border + '"' +
+                ' onclick="chooseRole(\'' + role.id + '\');event.stopPropagation()">' +
+          'Choose This Role &rarr;' +
+        '</button>' +
+      '</div>';
+    card.addEventListener('click', (function(rid){ return function(){ toggleRole(rid); }; })(role.id));
+    grid.appendChild(card);
+  });
+}
+
+function toggleRole(id) {
+  document.querySelectorAll('.role-card').forEach(function(c) {
+    if (c.id === 'rc-' + id) {
+      c.classList.toggle('expanded');
+    } else {
+      c.classList.remove('expanded');
+    }
+  });
+}
+
+function chooseRole(id) {
+  S.role = ROLES.filter(function(r){ return r.id === id; })[0];
+  buildHomeScreen();
+  show('home-screen');
+}
+
+// ══════════════════════════════════════
+//  HOME
+// ══════════════════════════════════════
+
+function buildHomeScreen() {
+  var r = S.role;
+  document.getElementById('home-role-badge').innerHTML =
+    '<div class="role-badge" style="color:' + r.color + ';border-color:' + r.border + '">' +
+      '<span class="role-dot" style="background:' + r.color + '"></span>' +
+      'Your role: <strong>' + r.name + '</strong>' +
+    '</div>' +
+    '<p style="color:var(--muted);font-size:0.85rem;font-style:italic;margin-top:0.4rem">&ldquo;' + r.lens + '&rdquo;</p>';
+}
+
+// ══════════════════════════════════════
+//  LEVERS
+// ══════════════════════════════════════
+
+function startLevers() {
+  S.leverIdx = 0; S.phase = 0;
+  renderLever();
+  show('lever-screen');
+}
+
+function groupSpentExcept(exceptIdx) {
+  var n = 0;
+  Object.keys(S.groupPicks).forEach(function(k) {
+    var li = parseInt(k);
+    if (li !== exceptIdx) n += LEVERS[li].options[S.groupPicks[k]].cost;
+  });
+  return n;
+}
+
+function totalGroupSpent() { return groupSpentExcept(-1); }
+
+function renderProgress() {
+  return '<div class="progress-bar">' +
+    LEVERS.map(function(_, i) {
+      var c = 'progress-step';
+      if (i < S.leverIdx) c += ' done';
+      else if (i === S.leverIdx) c += ' active';
+      return '<div class="' + c + '"></div>';
+    }).join('') + '</div>';
+}
+
+function phasePips(active) {
+  return '<div class="phase-pips">' +
+    [0,1,2].map(function(i){ return '<div class="phase-pip' + (i <= active ? ' on' : '') + '"></div>'; }).join('') +
+    '</div>';
+}
+
+function renderLever() {
+  var li = S.leverIdx;
+  if (S.phase === 0) renderPhase0(li);
+  else if (S.phase === 1) renderPhase1(li);
+  else renderPhase2(li);
+}
+
+// ── Phase 0: Individual Pick ──
+
+function renderPhase0(li) {
+  var lever  = LEVERS[li];
+  var r      = S.role;
+  var spent  = totalGroupSpent();
+  var myPick = S.myPicks[li];
+  var myRat  = S.myRationale[li] || '';
+  var charOk = myRat.length >= MIN_CHARS;
+  var canGo  = (myPick !== undefined) && charOk;
+
+  var opts = lever.options.map(function(o, oi) {
+    return '<button class="option-btn' + (myPick === oi ? ' selected' : '') + '"' +
+           ' onclick="pickIndividual(' + li + ',' + oi + ')">' +
+      '<div class="opt-info">' +
+        '<div class="opt-label">' + o.label + '</div>' +
+        '<div class="opt-desc">' + o.desc + '</div>' +
+      '</div>' +
+      '<span class="cost-pill">' + o.cost + ' pt' + (o.cost !== 1 ? 's' : '') + '</span>' +
+    '</button>';
+  }).join('');
+
+  document.getElementById('lever-inner').innerHTML =
+    renderProgress() +
+    '<div class="lever-header">' +
+      '<div>' +
+        '<div class="lever-num">Decision ' + (li + 1) + ' of ' + LEVERS.length + '</div>' +
+        '<div class="lever-name">' + lever.name + '</div>' +
+      '</div>' +
+      '<div class="budget-pill">Budget: <span>' + (BUDGET - spent) + '</span> pts left</div>' +
+    '</div>' +
+    '<div class="role-badge" style="color:' + r.color + ';border-color:' + r.border + '">' +
+      '<span class="role-dot" style="background:' + r.color + '"></span>' + r.name +
+    '</div>' +
+    phasePips(0) +
+    '<div class="card-title" style="margin-bottom:0.4rem">Your Pick</div>' +
+    '<p style="color:var(--muted);font-size:0.87rem;margin-bottom:1rem;line-height:1.55">' +
+      lever.question + ' Make your own choice <em>before</em> discussing with your group.' +
+    '</p>' +
+    '<div class="option-list">' + opts + '</div>' +
+    '<div class="rationale-row">' +
+      '<div class="rationale-header">' +
+        '<span class="rationale-lbl">Your reasoning</span>' +
+        '<span class="char-count ' + (charOk ? 'ok' : 'low') + '" id="cc">' + myRat.length + '/30 min</span>' +
+      '</div>' +
+      '<textarea id="rat-input"' +
+        ' placeholder="Why this choice? What in the Ecuador context drove your decision? (30 chars min)"' +
+        ' oninput="onRationale(' + li + ')">' + myRat + '</textarea>' +
+    '</div>' +
+    '<button class="btn btn-primary" id="p0-btn"' +
+      ' onclick="goGate(' + li + ')" ' + (canGo ? '' : 'disabled') + '>' +
+      'Discuss with Your Group &rarr;' +
+    '</button>';
+}
+
+function pickIndividual(li, oi) {
+  S.myPicks[li] = oi;
+  renderLever();
+  setTimeout(function(){ var t = document.getElementById('rat-input'); if(t) t.focus(); }, 40);
+}
+
+function onRationale(li) {
+  var t  = document.getElementById('rat-input');
+  S.myRationale[li] = t.value;
+  var len = t.value.length;
+  var cc  = document.getElementById('cc');
+  cc.textContent = len + '/30 min';
+  cc.className   = 'char-count ' + (len >= MIN_CHARS ? 'ok' : 'low');
+  var btn = document.getElementById('p0-btn');
+  btn.disabled = !((S.myPicks[li] !== undefined) && len >= MIN_CHARS);
+}
+
+// ── Phase 1: Discussion Gate ──
+
+function goGate(li) { S.phase = 1; renderLever(); }
+
+function renderPhase1(li) {
+  var lever  = LEVERS[li];
+  var myOi   = S.myPicks[li];
+  var myOpt  = lever.options[myOi];
+  var myRat  = S.myRationale[li] || '';
+
+  document.getElementById('lever-inner').innerHTML =
+    renderProgress() +
+    '<div class="lever-header">' +
+      '<div>' +
+        '<div class="lever-num">Decision ' + (li + 1) + ' of ' + LEVERS.length + '</div>' +
+        '<div class="lever-name">' + lever.name + '</div>' +
+      '</div>' +
+    '</div>' +
+    phasePips(1) +
+    '<div class="gate-card">' +
+      '<div class="gate-icon">&#x1F4AC;</div>' +
+      '<div class="gate-title">Group Discussion</div>' +
+      '<div class="gate-body">Talk to your group about <span class="gate-lever-name">' + lever.name + '</span>.</div>' +
+      '<div class="gate-hint">Share your reasoning. Listen to theirs. Then agree on a group answer.</div>' +
+      '<div class="pick-preview">' +
+        '<div class="pick-preview-label">YOUR PICK</div>' +
+        '<div class="pick-preview-value">' + myOpt.label + ' &mdash; ' + myOpt.desc + '</div>' +
+        '<div class="pick-preview-rationale">&ldquo;' + myRat + '&rdquo;</div>' +
+      '</div>' +
+      '<button class="btn btn-primary" onclick="goConsensus(' + li + ')">Ready for Group Answer &rarr;</button>' +
+    '</div>';
+}
+
+// ── Phase 2: Group Consensus ──
+
+function goConsensus(li) { S.phase = 2; renderLever(); }
+
+function renderPhase2(li) {
+  var lever     = LEVERS[li];
+  var r         = S.role;
+  var budgetLeft = BUDGET - groupSpentExcept(li);
+  var gpick     = S.groupPicks[li];
+  var isLast    = li === LEVERS.length - 1;
+
+  var opts = lever.options.map(function(o, oi) {
+    var over = o.cost > budgetLeft && gpick === undefined;
+    return '<button class="option-btn' + (gpick === oi ? ' selected' : '') + (over ? ' locked' : '') + '"' +
+           ' onclick="' + (over ? '' : 'pickGroup(' + li + ',' + oi + ')') + '">' +
+      '<div class="opt-info">' +
+        '<div class="opt-label">' + o.label + '</div>' +
+        '<div class="opt-desc">' + o.desc + (over ? ' <span style="color:var(--miss);font-family:var(--mono);font-size:0.72rem">&middot; over budget</span>' : '') + '</div>' +
+      '</div>' +
+      '<span class="cost-pill">' + o.cost + ' pt' + (o.cost !== 1 ? 's' : '') + '</span>' +
+    '</button>';
+  }).join('');
+
+  document.getElementById('lever-inner').innerHTML =
+    renderProgress() +
+    '<div class="lever-header">' +
+      '<div>' +
+        '<div class="lever-num">Decision ' + (li + 1) + ' of ' + LEVERS.length + '</div>' +
+        '<div class="lever-name">' + lever.name + '</div>' +
+      '</div>' +
+      '<div class="budget-pill">Budget: <span>' + budgetLeft + '</span> pts left</div>' +
+    '</div>' +
+    '<div class="role-badge" style="color:' + r.color + ';border-color:' + r.border + '">' +
+      '<span class="role-dot" style="background:' + r.color + '"></span>' + r.name +
+    '</div>' +
+    phasePips(2) +
+    '<div class="consensus-heading">Group Answer</div>' +
+    '<div class="consensus-sub">What did your group agree on?</div>' +
+    '<div class="option-list">' + opts + '</div>' +
+    '<button class="btn btn-primary" id="p2-btn"' +
+      ' onclick="' + (isLast ? 'buildSummary()' : 'nextLever(' + li + ')') + '"' +
+      (gpick !== undefined ? '' : ' disabled') + '>' +
+      (isLast ? 'See Results &rarr;' : 'Next Decision &rarr;') +
+    '</button>';
+}
+
+function pickGroup(li, oi) {
+  S.groupPicks[li] = oi;
+  renderLever();
+}
+
+function nextLever(li) {
+  S.leverIdx = li + 1;
+  S.phase    = 0;
+  renderLever();
+}
+
+// ══════════════════════════════════════
+//  SUMMARY
+// ══════════════════════════════════════
+
+function buildSummary() {
+  var hits = 0, totalCost = 0;
+  LEVERS.forEach(function(lever, li) {
+    var oi  = S.groupPicks[li];
+    var out = OUTCOMES[lever.id][oi];
+    if (out.r === 'hit') hits++;
+    totalCost += lever.options[oi].cost;
+  });
+
+  var vText, vSub, vColor, vBg;
+  if (hits >= 4) {
+    vText = 'Market-Ready Build';    vSub = hits + '/5 hits \u2014 this configuration works';
+    vColor = '#40c080'; vBg = 'rgba(64,192,128,0.1)';
+  } else if (hits === 3) {
+    vText = 'Close, But Costly';    vSub = hits + '/5 hits \u2014 one decision will hurt adoption';
+    vColor = '#f0b040'; vBg = 'rgba(240,176,64,0.1)';
+  } else if (hits === 2) {
+    vText = 'Needs Rethinking';     vSub = hits + '/5 hits \u2014 significant misalignment with the market';
+    vColor = '#e05050'; vBg = 'rgba(224,80,80,0.08)';
+  } else {
+    vText = 'Wrong Product, Wrong Market'; vSub = hits + '/5 hits \u2014 this configuration misses the customer entirely';
+    vColor = '#e05050'; vBg = 'rgba(224,80,80,0.12)';
+  }
+
+  document.getElementById('sum-sub').textContent =
+    'Group ' + S.groupNum + ' \u00b7 ' + totalCost + '/' + BUDGET + ' pts \u00b7 ' + hits + ' of 5 hits';
+
+  var banner = document.getElementById('verdict-banner');
+  banner.style.background      = vBg;
+  banner.style.borderLeftColor = vColor;
+  var vt = document.getElementById('verdict-text');
+  vt.style.color = vColor; vt.textContent = vText;
+  var vs = document.getElementById('verdict-sub');
+  vs.style.color = vColor; vs.textContent = vSub;
+
+  document.getElementById('outcomes-list').innerHTML = LEVERS.map(function(lever, li) {
+    var oi    = S.groupPicks[li];
+    var myOi  = S.myPicks[li];
+    var out   = OUTCOMES[lever.id][oi];
+    var opt   = lever.options[oi];
+    var myOpt = lever.options[myOi];
+    var diff  = oi !== myOi;
+    var chipCls = out.r === 'hit' ? 'chip-hit' : out.r === 'miss' ? 'chip-miss' : 'chip-neutral';
+    var chipLbl = out.r === 'hit' ? '\u2713 Hit' : out.r === 'miss' ? '\u2717 Miss' : '\u2248 Partial';
+
+    return '<div class="outcome-row">' +
+      '<div class="outcome-top">' +
+        '<div>' +
+          '<div class="outcome-lever-name">' + lever.name + '</div>' +
+          '<div class="outcome-pick">' + opt.label + ' &mdash; ' + opt.desc + '</div>' +
+          (diff ? '<div class="outcome-my-pick">Your pick: ' + myOpt.label + '</div>' : '') +
+        '</div>' +
+        '<span class="verdict-chip ' + chipCls + '">' + chipLbl + '</span>' +
+      '</div>' +
+      '<div class="outcome-why">' + out.why + '</div>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('debrief-text').textContent = DEBRIEF;
+  document.getElementById('concepts-wrap').innerHTML =
+    CONCEPTS.map(function(c){ return '<span class="concept-chip">' + c + '</span>'; }).join('');
+
+  show('summary-screen');
+}
+
+// ══════════════════════════════════════
+//  WEBHOOK SUBMIT
+// ══════════════════════════════════════
+
+function submitResults() {
+  if (S.submitted) return;
+  S.submitted = true;
+
+  var btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting\u2026';
+
+  var hits = 0, totalCost = 0;
+  var leverData = {};
+  LEVERS.forEach(function(lever, li) {
+    var oi   = S.groupPicks[li];
+    var myOi = S.myPicks[li];
+    var out  = OUTCOMES[lever.id][oi];
+    if (out.r === 'hit') hits++;
+    totalCost += lever.options[oi].cost;
+    leverData[lever.id] = {
+      individualPick:      lever.options[myOi].label,
+      individualRationale: S.myRationale[li] || '',
+      groupPick:           lever.options[oi].label,
+      cost:                lever.options[oi].cost,
+      verdict:             out.r
+    };
+  });
+
+  var overallVerdict =
+    hits >= 4 ? 'Market-Ready Build' :
+    hits === 3 ? 'Close, But Costly' :
+    hits === 2 ? 'Needs Rethinking' :
+    'Wrong Product, Wrong Market';
+
+  var payload = {
+    exercise:  'W9.1 Launch It \u2014 Ecuador',
+    timestamp: new Date().toISOString(),
+    student: { name: S.name, email: S.email, group: S.groupNum, role: S.role ? S.role.name : 'Unknown' },
+    results:  { hits: hits, totalCost: totalCost, budgetUsed: totalCost + '/' + BUDGET, overallVerdict: overallVerdict, levers: leverData }
+  };
+
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(){ onSubmitted(); })
+  .catch(function(){ onSubmitted(); }); // CORS may suppress response; n8n still receives
+
+  function onSubmitted() {
+    btn.style.display = 'none';
+    var msg = document.getElementById('submitted-msg');
+    msg.style.display = 'block';
+    msg.textContent   = '\u2713 Participation recorded. Thanks, ' + S.name.split(' ')[0] + '!';
+  }
+}
 </script>
 </body>
 </html>
