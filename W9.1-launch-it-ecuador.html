@@ -249,6 +249,43 @@
     0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)}
   }
 
+  /* JOIN SCREEN */
+  #join-screen { align-items: center; justify-content: center; }
+  .join-wrap { max-width: 480px; width: 100%; padding: 60px 32px; }
+  .join-title { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .join-sub { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 32px; }
+  .join-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; }
+  .join-field { margin-bottom: 18px; }
+  .join-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 8px; }
+  .join-input, .join-select {
+    width: 100%; padding: 13px 16px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 7px; color: var(--text);
+    font-family: 'Syne', sans-serif; font-size: 16px;
+    outline: none; transition: border-color 0.2s ease;
+  }
+  .join-input:focus, .join-select:focus { border-color: var(--accent); }
+  .join-select option { background: var(--surface); }
+  .join-btn {
+    width: 100%; padding: 16px; margin-top: 8px;
+    background: var(--accent); color: var(--bg);
+    border: none; border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.03em;
+    opacity: 0.45; pointer-events: none;
+  }
+  .join-btn.ready { opacity: 1; pointer-events: auto; }
+  .join-btn.ready:hover { box-shadow: 0 10px 32px rgba(240,192,64,0.35); transform: translateY(-2px); }
+  .submit-btn {
+    width: 100%; padding: 16px; margin-top: 12px;
+    background: var(--accent); color: var(--bg);
+    border: none; border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.03em;
+  }
+  .submit-btn:hover { box-shadow: 0 10px 32px rgba(240,192,64,0.35); transform: translateY(-2px); }
+  .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
 </style>
 </head>
 <body>
@@ -264,6 +301,34 @@
     <div class="pw-err" id="pw-err"></div>
     <button class="pw-btn" onclick="checkPw()">ENTER →</button>
     <div class="pw-hint">Password provided by Professor Hudnall at start of class</div>
+  </div>
+</div>
+
+<!-- ══ JOIN ══ -->
+<div id="join-screen" class="screen">
+  <div class="join-wrap">
+    <div class="join-title">LAUNCH<span style="color:var(--accent)">IT</span></div>
+    <div class="join-sub">MKTG 2080 · WEEK 9.1 · GET SET UP</div>
+    <div class="join-card">
+      <div class="join-field">
+        <label class="join-label">Your First Name</label>
+        <input class="join-input" id="j-name" type="text" placeholder="First name only" oninput="updateJoinBtn()">
+      </div>
+      <div class="join-field">
+        <label class="join-label">Your UC Email</label>
+        <input class="join-input" id="j-email" type="email" placeholder="m.lastname@mail.uc.edu" oninput="updateJoinBtn()">
+      </div>
+      <div class="join-field">
+        <label class="join-label">Group Number</label>
+        <select class="join-select" id="j-group" onchange="updateJoinBtn()">
+          <option value="">— pick your group —</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </div>
+      <button class="join-btn" id="join-btn" onclick="doJoin()">Let's go →</button>
+    </div>
   </div>
 </div>
 
@@ -428,6 +493,27 @@ const CONCEPTS = [
   "Switching Costs (Ch.6)",
   "Price as Market Access (Ch.14)"
 ];
+
+const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
+const state = { name: '', email: '', group: null };
+
+function updateJoinBtn() {
+  const name  = document.getElementById('j-name').value.trim();
+  const email = document.getElementById('j-email').value.trim();
+  const group = document.getElementById('j-group').value;
+  document.getElementById('join-btn').classList.toggle('ready', name.length > 0 && email.includes('@') && group !== '');
+}
+
+function doJoin() {
+  const name  = document.getElementById('j-name').value.trim();
+  const email = document.getElementById('j-email').value.trim();
+  const group = document.getElementById('j-group').value;
+  if (!name || !email.includes('@') || !group) return;
+  state.name  = name;
+  state.email = email;
+  state.group = parseInt(group);
+  show('home');
+}
 
 // ══════════════════════════════════════════
 // STATE & RENDER
@@ -680,13 +766,53 @@ function revealOutcome() {
   });
   body.appendChild(pills);
 
-  // Nav
-  const nav = document.createElement('div');
-  nav.className = 'nav-row';
-  nav.innerHTML = `
-    <button class="nav-btn" onclick="startGame()">← Play Again</button>
-    <button class="nav-btn primary" onclick="show('home')">Home</button>`;
-  body.appendChild(nav);
+  // Participation note
+  const partNote = document.createElement('p');
+  partNote.style.cssText = 'text-align:center; font-size:12px; color:rgba(255,255,255,0.5); margin:8px 0 4px; letter-spacing:0.04em;';
+  partNote.textContent = 'Submitting this exercise records your participation and case work for today\'s class.';
+  body.appendChild(partNote);
+
+  // Submit button — fires webhook, then reveals nav
+  const submitBtn = document.createElement('button');
+  submitBtn.className = 'submit-btn';
+  submitBtn.textContent = 'Submit & Record Participation →';
+  submitBtn.onclick = function() {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+    const payload = {
+      exercise: 'W9.1 — Launch It',
+      name: state.name,
+      email: state.email,
+      group: state.group,
+      selections: Object.fromEntries(
+        LEVERS.map(lever => [lever.id, {
+          choice: lever.options[selections[lever.id]]?.label || '—',
+          cost:   lever.options[selections[lever.id]]?.cost  || 0,
+          result: OUTCOMES[lever.id][selections[lever.id]]?.r || '—'
+        }])
+      ),
+      score,
+      maxScore,
+      verdict: vText,
+      timestamp: new Date().toISOString()
+    };
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => {
+      console.log('Webhook delivery attempt made (may fail silently)');
+    });
+    submitBtn.textContent = 'Submitted ✓';
+    const nav = document.createElement('div');
+    nav.className = 'nav-row';
+    nav.style.marginTop = '12px';
+    nav.innerHTML = `
+      <button class="nav-btn" onclick="startGame()">← Play Again</button>
+      <button class="nav-btn primary" onclick="show('home')">Home</button>`;
+    body.appendChild(nav);
+  };
+  body.appendChild(submitBtn);
 
   show('outcome');
 }
@@ -708,7 +834,7 @@ function checkPw() {
   const err = document.getElementById('pw-err');
   const inp = document.getElementById('pw-input');
   if (val === PW) {
-    show('home');
+    show('join-screen');
   } else {
     err.textContent = 'INCORRECT — try again';
     inp.classList.remove('shake');

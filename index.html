@@ -159,79 +159,79 @@
 
 const weeks = [
   {
-    num: 1, case: "Quibi", chapter: "Marketing Mix (4 Ps)", icon: "📺",
-    day1: { date: "2026-01-13", focus: "What is marketing? What is a case?",       link: null },
-    day2: { date: "2026-01-15", focus: "Is this a marketing problem?",              link: null }
+    num: 1, case: "Quibi", chapter: "Ch 1", icon: "📺",
+    day1: { date: "2026-01-13", focus: "What is marketing? What is a case?",       link: null },  // W01-value-lab.html
+    day2: { date: "2026-01-15", focus: "Is this a marketing problem?",              link: null }   // W01-value-lab-rebuild.html
   },
   {
-    num: 2, case: "ALDI", chapter: "SWOT Analysis", icon: "🛒",
-    day1: { date: "2026-01-20", focus: "Strategy & tradeoffs",                      link: null },
-    day2: { date: "2026-01-22", focus: "Choosing who not to serve",                 link: null }
+    num: 2, case: "ALDI", chapter: "Ch 2", icon: "🛒",
+    day1: { date: "2026-01-20", focus: "Strategy & tradeoffs",                      link: null },  // W02-strategy-stress-test.html
+    day2: { date: "2026-01-22", focus: "Choosing who not to serve",                 link: null }   // W02-strategy-stress-test-reverse.html
   },
   {
-    num: 3, case: "Amazon Fire Phone", chapter: "Consumer Decision Process", icon: "📱",
-    day1: { date: "2026-01-27", focus: "Habit, risk, switching costs",              link: null },
-    day2: { date: "2026-01-29", focus: "Behavior beats marketing",                  link: null }
+    num: 3, case: "Dollar General vs Walmart", chapter: "Ch 5", icon: "🏪",
+    day1: { date: "2026-01-27", focus: "Environment constraints & capability fit",  link: null },  // W03-force-field.html
+    day2: { date: "2026-01-29", focus: "SWOT as fit vs tension",                    link: null }   // W03-force-field-asymmetry.html
   },
   {
-    num: 4, case: "St. Anne's Hospital", chapter: "Buying Center (6 Roles)", icon: "🏥",
-    day1: { date: "2026-02-03", focus: "Buying center roles & risk",                link: null },
-    day2: { date: "2026-02-05", focus: "Coordination vs persuasion",                link: null }
+    num: 4, case: "Amazon Fire Phone", chapter: "Ch 6", icon: "📱",
+    day1: { date: "2026-02-03", focus: "Habit, risk, switching costs",              link: null },  // W04-decision-path.html
+    day2: { date: "2026-02-05", focus: "Behavior beats marketing",                  link: null }   // W04-decision-path-compare.html
   },
   {
-    num: 5, case: "Warby Parker", chapter: "STP Part 1 — Segmentation", icon: "👓",
-    day1: { date: "2026-02-10", focus: "Picking the right segment",                 link: null },
-    day2: { date: "2026-02-12", focus: "STP tradeoffs & constraints",               link: null }
+    num: 5, case: "St. Anne's Hospital", chapter: "Ch 7", icon: "🏥",
+    day1: { date: "2026-02-10", focus: "Buying center roles & risk",                link: null },  // W05-buying-center.html
+    day2: { date: "2026-02-12", focus: "Coordination vs persuasion",                link: null }   // W05-buying-center-pressure.html
   },
   {
-    num: 6, case: "Warby Parker", chapter: "STP Part 2 — Positioning", icon: "👓",
-    day1: { date: "2026-02-17", focus: "Positioning & perceptual maps",             link: null },
-    day2: { date: "2026-02-19", focus: "Repositioning tradeoffs",                   link: null }
+    num: 6, case: "Warby Parker", chapter: "Ch 9", icon: "👓",
+    day1: { date: "2026-02-17", focus: "Picking the right segment",                 link: null },  // W06-segment-lab.html
+    day2: { date: "2026-02-19", focus: "STP tradeoffs & constraints",               link: null }   // W06-segment-lab-position.html
   },
   {
-    num: 7, case: "Midterm", chapter: "", icon: "📝",
-    day1: { date: "2026-02-24", focus: "Marketing brief review",                    link: null },
-    day2: { date: "2026-02-26", focus: "Midterm exam",                              link: null }
+    num: 7, case: "Google Flu Trends", chapter: "Ch 10", icon: "🔬",
+    day1: { date: "2026-02-24", focus: "Signals vs behavior",                       link: null },  // W07-signal-lab.html
+    day2: { date: "2026-02-26", focus: "Assumptions & drift",                       link: null }   // W07-signal-lab-update.html
   },
   {
-    num: 8, case: "Google Flu Trends", chapter: "Research Process (5 Steps)", icon: "🔬",
-    day1: { date: "2026-03-03", focus: "Signals vs behavior",                       link: null },
-    day2: { date: "2026-03-05", focus: "Assumptions & drift",                       link: null }
+    num: 8, case: "Midterm", chapter: "", icon: "📝",
+    day1: { date: "2026-03-03", focus: "Marketing brief review",                     link: null },  // no exercise
+    day2: { date: "2026-03-05", focus: "Midterm exam",                              link: null }   // no exercise
   },
   {
-    num: 9, case: "P\u0026G Low-Cost Razor (India)", chapter: "NPD Process + Brand Equity", icon: "🚀",
-    day1: { date: "2026-03-10", focus: "Product–market fit via context",            link: null },
-    day2: { date: "2026-03-12", focus: "Standardization vs localization",           link: null }
+    num: 9, case: "P&G Low-Cost Razor (India)", chapter: "Ch 11–12", icon: "🚀",
+    day1: { date: "2026-03-10", focus: "Product–market fit via context",            link: "W9.1-launch-it-ecuador.html" },
+    day2: { date: "2026-03-12", focus: "Standardization vs localization",           link: null }   // W09-launch-it-adapt.html
   },
   {
-    num: 10, case: "Valvoline", chapter: "5 Cs of Pricing + 3 Methods", icon: "🛢️",
-    day1: { date: "2026-03-24", focus: "Experience is the product",                 link: "W10.1-run-the-bay.html" },
-    day2: { date: "2026-03-26", focus: "Premium depends on delivery",               link: "W10.2-rate-the-bay.html" }
+    num: 10, case: "Valvoline", chapter: "Ch 13", icon: "🛢️",
+    day1: { date: "2026-03-24", focus: "Experience is the product",                 link: "W10-run-the-bay.html" },
+    day2: { date: "2026-03-26", focus: "Premium depends on delivery",               link: "W10-rate-the-bay.html" }
   },
   {
-    num: 11, case: "Netflix / StreamLocal", chapter: "5 Cs of Pricing + 3 Methods", icon: "📊",
-    day1: { date: "2026-03-31", focus: "5 Cs of Pricing",                           link: "W11.1-5cs-netflix.html" },
-    day2: { date: "2026-04-02", focus: "Three Pricing Methods",                     link: "W11.2-price-the-stream.html" }
+    num: 11, case: "Polymarket", chapter: "Ch 14", icon: "📊",
+    day1: { date: "2026-03-31", focus: "Value vs cost logic",                       link: null },  // W11-price-the-line.html
+    day2: { date: "2026-04-02", focus: "Demand can be destructive",                 link: null }   // W11-price-the-line-sim.html
   },
   {
-    num: 12, case: "Apple vs Epic", chapter: "Channel Structure", icon: "🎮",
-    day1: { date: "2026-04-07", focus: "Channel control & power",                   link: null },
-    day2: { date: "2026-04-09", focus: "Brand risk & backlash",                     link: null }
+    num: 12, case: "Apple vs Epic", chapter: "Ch 15", icon: "🎮",
+    day1: { date: "2026-04-07", focus: "Channel control & power",                   link: null },  // W12-channel-architect.html
+    day2: { date: "2026-04-09", focus: "Brand risk & backlash",                     link: null }   // W12-channel-architect-tradeoff.html
   },
   {
-    num: 13, case: "Stranger Things", chapter: "IMC Mix + AIDA", icon: "📡",
-    day1: { date: "2026-04-14", focus: "Message alignment",                         link: null },
-    day2: { date: "2026-04-16", focus: "Partner risk & discipline",                 link: null }
+    num: 13, case: "Stranger Things", chapter: "Ch 17", icon: "📡",
+    day1: { date: "2026-04-14", focus: "Message alignment",                         link: null },  // W13-message-match.html
+    day2: { date: "2026-04-16", focus: "Partner risk & discipline",                 link: null }   // W13-message-match-rewrite.html
   },
   {
-    num: 14, case: "They Ask, You Answer", chapter: "Digital Marketing + 4E", icon: "💬",
-    day1: { date: "2026-04-21", focus: "Content builds trust",                      link: null },
-    day2: { date: "2026-04-23", focus: "Transparency tradeoffs",                    link: null }
+    num: 14, case: "They Ask, You Answer", chapter: "Ch 3", icon: "💬",
+    day1: { date: "2026-04-21", focus: "Content builds trust",                      link: null },  // no exercise (project week)
+    day2: { date: "2026-04-23", focus: "Transparency tradeoffs",                    link: null }   // no exercise (project week)
   },
   {
     num: 15, case: "Finals", chapter: "", icon: "🎓",
-    day1: { date: "2026-04-28", focus: "Project presentations + career day",        link: null },
-    day2: { date: "2026-04-30", focus: "Final exam",                                link: null }
+    day1: { date: "2026-04-28", focus: "Project presentations + career day",        link: null },  // no exercise
+    day2: { date: "2026-04-30", focus: "Final exam",                                link: null }   // no exercise
   }
 ];
 
@@ -309,7 +309,7 @@ function renderTimeline() {
     function dayCard(day, label) {
       const dStatus = getDayStatus(day.date);
       // Make days clickable if the WEEK is current or past (not just the individual day)
-      const accessible = wStatus !== "future" || day.link;
+      const accessible = wStatus !== "future";
       const hasLink = day.link && accessible;
       const tag = hasLink ? "a" : "div";
       const href = hasLink ? ` href="${day.link}"` : "";
@@ -337,7 +337,7 @@ function renderTimeline() {
 
     return `
       <li class="week-group ${wStatus}">
-        <div class="week-header">${w.icon} Week ${w.num}${w.chapter ? " · " + w.chapter : ""} — ${w.case}</div>
+        <div class="week-header">Week ${w.num}${w.chapter ? " · " + w.chapter : ""} — ${w.case}</div>
         <div class="day-cards">
           ${dayCard(w.day1, "Tuesday")}
           ${dayCard(w.day2, "Thursday")}
