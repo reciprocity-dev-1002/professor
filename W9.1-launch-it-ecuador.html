@@ -378,6 +378,9 @@
       <button class="reveal-toggle-btn" id="reveal-toggle-btn" onclick="toggleReveal()">🔒 REVEAL OUTCOMES</button>
     </div>
     <div id="reveal-panel" style="display:none; margin-top:20px;"></div>
+    <div id="student-submit-row" style="display:none; margin-top:14px;">
+      <button class="submit-btn" onclick="revealOutcome()">Submit & See Results →</button>
+    </div>
   </div>
 </div>
 
@@ -587,6 +590,9 @@ function updateBudget() {
     over ? `OVER BUDGET — ${used - BUDGET} PT OVER` :
     allPicked ? 'ALL LEVERS CHOSEN ✓' :
     `${used} / ${BUDGET} POINTS USED`;
+
+  const submitRow = document.getElementById('student-submit-row');
+  if (submitRow) submitRow.style.display = (allPicked && !over) ? 'block' : 'none';
 }
 
 let hidingSelections = false;
