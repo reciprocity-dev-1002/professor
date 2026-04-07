@@ -1139,7 +1139,8 @@ const ghost      = document.getElementById('drag-ghost');
 function onTouchStart(e) {
   touchCardEl = e.currentTarget;
   touchCardId = parseInt(touchCardEl.dataset.cardId);
-  ghost.textContent = touchCardEl.querySelector('.policy-title').textContent;
+  const titleEl = touchCardEl.querySelector('.policy-title');
+  ghost.textContent = titleEl ? titleEl.textContent : touchCardEl.textContent;
   ghost.style.display = 'block';
   const t = e.touches[0];
   ghost.style.left = (t.clientX - 40) + 'px';
@@ -1187,13 +1188,21 @@ function bucketLabel(b) {
 }
 
 function sortCard(cardId, bucket) {
+  const prevBucket = state.sorts[cardId];
   state.sorts[cardId] = bucket;
 
-  // Remove from deck
+  // Remove existing chip if re-sorting from another bucket
+  const existingChip = document.getElementById('chip-' + cardId);
+  if (existingChip) {
+    existingChip.remove();
+    if (prevBucket) updateBucketHint(prevBucket);
+  }
+
+  // Remove from deck if still there
   const deckEl = document.getElementById('deck-card-' + cardId);
   if (deckEl) deckEl.remove();
 
-  // Add chip to bucket
+  // Add chip to new bucket
   const card = state.myCards.find(c => c.id === cardId);
   const chip = document.createElement('div');
   chip.className = 'bucket-chip';
@@ -1201,13 +1210,18 @@ function sortCard(cardId, bucket) {
   chip.textContent = card.title;
   chip.dataset.cardId = cardId;
   chip.draggable = true;
-  // Allow dragging chip back OUT to re-sort
+  // Desktop: drag chip to re-sort
   chip.addEventListener('dragstart', e => {
     dragCardId = parseInt(e.currentTarget.dataset.cardId);
     e.dataTransfer.effectAllowed = 'move';
   });
   chip.addEventListener('dragend', () => { dragCardId = null; });
-  chip.addEventListener('click', () => unSortCard(cardId)); // tap to remove
+  // Mobile: touch drag chip to re-sort
+  chip.addEventListener('touchstart', onTouchStart, { passive: false });
+  chip.addEventListener('touchmove',  onTouchMove,  { passive: false });
+  chip.addEventListener('touchend',   onTouchEnd);
+  // Click/tap to send back to deck
+  chip.addEventListener('click', () => unSortCard(cardId));
   document.getElementById('chips-' + bucket).appendChild(chip);
 
   // Update empty hint
