@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W12.1 — Value or Rent?</title>
+<title>W12.1 — Channel or Control?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -13,14 +13,18 @@
   --border: #e2e5eb;
   --text: #1a1d23;
   --muted: #6b7280;
-  --accent: #2B5F8E;
-  --accent-light: #e8f0f9;
+  --accent: #9A5A2A;
+  --accent-light: #f5ece3;
+
   --value: #1D6349;
   --value-light: #e6f4ee;
-  --rent: #B03A2E;
-  --rent-light: #fcecea;
-  --unsure: #6B7280;
-  --unsure-light: #f3f4f6;
+
+  --control: #B03A2E;
+  --control-light: #fcecea;
+
+  --conflict: #2B5F8E;
+  --conflict-light: #e8f0f9;
+
   --radius: 10px;
   --shadow: 0 2px 12px rgba(0,0,0,0.07);
 }
@@ -81,9 +85,7 @@ body {
 }
 
 /* ── FORM ── */
-.field {
-  margin-bottom: 18px;
-}
+.field { margin-bottom: 18px; }
 
 .field label {
   display: block;
@@ -113,11 +115,7 @@ body {
   background: white;
 }
 
-.field textarea {
-  resize: vertical;
-  min-height: 80px;
-  line-height: 1.5;
-}
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
 
 /* ── BUTTONS ── */
 .btn {
@@ -136,13 +134,9 @@ body {
   text-decoration: none;
 }
 
-.btn-primary {
-  background: var(--accent);
-  color: white;
-}
-.btn-primary:hover:not(:disabled) { background: #234d75; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover:not(:disabled) { background: #7d4820; }
 .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-
 .btn-full { width: 100%; }
 
 /* ── PASSWORD SCREEN ── */
@@ -192,7 +186,7 @@ body {
 .pw-input-wrap input:focus { border-color: var(--accent); background: white; }
 
 .pw-err {
-  color: var(--rent);
+  color: var(--control);
   font-size: 13px;
   font-weight: 600;
   min-height: 20px;
@@ -225,10 +219,7 @@ body {
   margin-bottom: 8px;
 }
 
-.howto-list {
-  list-style: none;
-  counter-reset: steps;
-}
+.howto-list { list-style: none; counter-reset: steps; }
 
 .howto-list li {
   counter-increment: steps;
@@ -257,11 +248,15 @@ body {
   line-height: 1;
 }
 
-/* ── SORT CARDS ── */
+/* ══════════════════════════════════════════
+   DRAG-AND-DROP SORT SCREEN
+══════════════════════════════════════════ */
+
+/* Progress bar */
 .sort-progress {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
@@ -271,55 +266,142 @@ body {
   color: var(--muted);
 }
 
-.buckets-legend {
-  display: flex;
-  gap: 10px;
+/* Bucket drop zones — horizontal row */
+.bucket-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
 }
 
-.bucket-dot {
+.bucket-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 12px 10px;
+  min-height: 110px;
+  transition: border-color 0.15s, background 0.15s;
+  position: relative;
+}
+
+.bucket-zone.dragover {
+  border-style: solid;
+}
+
+.bucket-zone[data-bucket="value"].dragover  { border-color: var(--value);   background: var(--value-light); }
+.bucket-zone[data-bucket="control"].dragover { border-color: var(--control);  background: var(--control-light); }
+.bucket-zone[data-bucket="conflict"].dragover { border-color: var(--conflict); background: var(--conflict-light); }
+
+.bucket-zone-header {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
-  font-weight: 700;
+}
+
+.bucket-zone[data-bucket="value"]   .bucket-zone-header { color: var(--value); }
+.bucket-zone[data-bucket="control"] .bucket-zone-header { color: var(--control); }
+.bucket-zone[data-bucket="conflict"] .bucket-zone-header { color: var(--conflict); }
+
+.bucket-zone-label {
+  font-size: 10px;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
+.bucket-count-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-left: auto;
 }
 
-.dot-value { background: var(--value); }
-.dot-rent { background: var(--rent); }
-.dot-unsure { background: var(--unsure); }
+.bucket-zone[data-bucket="value"]    .bucket-count-badge { background: var(--value); }
+.bucket-zone[data-bucket="control"]  .bucket-count-badge { background: var(--control); }
+.bucket-zone[data-bucket="conflict"] .bucket-count-badge { background: var(--conflict); }
 
-/* Each policy card */
+/* Cards dropped into bucket — compact chips */
+.bucket-chips { display: flex; flex-direction: column; gap: 5px; }
+
+.bucket-chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 8px;
+  border-radius: 5px;
+  line-height: 1.3;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: opacity 0.15s;
+}
+
+.bucket-chip:active { cursor: grabbing; }
+
+.bucket-zone[data-bucket="value"]    .bucket-chip { background: var(--value-light);   color: var(--value);   border: 1px solid var(--value); }
+.bucket-zone[data-bucket="control"]  .bucket-chip { background: var(--control-light);  color: var(--control);  border: 1px solid var(--control); }
+.bucket-zone[data-bucket="conflict"] .bucket-chip { background: var(--conflict-light); color: var(--conflict); border: 1px solid var(--conflict); }
+
+/* Drag hint text when empty */
+.bucket-empty-hint {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  padding: 10px 4px;
+  line-height: 1.4;
+}
+
+/* Card deck below buckets */
+.card-deck-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.deck-cards { display: flex; flex-direction: column; gap: 12px; }
+
+/* A draggable policy card */
 .policy-card {
   background: var(--surface);
   border: 2px solid var(--border);
   border-radius: var(--radius);
-  padding: 18px 20px;
-  margin-bottom: 14px;
-  transition: border-color 0.2s, background 0.2s;
+  padding: 16px 18px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: box-shadow 0.15s, opacity 0.15s, border-color 0.2s;
+  position: relative;
 }
 
-.policy-card.sorted-value {
-  border-color: var(--value);
-  background: var(--value-light);
+.policy-card:active { cursor: grabbing; }
+
+.policy-card.dragging {
+  opacity: 0.35;
+  box-shadow: none;
 }
 
-.policy-card.sorted-rent {
-  border-color: var(--rent);
-  background: var(--rent-light);
-}
-
-.policy-card.sorted-unsure {
-  border-color: var(--unsure);
-  background: var(--unsure-light);
+/* Drag handle hint */
+.drag-handle {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  color: #ccc;
+  font-size: 16px;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .policy-title {
@@ -327,74 +409,14 @@ body {
   font-weight: 800;
   color: var(--text);
   margin-bottom: 6px;
+  padding-right: 20px;
 }
 
 .policy-body {
   font-size: 13px;
   color: #444;
   line-height: 1.65;
-  margin-bottom: 14px;
 }
-
-.bucket-btns {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.bucket-btn {
-  padding: 7px 14px;
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: 2px solid;
-  border-radius: 6px;
-  cursor: pointer;
-  background: transparent;
-  transition: all 0.15s;
-}
-
-.bucket-btn-value {
-  border-color: var(--value);
-  color: var(--value);
-}
-.bucket-btn-value:hover, .bucket-btn-value.selected {
-  background: var(--value);
-  color: white;
-}
-
-.bucket-btn-rent {
-  border-color: var(--rent);
-  color: var(--rent);
-}
-.bucket-btn-rent:hover, .bucket-btn-rent.selected {
-  background: var(--rent);
-  color: white;
-}
-
-.bucket-btn-unsure {
-  border-color: var(--unsure);
-  color: var(--unsure);
-}
-.bucket-btn-unsure:hover, .bucket-btn-unsure.selected {
-  background: var(--unsure);
-  color: white;
-}
-
-.bucket-label {
-  display: none;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-}
-
-.sorted-value .bucket-label { display: block; color: var(--value); }
-.sorted-rent .bucket-label { display: block; color: var(--rent); }
-.sorted-unsure .bucket-label { display: block; color: var(--unsure); }
 
 /* ── SHARE GATE ── */
 .share-gate {
@@ -431,13 +453,45 @@ body {
   margin: 0 auto 24px;
 }
 
-.share-gate .btn {
-  background: #F0C040;
-  color: #1a1d23;
-  font-size: 13px;
+.share-gate .btn { background: #F0C040; color: #1a1d23; font-size: 13px; }
+.share-gate .btn:hover { background: #d4a800; }
+
+/* Share cards review */
+.share-card-review {
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border: 1.5px solid;
 }
 
-.share-gate .btn:hover { background: #d4a800; }
+.share-card-review.sorted-value   { border-color: var(--value);   background: var(--value-light); }
+.share-card-review.sorted-control { border-color: var(--control);  background: var(--control-light); }
+.share-card-review.sorted-conflict{ border-color: var(--conflict); background: var(--conflict-light); }
+
+.share-card-bucket-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 5px;
+}
+
+.sorted-value    .share-card-bucket-label { color: var(--value); }
+.sorted-control  .share-card-bucket-label { color: var(--control); }
+.sorted-conflict .share-card-bucket-label { color: var(--conflict); }
+
+.share-card-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.share-card-body {
+  font-size: 12px;
+  color: #444;
+  line-height: 1.6;
+}
 
 /* ── MOVE SCREEN ── */
 .move-card-select {
@@ -498,30 +552,18 @@ body {
   letter-spacing: 0.5px;
 }
 
-.mc-value { color: var(--value); }
-.mc-rent { color: var(--rent); }
-.mc-unsure { color: var(--unsure); }
+.mc-value   { color: var(--value); }
+.mc-control { color: var(--control); }
+.mc-conflict{ color: var(--conflict); }
 
-.move-defense-wrap {
-  display: none;
-  margin-top: 20px;
-}
-
+.move-defense-wrap { display: none; margin-top: 20px; }
 .move-defense-wrap.visible { display: block; }
 
-.char-count {
-  font-size: 11px;
-  color: var(--muted);
-  text-align: right;
-  margin-top: 4px;
-}
-
+.char-count { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
 .char-count.ok { color: var(--value); font-weight: 700; }
 
 /* ── SUMMARY ── */
-.summary-group {
-  margin-bottom: 28px;
-}
+.summary-group { margin-bottom: 28px; }
 
 .summary-group-title {
   font-size: 11px;
@@ -534,9 +576,9 @@ body {
   margin-bottom: 12px;
 }
 
-.sg-value { background: var(--value-light); color: var(--value); }
-.sg-rent   { background: var(--rent-light); color: var(--rent); }
-.sg-unsure { background: var(--unsure-light); color: var(--unsure); }
+.sg-value    { background: var(--value-light);   color: var(--value); }
+.sg-control  { background: var(--control-light);  color: var(--control); }
+.sg-conflict { background: var(--conflict-light); color: var(--conflict); }
 
 .summary-item {
   background: var(--surface);
@@ -546,18 +588,8 @@ body {
   margin-bottom: 8px;
 }
 
-.summary-item-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.summary-item-body {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
-  line-height: 1.5;
-}
+.summary-item-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.summary-item-body  { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
 
 .moved-badge {
   display: inline-block;
@@ -609,17 +641,26 @@ body {
   margin-bottom: 10px;
 }
 
-.debrief-box p {
-  font-size: 13px;
-  color: #ccc;
-  line-height: 1.7;
-}
+.debrief-box p { font-size: 13px; color: #ccc; line-height: 1.7; }
 
-.student-tag {
+.student-tag { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 20px; }
+
+/* ── DRAG GHOST (floating card while dragging) ── */
+#drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  max-width: 280px;
+  background: white;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.18);
   font-size: 13px;
-  font-weight: 700;
-  color: var(--muted);
-  margin-bottom: 20px;
+  font-weight: 800;
+  color: var(--text);
+  transform: rotate(2deg);
+  display: none;
 }
 </style>
 </head>
@@ -629,9 +670,9 @@ body {
 <div id="pw-screen" class="screen active">
   <div class="pw-box">
     <div class="week-tag">Week 12 · Exercise 1</div>
-    <div class="screen-title">Value or Rent?</div>
+    <div class="screen-title">Channel or Control?</div>
     <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;">
-      Apple's App Store — is it a service or a toll booth?<br>You're about to argue both sides.
+      Apple's App Store — is it a channel that creates value, or a gatekeeper extracting it?<br>You're about to sort the evidence.
     </p>
     <div class="pw-input-wrap">
       <input type="text" id="pw-input" maxlength="10" placeholder="CLASS PASSWORD" autocomplete="off"
@@ -672,11 +713,8 @@ body {
         <label>Your Card Set (1–5)</label>
         <select id="j-position">
           <option value="">— each person picks a different number —</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
+          <option value="1">1</option><option value="2">2</option>
+          <option value="3">3</option><option value="4">4</option><option value="5">5</option>
         </select>
       </div>
       <button class="btn btn-primary btn-full" id="join-btn" onclick="doJoin()" disabled>Get My Cards →</button>
@@ -695,27 +733,27 @@ body {
       <div class="howto-title">What's happening here</div>
       <ul class="howto-list">
         <li>You've been assigned 5 App Store policy cards that only you can see right now.</li>
-        <li>Sort each card: does this policy create value, extract rent, or are you genuinely unsure?</li>
+        <li>Drag each card into one of the three buckets: Channel Value, Channel Control, or Channel Conflict.</li>
         <li>After sorting, share your cards and your reasoning with your group one at a time.</li>
-        <li>As a group, pick one card that could honestly go in either bucket — then defend the move.</li>
+        <li>As a group, pick one card to move — then write one sentence defending the move.</li>
       </ul>
     </div>
 
     <div class="card" style="margin-bottom:20px;">
-      <p style="font-size:13px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Two Buckets</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div style="background:var(--value-light);border-radius:8px;padding:14px;">
-          <div style="font-size:12px;font-weight:800;color:var(--value);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">✓ Value Creation</div>
-          <div style="font-size:12px;color:#444;line-height:1.6;">Apple provides something real: security, reach, tools, trust. The fee is payment for a service developers couldn't build themselves.</div>
+      <p style="font-size:13px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Three Buckets</p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="background:var(--value-light);border-radius:8px;padding:14px;border-left:4px solid var(--value);">
+          <div style="font-size:12px;font-weight:800;color:var(--value);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;">✓ Channel Value</div>
+          <div style="font-size:12px;color:#444;line-height:1.6;">Apple is genuinely making the channel better — providing infrastructure, trust, or reach that developers and consumers couldn't access on their own.</div>
         </div>
-        <div style="background:var(--rent-light);border-radius:8px;padding:14px;">
-          <div style="font-size:12px;font-weight:800;color:var(--rent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">$ Power Extraction</div>
-          <div style="font-size:12px;color:#444;line-height:1.6;">Apple is using its control over the channel to extract rent — charging fees, blocking alternatives, or tilting the rules in its own favor.</div>
+        <div style="background:var(--control-light);border-radius:8px;padding:14px;border-left:4px solid var(--control);">
+          <div style="font-size:12px;font-weight:800;color:var(--control);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;">⛔ Channel Control</div>
+          <div style="font-size:12px;color:#444;line-height:1.6;">Apple is using its gatekeeper position to restrict alternatives, extract fees, or set terms that benefit Apple at the expense of other channel members.</div>
         </div>
-      </div>
-      <div style="background:var(--unsure-light);border-radius:8px;padding:14px;margin-top:12px;">
-        <div style="font-size:12px;font-weight:800;color:var(--unsure);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">? Not Sure</div>
-        <div style="font-size:12px;color:#444;">Use this when a policy genuinely could go either way. You'll need to defend every "Not Sure" to your group.</div>
+        <div style="background:var(--conflict-light);border-radius:8px;padding:14px;border-left:4px solid var(--conflict);">
+          <div style="font-size:12px;font-weight:800;color:var(--conflict);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;">⚡ Channel Conflict</div>
+          <div style="font-size:12px;color:#444;line-height:1.6;">This policy directly triggers conflict between Apple and other channel members — developers, regulators, or competitors who push back on Apple's terms.</div>
+        </div>
       </div>
     </div>
 
@@ -728,24 +766,58 @@ body {
   <div class="page-wrap">
     <div class="week-tag">Week 12 · Exercise 1</div>
     <div class="screen-title">Sort Your Cards</div>
-    <div class="screen-sub">These are your 5 cards. No one else has this exact set. Sort each one before you discuss anything with your group.</div>
+    <div class="screen-sub">Drag each card into a bucket. No one else has your exact set.</div>
 
     <div class="sort-progress">
       <div class="sort-count"><span id="sorted-count">0</span> of 5 sorted</div>
-      <div class="buckets-legend">
-        <div class="bucket-dot"><div class="dot dot-value"></div> Value</div>
-        <div class="bucket-dot"><div class="dot dot-rent"></div> Rent</div>
-        <div class="bucket-dot"><div class="dot dot-unsure"></div> Unsure</div>
+    </div>
+
+    <!-- Three drop zones -->
+    <div class="bucket-row">
+      <div class="bucket-zone" id="zone-value" data-bucket="value"
+        ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'value')">
+        <div class="bucket-zone-header">
+          <div class="bucket-zone-label">✓ Channel Value</div>
+          <div class="bucket-count-badge" id="badge-value">0</div>
+        </div>
+        <div class="bucket-chips" id="chips-value"></div>
+        <div class="bucket-empty-hint" id="hint-value">Drag here</div>
+      </div>
+
+      <div class="bucket-zone" id="zone-control" data-bucket="control"
+        ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'control')">
+        <div class="bucket-zone-header">
+          <div class="bucket-zone-label">⛔ Channel Control</div>
+          <div class="bucket-count-badge" id="badge-control">0</div>
+        </div>
+        <div class="bucket-chips" id="chips-control"></div>
+        <div class="bucket-empty-hint" id="hint-control">Drag here</div>
+      </div>
+
+      <div class="bucket-zone" id="zone-conflict" data-bucket="conflict"
+        ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'conflict')">
+        <div class="bucket-zone-header">
+          <div class="bucket-zone-label">⚡ Channel Conflict</div>
+          <div class="bucket-count-badge" id="badge-conflict">0</div>
+        </div>
+        <div class="bucket-chips" id="chips-conflict"></div>
+        <div class="bucket-empty-hint" id="hint-conflict">Drag here</div>
       </div>
     </div>
 
-    <div id="sort-cards-list"></div>
+    <!-- Card deck -->
+    <div class="card-deck-label">Your 5 cards — drag each one up into a bucket</div>
+    <div class="deck-cards" id="card-deck"></div>
 
-    <button class="btn btn-primary btn-full" id="to-share-btn" onclick="show('share-screen')" disabled style="margin-top:8px;">
+    <button class="btn btn-primary btn-full" id="to-share-btn"
+      onclick="show('share-screen'); renderShareCards()" disabled style="margin-top:20px;">
       All sorted — share with my group →
     </button>
   </div>
 </div>
+
+<!-- Floating ghost for touch drag -->
+<div id="drag-ghost"></div>
 
 <!-- ═══════════════════════════ SHARE GATE ═══════════════════════════ -->
 <div id="share-screen" class="screen">
@@ -753,13 +825,15 @@ body {
     <div class="share-gate">
       <div class="stop-tag">Stop · Group Discussion</div>
       <h2>Share your cards with your group</h2>
-      <p>Take turns reading each card aloud and telling your group which bucket you put it in — and why. Your group will probably disagree on at least one. That disagreement is the point. Don't move on until everyone has shared all their cards.</p>
-      <button class="btn" onclick="show('move-screen')">My group is done talking →</button>
+      <p>Take turns reading each card aloud and telling your group which bucket you put it in — and why. Someone will disagree. That disagreement is the point.</p>
+      <button class="btn" onclick="show('move-screen'); renderMoveCards()">My group is done talking →</button>
     </div>
 
-    <div class="card">
-      <p style="font-size:13px;color:var(--muted);line-height:1.65;"><strong style="color:var(--text);">What to talk about:</strong> When someone puts a card in "Power Extraction," ask — does Apple get anything real from this? When someone puts it in "Value Creation," ask — could a developer get this anywhere else, or only through Apple? The hardest cards are the ones that could honestly go either way.</p>
+    <div class="card" style="margin-bottom:20px;">
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;"><strong style="color:var(--text);">What to talk about:</strong> When someone puts a card in Channel Control, ask — does Apple get anything real from this? When someone puts it in Channel Value, ask — could a developer get this anywhere else, or only through Apple? Channel Conflict cards are the ones that caused real lawsuits — ask what the developer should have done instead.</p>
     </div>
+
+    <div id="share-cards-list"></div>
   </div>
 </div>
 
@@ -768,7 +842,7 @@ body {
   <div class="page-wrap">
     <div class="week-tag">Week 12 · Exercise 1 — Group Consensus</div>
     <div class="screen-title">Move One Card</div>
-    <div class="screen-sub">After discussing with your group — pick one card from your set that you could argue belongs in the <em>opposite</em> bucket. Then write one sentence defending the move. This should be the card your group argued about most.</div>
+    <div class="screen-sub">After discussing with your group — pick one card from your set that you could argue belongs in a <em>different</em> bucket. Write one sentence defending the move.</div>
 
     <div id="move-cards-list"></div>
 
@@ -776,11 +850,11 @@ body {
       <div class="field">
         <label>Defend the move — one sentence</label>
         <textarea id="defense-text" rows="3"
-          placeholder="Explain why this card could actually belong in the other bucket..."
+          placeholder="Explain why this card could actually belong in a different bucket..."
           oninput="checkDefense()"></textarea>
         <div class="char-count" id="defense-count">0 / 30 minimum</div>
       </div>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:8px;text-align:center;">Submitting this exercise records your participation and case work for today's class.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px;text-align:center;">Submitting records your participation and case work for today's class.</p>
       <button class="btn btn-primary btn-full" id="move-submit-btn" onclick="submitMove()" disabled>Submit &amp; Record Participation →</button>
     </div>
   </div>
@@ -792,12 +866,10 @@ body {
     <div class="week-tag">Week 12 · Exercise 1 — Summary</div>
     <div class="screen-title">Your Group's Decisions</div>
     <div id="student-tag" class="student-tag"></div>
-
     <div id="summary-body"></div>
-
     <div class="debrief-box">
-      <h3>Debrief: Why this question matters</h3>
-      <p>The hardest part of the Apple/Epic case is that both sides are partly right. Apple does provide real infrastructure: security reviews, payment rails, global distribution, and a trusted brand. Those are genuine services. But Apple is also the <em>only</em> way onto the iPhone — and that monopoly position means it can charge whatever it wants for those services. The 30% fee isn't just a price; it's a gatekeeping tax. The real question isn't whether Apple provides value. It's whether Apple's control over the channel gives it the power to extract more value than it creates — and whether that's good for the ecosystem, or just good for Apple.</p>
+      <h3>Debrief: The Channel Captain Problem</h3>
+      <p>The hardest part of the Apple/Epic case is that Apple is both the channel captain and a competing seller in the channel it runs. As channel captain, Apple designs the rules — security review, commission rates, payment processing. Those rules create real value. But Apple also uses that same authority to block competitors, extract fees with no market alternative, and tilt visibility toward its own apps. The question isn't whether Apple provides value. It's whether Apple's monopoly position over the channel gives it the power to extract more than it creates — and whether regulators, developers, or the market can do anything about it.</p>
     </div>
   </div>
 </div>
@@ -810,131 +882,139 @@ const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercis
 
 /* ── STATE ── */
 let state = {
-  name: '',
-  email: '',
-  group: null,
-  position: null,
+  name: '', email: '', group: null, position: null,
   myCards: [],
-  sorts: {}, // cardId → 'value' | 'rent' | 'unsure'
+  sorts: {},        // cardId → 'value' | 'control' | 'conflict'
   movedCardId: null,
   defense: '',
 };
 
-/* ── 18 APP STORE POLICY CARDS ── */
+/* ── 18 APP STORE CHANNEL CARDS ── */
 const ALL_CARDS = [
+  // ── CHANNEL VALUE (1–6) ──────────────────────────────────────────
   {
     id: 1,
-    title: "The 30% Cut",
-    body: "Apple takes 30 cents out of every dollar spent inside an app — on subscriptions, in-app purchases, and digital goods. Developers say this makes it nearly impossible to compete with Apple's own apps, which pay themselves nothing. This is the fee that started the war with Epic."
+    title: "Global Storefront: 175 Countries",
+    body: "A developer in Austin gets instant distribution to iPhone users in Tokyo, São Paulo, and Lagos — with local currency support, tax handling, and payment trust already built in. That's a global channel infrastructure that would take years and hundreds of millions of dollars to build independently."
   },
   {
     id: 2,
-    title: "The Security Review",
-    body: "Every app must pass Apple's review process before it goes live in the App Store. Apple checks for malware, privacy violations, and policy problems. Reviews can take days, and Apple can reject any app at any time — often without a detailed explanation."
+    title: "Security Review: Consumer Trust Engine",
+    body: "Every app is screened for malware, scams, and privacy violations before it reaches customers. That review process is why consumers trust buying inside apps — which is why they spend money inside apps. The security review creates the safe shopping environment that makes developer revenue possible."
   },
   {
     id: 3,
-    title: "No Competing App Stores",
-    body: "On an iPhone, the only place you can download apps is Apple's App Store. Apple does not allow competing stores on iOS. This means Apple is the only gatekeeper to over 1.8 billion active devices worldwide — there is no alternative."
+    title: "Developer Tools at $99/Year",
+    body: "Xcode, Swift, TestFlight, CloudKit, and 250,000+ APIs are available for $99/year. These are enterprise-grade tools that power billion-dollar apps. Independent developers couldn't fund this infrastructure alone — Apple absorbs the cost and spreads it across the ecosystem."
   },
   {
     id: 4,
-    title: "Mandatory Apple Checkout",
-    body: "Any app that sells digital goods — subscriptions, coins, skins, upgrades — must use Apple's payment system. Developers cannot build their own checkout or offer a cheaper price through a different processor. This is the rule Epic deliberately broke inside Fortnite."
+    title: "Small Business Program: 15% Cut",
+    body: "Developers earning under $1 million per year pay 15% instead of 30%. Apple launched this in 2020 at the height of the Epic lawsuit. Critics argued it was PR cover. Supporters say it meaningfully reduces friction for the long tail of indie developers who make up most of the App Store's catalog."
   },
   {
     id: 5,
-    title: "Small Business Program",
-    body: "Developers earning less than $1 million per year pay only 15% commission instead of 30%. Apple launched this program in 2020 during the height of the Epic lawsuit. Critics call it a public relations move; supporters say it meaningfully helps smaller app creators."
+    title: "Subscription Cliff: 30% Drops to 15%",
+    body: "When a subscriber renews past 12 months, Apple's commission automatically drops from 30% to 15%. Apple frames this as rewarding long-term customer relationships. For subscription-based apps, this cut can dramatically improve unit economics in year two and beyond."
   },
   {
     id: 6,
-    title: "Editorial Featuring",
-    body: "Apple's editorial team can place any app on the front page of the App Store. A feature from Apple can drive millions of new downloads in days. There is no guaranteed path to getting featured — Apple picks who gets the spotlight and who doesn't."
+    title: "Built-In Payment Infrastructure",
+    body: "Apple handles credit card processing, fraud detection, chargebacks, refunds, and PCI compliance. A developer using Stripe directly pays 2.9% + $0.30 per transaction and manages their own fraud stack. Apple's 30% covers the full payment rail — though developers argue the premium isn't justified."
   },
+
+  // ── CHANNEL CONTROL (7–12) ───────────────────────────────────────
   {
     id: 7,
-    title: "Subscription Revenue After Year One",
-    body: "For subscription apps, Apple's commission drops from 30% to 15% after a customer has been subscribed for more than one year. Apple frames this as rewarding long-term customer relationships. Developers acknowledge the reduction but argue the first-year rate still isn't justified."
+    title: "The 30% Commission",
+    body: "Apple takes 30 cents of every dollar spent on digital goods inside apps. Developers cannot negotiate this rate, cannot opt out, and cannot tell customers that the higher price reflects Apple's cut. No competitor, no alternative, no appeal. The only way around it is to leave the iPhone entirely."
   },
   {
     id: 8,
-    title: "Annual Developer Fee",
-    body: "Every developer must pay $99 per year for the right to be in the App Store — whether they make money or not. For small or first-time developers, this is the cost of admission to reach iPhone users at all. Miss the payment, and your apps get pulled."
+    title: "No Competing App Stores",
+    body: "For 16 years, the iPhone had only one door: Apple's App Store. Developers who wanted to reach iOS users had no alternative channel. The EU Digital Markets Act forced Apple to allow third-party stores in 2024 — but Apple added a €0.50 'core technology fee' per install after 1 million downloads. Developers called it malicious compliance."
   },
   {
     id: 9,
-    title: "No Sideloading",
-    body: "On an iPhone, you cannot install apps from outside the App Store. On Android, you can install apps from any source. Apple calls this a safety feature. Critics say it removes user choice and locks competitors out of the iOS ecosystem entirely."
+    title: "Mandatory Apple Checkout",
+    body: "Any app selling digital goods must use Apple's payment processor. Developers cannot offer Stripe, PayPal, or a cheaper web price inside the app. This is the rule Epic deliberately broke when they added a direct V-Bucks checkout inside Fortnite — and the rule that started the lawsuit."
   },
   {
     id: 10,
-    title: "Apple Can Remove Any App",
-    body: "Apple can remove any app from the App Store at any time, for any reason. This happened to Fortnite in 2020 within hours of Epic's payment stunt. When an app is removed, every iPhone user in the world instantly loses the ability to download it."
+    title: "Gag Rule: No Price Links",
+    body: "Until a 2024 US court ruling, Apple prohibited developers from telling customers inside an app that a cheaper price existed on the developer's website. Apple was the only price a user ever saw — unless they already knew to look elsewhere. The court found this violated antitrust law."
   },
   {
     id: 11,
-    title: "Privacy and Trust Marketing",
-    body: "Apple actively markets the App Store as safer and more private than uncontrolled alternatives. Apple does not sell user data from App Store activity. This privacy reputation is a real advantage for consumers — and Apple uses it to justify the fees developers pay."
+    title: "Rejection Without Appeal",
+    body: "Apple can remove or reject any app at any time, with no requirement to provide a detailed explanation. There is no independent appeals court. A developer whose app is removed loses all access to iOS users immediately — with no alternative channel available in the US market."
   },
   {
     id: 12,
-    title: "Free Developer Tools",
-    body: "Apple gives developers free access to crash reports, performance analytics, A/B testing tools, and device testing frameworks. These tools are only available inside Apple's ecosystem. A developer who leaves Apple to build for Android loses access to all of them."
+    title: "Apple Competing on Its Own Shelf",
+    body: "Apple's own apps — Maps, Music, Podcasts, Apple TV+ — pay no commissions, face no review delays, and receive preferential placement in search results. Apple is simultaneously the channel manager and a competing seller in the channel it controls. No other retailer operates at this scale under the same rules."
   },
+
+  // ── CHANNEL CONFLICT (13–18) ─────────────────────────────────────
   {
     id: 13,
-    title: "No Linking to Outside Payment",
-    body: "For years, apps couldn't even mention that a lower price existed outside the app. A federal court ruling forced Apple to allow some apps to link out to external payment pages. Apple fought this rule in court and still controls exactly how and where those links can appear."
+    title: "Epic's Direct Checkout Gambit",
+    body: "In August 2020, Epic secretly added a direct payment option inside Fortnite that cut Apple out of the transaction entirely. Apple removed Fortnite from the App Store within hours. Epic filed an antitrust lawsuit the same day. This is vertical channel conflict in real time: a manufacturer attempting to disintermediate its retailer."
   },
   {
     id: 14,
-    title: "Inconsistent App Review",
-    body: "Apple's review process doesn't always apply its rules the same way. Some apps get rejected for content that nearly identical approved apps already have. Small developers without a direct line to Apple's review team have no reliable way to challenge or appeal a rejection."
+    title: "The Spotify Paradox",
+    body: "Spotify cannot sell Premium subscriptions inside its iPhone app without giving Apple 30% of each sale. Instead, Spotify tells users to subscribe on the web. Meanwhile, Apple Music is Apple's own product with no commission. Spotify filed an EU antitrust complaint in 2019 — arguing Apple uses the channel to disadvantage competing services."
   },
   {
     id: 15,
-    title: "Country and Category Bans",
-    body: "Apple removes entire categories of apps in certain countries, sometimes at the request of local governments. Apple removed thousands of apps from the Chinese App Store at the Chinese government's request. Individual developers affected by these decisions have no vote and no recourse."
+    title: "Disintermediation via Web",
+    body: "Netflix, Kindle, and Duolingo all removed their in-app purchase options rather than pay Apple's cut. They route users to a browser to subscribe, then return to the app. This workaround exists entirely to cut Apple out of the transaction — a channel bypass that Apple tolerates but restricts by banning direct web links."
   },
   {
     id: 16,
-    title: "Access to 1.8 Billion Devices",
-    body: "The App Store gives developers instant access to over 1.8 billion active Apple devices worldwide. For many app companies, being kicked off the App Store would mean losing the majority of their customers overnight. That reach is exactly what gives Apple its negotiating power."
+    title: "Developer Coalition Revolt",
+    body: "Over 60 companies — including Spotify, Epic, Match Group, and Tile — formed the Coalition for App Fairness to fight Apple's channel terms through regulation and litigation. They argue Apple's rules create illegal tying arrangements: access to iPhone users is bundled with mandatory use of Apple's payment system."
   },
   {
     id: 17,
-    title: "Server and Distribution Infrastructure",
-    body: "Apple runs all the technical infrastructure for delivering apps and updates to users — servers, bandwidth, and global distribution at scale. Developers don't have to build or pay for this separately. Apple cites this infrastructure as part of why the 30% fee is fair."
+    title: "The Fortnite Standoff",
+    body: "Despite a 2024 settlement that ended the antitrust lawsuit, Fortnite remains unavailable in the US App Store. Epic and Apple still cannot agree on App Store terms. The game that started the most high-profile channel conflict in tech history still cannot reach US iPhone users through the official channel — years later."
   },
   {
     id: 18,
-    title: "Anti-Steering Rules",
-    body: "Apple's rules long prevented developers from mentioning that cheaper options existed outside the app — not even a URL was allowed. Regulators in the US, EU, and South Korea called this anticompetitive. Apple changed these rules only when legally forced to, and still fights to limit what developers can say."
+    title: "EU Forces Open Channel",
+    body: "When market pressure failed to change Apple's channel rules, developers turned to regulators. The EU's Digital Markets Act (2024) forced Apple to allow competing app stores and alternative payment methods in Europe. Apple complied — but added conditions that made the alternatives commercially unattractive. Developers called it a lesson in how a channel captain responds to forced disintermediation."
   }
 ];
 
-/* ── UTILS ── */
+/* ══════════════════════════════════════════
+   SCREEN MANAGEMENT
+══════════════════════════════════════════ */
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
 
+/* ══════════════════════════════════════════
+   CARD ASSIGNMENT
+══════════════════════════════════════════ */
 function seededShuffle(arr, seed) {
   let s = Math.abs(seed * 1664525 + 1013904223) | 0;
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
-    s = (Math.abs(s) * 1664525 + 1013904223) | 0;
-    const j = Math.abs(s) % (i + 1);
+    s = Math.abs(s * 1664525 + 1013904223) | 0;
+    const j = s % (i + 1);
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
 }
 
 function getMyCards(group, position) {
-  const shuffled = seededShuffle(ALL_CARDS, group * 100);
-  const offset = ((position - 1) * 4) % ALL_CARDS.length;
+  const seed = group * 100 + position;
+  const shuffled = seededShuffle(ALL_CARDS, seed);
+  const offset = (position - 1) * 3;
   const cards = [];
   for (let i = 0; i < 5; i++) {
     cards.push(shuffled[(offset + i) % ALL_CARDS.length]);
@@ -942,7 +1022,9 @@ function getMyCards(group, position) {
   return cards;
 }
 
-/* ── PASSWORD ── */
+/* ══════════════════════════════════════════
+   PASSWORD
+══════════════════════════════════════════ */
 function checkPw() {
   const val = document.getElementById('pw-input').value.trim().toUpperCase();
   const err = document.getElementById('pw-err');
@@ -960,7 +1042,9 @@ function checkPw() {
   }
 }
 
-/* ── JOIN ── */
+/* ══════════════════════════════════════════
+   JOIN
+══════════════════════════════════════════ */
 function setupJoinListeners() {
   ['j-name', 'j-email', 'j-group', 'j-position'].forEach(id => {
     document.getElementById(id).addEventListener('input', checkJoinReady);
@@ -969,76 +1053,255 @@ function setupJoinListeners() {
 }
 
 function checkJoinReady() {
-  const name = document.getElementById('j-name').value.trim();
+  const name  = document.getElementById('j-name').value.trim();
   const email = document.getElementById('j-email').value.trim();
   const group = document.getElementById('j-group').value;
-  const pos = document.getElementById('j-position').value;
-  const ok = name.length > 0 && email.includes('@') && group && pos;
-  document.getElementById('join-btn').disabled = !ok;
+  const pos   = document.getElementById('j-position').value;
+  document.getElementById('join-btn').disabled = !(name.length > 0 && email.includes('@') && group && pos);
 }
 
 function doJoin() {
-  state.name = document.getElementById('j-name').value.trim();
-  state.email = document.getElementById('j-email').value.trim();
-  state.group = parseInt(document.getElementById('j-group').value);
+  state.name     = document.getElementById('j-name').value.trim();
+  state.email    = document.getElementById('j-email').value.trim();
+  state.group    = parseInt(document.getElementById('j-group').value);
   state.position = parseInt(document.getElementById('j-position').value);
-  state.myCards = getMyCards(state.group, state.position);
+  state.myCards  = getMyCards(state.group, state.position);
   show('instructions-screen');
 }
 
-/* ── SORT ── */
+/* ══════════════════════════════════════════
+   SORT SCREEN — DRAG AND DROP
+══════════════════════════════════════════ */
+let dragCardId = null;  // which card is being dragged
+
 function showSort() {
-  renderSortCards();
+  renderDeck();
   show('sort-screen');
 }
 
-function renderSortCards() {
-  const list = document.getElementById('sort-cards-list');
-  list.innerHTML = '';
+function renderDeck() {
+  const deck = document.getElementById('card-deck');
+  deck.innerHTML = '';
   state.myCards.forEach(card => {
-    const sorted = state.sorts[card.id];
-    const cls = sorted ? `sorted-${sorted}` : '';
-    const labelText = sorted === 'value' ? '✓ Value Creation' : sorted === 'rent' ? '$ Power Extraction' : '? Not Sure';
-    list.innerHTML += `
-      <div class="policy-card ${cls}" id="pc-${card.id}">
-        <div class="bucket-label">${sorted ? labelText : ''}</div>
-        <div class="policy-title">${card.title}</div>
-        <div class="policy-body">${card.body}</div>
-        <div class="bucket-btns">
-          <button class="bucket-btn bucket-btn-value ${sorted === 'value' ? 'selected' : ''}"
-            onclick="sortCard(${card.id}, 'value')">✓ Value Creation</button>
-          <button class="bucket-btn bucket-btn-rent ${sorted === 'rent' ? 'selected' : ''}"
-            onclick="sortCard(${card.id}, 'rent')">$ Power Extraction</button>
-          <button class="bucket-btn bucket-btn-unsure ${sorted === 'unsure' ? 'selected' : ''}"
-            onclick="sortCard(${card.id}, 'unsure')">? Not Sure</button>
-        </div>
-      </div>`;
+    if (state.sorts[card.id]) return; // already sorted — don't show in deck
+    const el = document.createElement('div');
+    el.className = 'policy-card';
+    el.id = 'deck-card-' + card.id;
+    el.draggable = true;
+    el.dataset.cardId = card.id;
+    el.innerHTML = `
+      <div class="drag-handle">⠿</div>
+      <div class="policy-title">${card.title}</div>
+      <div class="policy-body">${card.body}</div>`;
+    // Desktop drag events
+    el.addEventListener('dragstart', onDragStart);
+    el.addEventListener('dragend',   onDragEnd);
+    // Touch events for mobile
+    el.addEventListener('touchstart', onTouchStart, { passive: false });
+    el.addEventListener('touchmove',  onTouchMove,  { passive: false });
+    el.addEventListener('touchend',   onTouchEnd);
+    deck.appendChild(el);
   });
+}
+
+/* ── Desktop drag ── */
+function onDragStart(e) {
+  dragCardId = parseInt(e.currentTarget.dataset.cardId);
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function onDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  dragCardId = null;
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('dragover');
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('dragover');
+}
+
+function onDrop(e, bucket) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('dragover');
+  if (dragCardId !== null) sortCard(dragCardId, bucket);
+}
+
+/* ── Touch drag (mobile) ── */
+let touchCardEl  = null;
+let touchCardId  = null;
+const ghost      = document.getElementById('drag-ghost');
+
+function onTouchStart(e) {
+  touchCardEl = e.currentTarget;
+  touchCardId = parseInt(touchCardEl.dataset.cardId);
+  ghost.textContent = touchCardEl.querySelector('.policy-title').textContent;
+  ghost.style.display = 'block';
+  const t = e.touches[0];
+  ghost.style.left = (t.clientX - 40) + 'px';
+  ghost.style.top  = (t.clientY - 30) + 'px';
+  touchCardEl.style.opacity = '0.35';
+  e.preventDefault();
+}
+
+function onTouchMove(e) {
+  const t = e.touches[0];
+  ghost.style.left = (t.clientX - 40) + 'px';
+  ghost.style.top  = (t.clientY - 30) + 'px';
+  // Highlight bucket under finger
+  const zones = document.querySelectorAll('.bucket-zone');
+  zones.forEach(z => {
+    const r = z.getBoundingClientRect();
+    if (t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom) {
+      z.classList.add('dragover');
+    } else {
+      z.classList.remove('dragover');
+    }
+  });
+  e.preventDefault();
+}
+
+function onTouchEnd(e) {
+  ghost.style.display = 'none';
+  if (touchCardEl) touchCardEl.style.opacity = '';
+  document.querySelectorAll('.bucket-zone').forEach(z => z.classList.remove('dragover'));
+  const t = e.changedTouches[0];
+  const zones = document.querySelectorAll('.bucket-zone');
+  zones.forEach(z => {
+    const r = z.getBoundingClientRect();
+    if (t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom) {
+      if (touchCardId !== null) sortCard(touchCardId, z.dataset.bucket);
+    }
+  });
+  touchCardEl = null;
+  touchCardId = null;
+}
+
+/* ── Sort a card into a bucket ── */
+function bucketLabel(b) {
+  return b === 'value' ? '✓ Channel Value' : b === 'control' ? '⛔ Channel Control' : '⚡ Channel Conflict';
 }
 
 function sortCard(cardId, bucket) {
   state.sorts[cardId] = bucket;
-  renderSortCards();
+
+  // Remove from deck
+  const deckEl = document.getElementById('deck-card-' + cardId);
+  if (deckEl) deckEl.remove();
+
+  // Add chip to bucket
+  const card = state.myCards.find(c => c.id === cardId);
+  const chip = document.createElement('div');
+  chip.className = 'bucket-chip';
+  chip.id = 'chip-' + cardId;
+  chip.textContent = card.title;
+  chip.dataset.cardId = cardId;
+  chip.draggable = true;
+  // Allow dragging chip back OUT to re-sort
+  chip.addEventListener('dragstart', e => {
+    dragCardId = parseInt(e.currentTarget.dataset.cardId);
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  chip.addEventListener('dragend', () => { dragCardId = null; });
+  chip.addEventListener('click', () => unSortCard(cardId)); // tap to remove
+  document.getElementById('chips-' + bucket).appendChild(chip);
+
+  // Update empty hint
+  updateBucketHint(bucket);
+  // Update count badge
+  updateBadges();
+  // Update progress
   const sorted = Object.keys(state.sorts).length;
   document.getElementById('sorted-count').textContent = sorted;
   document.getElementById('to-share-btn').disabled = sorted < state.myCards.length;
 }
 
-/* ── MOVE SCREEN ── */
+function unSortCard(cardId) {
+  const oldBucket = state.sorts[cardId];
+  if (!oldBucket) return;
+  delete state.sorts[cardId];
+
+  // Remove chip
+  const chip = document.getElementById('chip-' + cardId);
+  if (chip) chip.remove();
+  updateBucketHint(oldBucket);
+  updateBadges();
+
+  // Put card back in deck
+  const card = state.myCards.find(c => c.id === cardId);
+  const el = document.createElement('div');
+  el.className = 'policy-card';
+  el.id = 'deck-card-' + cardId;
+  el.draggable = true;
+  el.dataset.cardId = cardId;
+  el.innerHTML = `
+    <div class="drag-handle">⠿</div>
+    <div class="policy-title">${card.title}</div>
+    <div class="policy-body">${card.body}</div>`;
+  el.addEventListener('dragstart', onDragStart);
+  el.addEventListener('dragend',   onDragEnd);
+  el.addEventListener('touchstart', onTouchStart, { passive: false });
+  el.addEventListener('touchmove',  onTouchMove,  { passive: false });
+  el.addEventListener('touchend',   onTouchEnd);
+  document.getElementById('card-deck').appendChild(el);
+
+  const sorted = Object.keys(state.sorts).length;
+  document.getElementById('sorted-count').textContent = sorted;
+  document.getElementById('to-share-btn').disabled = sorted < state.myCards.length;
+}
+
+function updateBucketHint(bucket) {
+  const chips = document.getElementById('chips-' + bucket);
+  const hint  = document.getElementById('hint-' + bucket);
+  hint.style.display = chips.children.length === 0 ? 'block' : 'none';
+}
+
+function updateBadges() {
+  ['value', 'control', 'conflict'].forEach(b => {
+    const count = Object.values(state.sorts).filter(v => v === b).length;
+    document.getElementById('badge-' + b).textContent = count;
+  });
+}
+
+/* ══════════════════════════════════════════
+   SHARE SCREEN
+══════════════════════════════════════════ */
+function renderShareCards() {
+  const list = document.getElementById('share-cards-list');
+  if (!list) return;
+  list.innerHTML = state.myCards.map(card => {
+    const bucket = state.sorts[card.id];
+    const label  = bucketLabel(bucket);
+    return `
+      <div class="share-card-review sorted-${bucket}">
+        <div class="share-card-bucket-label">${label}</div>
+        <div class="share-card-title">${card.title}</div>
+        <div class="share-card-body">${card.body}</div>
+      </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════
+   MOVE SCREEN
+══════════════════════════════════════════ */
 function renderMoveCards() {
   const list = document.getElementById('move-cards-list');
   list.innerHTML = '';
   state.myCards.forEach(card => {
     const bucket = state.sorts[card.id];
-    const bucketLabel = bucket === 'value' ? 'Value Creation' : bucket === 'rent' ? 'Power Extraction' : 'Not Sure';
-    const cls = `mc-${bucket}`;
+    const label  = bucket === 'value' ? 'Channel Value' : bucket === 'control' ? 'Channel Control' : 'Channel Conflict';
+    const cls    = 'mc-' + bucket;
     const picked = state.movedCardId === card.id ? 'picked' : '';
     list.innerHTML += `
       <div class="move-card-select ${picked}" id="mc-${card.id}" onclick="pickMoveCard(${card.id})">
         <div class="move-card-radio"></div>
         <div class="move-card-info">
           <div class="move-card-title">${card.title}</div>
-          <div class="move-card-bucket ${cls}">Currently: ${bucketLabel}</div>
+          <div class="move-card-bucket ${cls}">Currently: ${label}</div>
         </div>
       </div>`;
   });
@@ -1052,18 +1315,21 @@ function pickMoveCard(cardId) {
 }
 
 function checkDefense() {
-  const txt = document.getElementById('defense-text').value;
+  const txt   = document.getElementById('defense-text').value;
   state.defense = txt;
   const count = txt.trim().length;
-  const el = document.getElementById('defense-count');
+  const el    = document.getElementById('defense-count');
   el.textContent = count < 30 ? `${count} / 30 minimum` : `${count} characters ✓`;
-  el.className = 'char-count' + (count >= 30 ? ' ok' : '');
+  el.className   = 'char-count' + (count >= 30 ? ' ok' : '');
   document.getElementById('move-submit-btn').disabled = count < 30 || !state.movedCardId;
 }
 
+/* ══════════════════════════════════════════
+   SUBMIT
+══════════════════════════════════════════ */
 function submitMove() {
   const payload = {
-    exercise: 'W12.1 — Value or Rent?',
+    exercise: 'W12.1 — Channel or Control?',
     name: state.name,
     email: state.email,
     group: state.group,
@@ -1078,86 +1344,54 @@ function submitMove() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
-  }).catch(() => {
-    console.log('Webhook delivery attempt made (may fail silently)');
-  });
+  }).catch(() => {});
   renderSummary();
   show('summary-screen');
 }
 
-/* ── SUMMARY ── */
+/* ══════════════════════════════════════════
+   SUMMARY
+══════════════════════════════════════════ */
 function renderSummary() {
   document.getElementById('student-tag').textContent =
     `${state.name} · Group ${state.group} · Card Set ${state.position}`;
 
-  const buckets = { value: [], rent: [], unsure: [] };
-  state.myCards.forEach(c => {
-    buckets[state.sorts[c.id]].push(c);
+  const buckets = { value: [], control: [], conflict: [] };
+  state.myCards.forEach(card => {
+    const b = state.sorts[card.id];
+    if (buckets[b]) buckets[b].push(card);
   });
 
   const movedCard = state.myCards.find(c => c.id === state.movedCardId);
-  const movedBucket = state.sorts[state.movedCardId];
-  const oppLabel = movedBucket === 'value' ? 'Power Extraction' : movedBucket === 'rent' ? 'Value Creation' : 'the other bucket';
+  const bucketDefs = [
+    { key: 'value',    label: '✓ Channel Value',   cls: 'sg-value' },
+    { key: 'control',  label: '⛔ Channel Control', cls: 'sg-control' },
+    { key: 'conflict', label: '⚡ Channel Conflict', cls: 'sg-conflict' },
+  ];
 
   let html = '';
-
-  [
-    { key: 'value', label: '✓ Value Creation', cls: 'sg-value' },
-    { key: 'rent', label: '$ Power Extraction', cls: 'sg-rent' },
-    { key: 'unsure', label: '? Not Sure', cls: 'sg-unsure' },
-  ].forEach(({ key, label, cls }) => {
-    if (buckets[key].length === 0) return;
-    html += `<div class="summary-group"><div class="summary-group-title ${cls}">${label}</div>`;
-    buckets[key].forEach(card => {
+  bucketDefs.forEach(def => {
+    if (!buckets[def.key].length) return;
+    html += `<div class="summary-group">
+      <div class="summary-group-title ${def.cls}">${def.label}</div>`;
+    buckets[def.key].forEach(card => {
       const isMoved = card.id === state.movedCardId;
-      html += `
-        <div class="summary-item">
-          <div class="summary-item-title">
-            ${card.title}
-            ${isMoved ? `<span class="moved-badge">↔ Moved to ${oppLabel}</span>` : ''}
-          </div>
-          ${isMoved ? `
-            <div class="defense-box">
-              <strong>Group's defense for moving this card</strong>
-              ${state.defense}
-            </div>` : ''}
-        </div>`;
+      html += `<div class="summary-item">
+        <div class="summary-item-title">${card.title}${isMoved ? '<span class="moved-badge">Moved</span>' : ''}</div>
+        <div class="summary-item-body">${card.body}</div>
+        ${isMoved ? `<div class="defense-box"><strong>Your defense</strong>${state.defense}</div>` : ''}
+      </div>`;
     });
     html += '</div>';
   });
-
   document.getElementById('summary-body').innerHTML = html;
-
 }
 
-/* ── KEYBOARD ── */
+/* ── Keyboard shortcut for password ── */
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.getElementById('pw-screen').classList.contains('active')) {
     checkPw();
   }
-});
-
-/* ── INIT ── */
-document.addEventListener('DOMContentLoaded', () => {
-  // Move screen render trigger
-  document.getElementById('move-screen').addEventListener('click', function onFirst() {
-    renderMoveCards();
-    this.removeEventListener('click', onFirst);
-  });
-
-  // Show move screen trigger via share screen button
-  // (share gate's button calls show('move-screen') directly)
-  const origShow = window.show;
-  const _show = function(id) {
-    origShow(id);
-    if (id === 'move-screen') renderMoveCards();
-  };
-  // patch show for move screen
-  document.querySelectorAll('[onclick]').forEach(el => {
-    if (el.getAttribute('onclick') && el.getAttribute('onclick').includes("'move-screen'")) {
-      el.onclick = () => { show('move-screen'); renderMoveCards(); };
-    }
-  });
 });
 </script>
 </body>
