@@ -1602,8 +1602,9 @@
                     </div>
                 </div>
 
+                <p style="text-align:center; font-size:13px; color:var(--muted); margin-bottom:10px;">Submitting this exercise records your participation and case work for today's class.</p>
                 <button class="btn btn-primary" id="submitRankingBtn" disabled onclick="submitRanking()">
-                    Submit Ranking
+                    Submit &amp; Record Participation
                 </button>
             `;
 
@@ -1742,7 +1743,7 @@
             if (!WEBHOOK_URL) return;
 
             const payload = {
-                exercise: "W11-5cs-netflix",
+                exercise: "W11.1",
                 studentName: exerciseData.studentName,
                 studentEmail: exerciseData.studentEmail,
                 groupNumber: exerciseData.groupNumber,

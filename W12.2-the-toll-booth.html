@@ -624,7 +624,7 @@ body {
         <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Vertical Channel Conflict</span> <span style="font-size:12px;color:var(--muted);">— disagreement between different levels of the channel (e.g., manufacturer vs. retailer)</span></div>
         <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Horizontal Channel Conflict</span> <span style="font-size:12px;color:var(--muted);">— disagreement between members at the same channel level</span></div>
         <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Coercive Channel Power</span> <span style="font-size:12px;color:var(--muted);">— one member forces compliance by threatening penalties or withholding access</span></div>
-        <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Franchise Channel Control</span> <span style="font-size:12px;color:var(--muted);">— the franchisor sets binding rules that franchisees must follow under contract</span></div>
+        <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Contractual Control</span> <span style="font-size:12px;color:var(--muted);">— using formal franchise agreements or exclusive contracts to bind and coordinate channel partners</span></div>
         <div style="padding:10px 14px;background:var(--bg);border-radius:7px;"><span style="font-weight:700;font-size:13px;">Direct Channel Disruption</span> <span style="font-size:12px;color:var(--muted);">— a company bypasses traditional intermediaries to control the path to the customer</span></div>
       </div>
     </div>
@@ -709,6 +709,9 @@ body {
   <div class="page-wrap">
     <div class="week-tag" style="color:var(--apple);">Week 12 · Exercise 2 — Summary</div>
     <div class="screen-title">All Four Rounds</div>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:#e6f4ee;border:1px solid #1D6349;border-radius:8px;padding:10px 16px;margin-bottom:20px;font-size:13px;font-weight:700;color:#1D6349;">
+      ✓ Participation recorded — you're all set
+    </div>
     <div id="student-tag" class="student-tag"></div>
     <div id="summary-body"></div>
 
@@ -723,7 +726,7 @@ body {
         <p>Ticketmaster controls access to the venue, which is the only legal channel to the fan. The venue signs an exclusive contract; the fan has no choice. When Ticketmaster also owns the promoter (Live Nation), vertical conflict is built into the business model — the same company is competing with itself at every level. The Taylor Swift collapse wasn't a technology failure. It was a channel power failure.</p>
       </div>
       <div class="debrief-company">
-        <strong>Subway — Vertical Channel Conflict + Franchise Control</strong>
+        <strong>Subway — Vertical Channel Conflict + Contractual Control</strong>
         <p>The $5 Footlong was a marketing win at the corporate level and a financial loss at the franchisee level. Corporate sets the price; franchisees pay the cost. That's textbook vertical channel conflict — two different levels of the channel with opposite incentives. Franchise contracts give Subway the legal right to enforce pricing. But legal authority and smart channel management are not the same thing.</p>
       </div>
       <div class="debrief-company">
@@ -802,7 +805,7 @@ const ROUNDS = [
       <p class="context-p">The conflict exposed a fundamental tension baked into franchise channel structures. Subway corporate controls brand decisions, marketing, pricing promotions, and operational standards. Franchisees sign contracts giving Subway that legal authority. But the franchisee absorbs the daily operational costs — labor, ingredients, rent, utilities. When corporate makes a pricing decision that works at the brand level but fails at the store level, the franchisee has no real recourse. Subway has the right to enforce it. Whether that's smart channel management is a separate question from whether it's legally allowed.</p>`,
     typed1Label: 'Step 2 — In one sentence, explain why you chose that concept for Subway.',
     typed1Placeholder: 'e.g., The $5 Footlong created vertical channel conflict because corporate gained marketing wins while franchisees absorbed the financial loss...',
-    gateText: 'Share your pick with your group. Subway is tricky — it could be franchise control OR vertical conflict. The distinction matters. Figure it out.',
+    gateText: 'Share your pick with your group. Subway is tricky — it could be contractual control OR vertical conflict. The distinction matters. Figure it out.',
     typed2Label: 'Step 3 — After discussing with your group: Whose problem is the $5 Footlong conflict to fix — Subway corporate or the franchisee? Why?',
     typed2Placeholder: 'Who has the power to change this? Who has the incentive? Are those the same person?...',
     verdictPrompt: 'Is Subway\'s channel control defensible?',
@@ -835,7 +838,7 @@ const CONCEPTS = [
   { id: 'vertical',   name: 'Vertical Channel Conflict',  def: 'Disagreement between different levels of the channel — e.g., manufacturer vs. retailer' },
   { id: 'horizontal', name: 'Horizontal Channel Conflict', def: 'Disagreement between members at the same channel level — e.g., two retailers competing' },
   { id: 'coercive',   name: 'Coercive Channel Power',     def: 'One channel member forces compliance by threatening penalties or withholding access' },
-  { id: 'franchise',  name: 'Franchise Channel Control',  def: 'The franchisor sets binding rules that franchisees must follow under contract' },
+  { id: 'franchise',  name: 'Contractual Control',         def: 'Using formal franchise agreements or exclusive contracts to bind and coordinate channel partners' },
   { id: 'direct',     name: 'Direct Channel Disruption',  def: 'A company bypasses traditional intermediaries to control the path to the customer' },
 ];
 
@@ -896,7 +899,8 @@ function checkJoinReady() {
   const name = document.getElementById('j-name').value.trim();
   const email = document.getElementById('j-email').value.trim();
   const group = document.getElementById('j-group').value;
-  document.getElementById('join-btn').disabled = !(name && email.includes('@') && group);
+  const validEmail = email.endsWith('@mail.uc.edu') || email.endsWith('@uc.edu');
+  document.getElementById('join-btn').disabled = !(name && validEmail && group);
 }
 
 function doJoin() {
@@ -1039,7 +1043,7 @@ function nextRound() {
     startRound(n + 1);
   } else {
     const payload = {
-      exercise: 'W12.2 — The Toll Booth',
+      exercise: 'W12.2',
       name: state.name,
       email: state.email,
       group: state.group,

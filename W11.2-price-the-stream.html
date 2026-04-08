@@ -677,6 +677,71 @@
       text-align: center;
     }
 
+    /* Collapsible data reference panel */
+    .data-ref {
+      border: 1px solid var(--case-primary);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .data-ref summary {
+      background: var(--case-light);
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--case-primary);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .data-ref summary::-webkit-details-marker { display: none; }
+
+    .data-ref summary::before {
+      content: "▶";
+      font-size: 10px;
+      transition: transform 0.2s;
+    }
+
+    .data-ref[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    .data-ref-body {
+      padding: 14px 16px;
+      background: white;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .data-ref-section h5 {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--case-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .data-ref-section ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .data-ref-section ul li {
+      margin-bottom: 4px;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
     @media (max-width: 600px) {
       .header-content {
         flex-direction: column;
@@ -758,6 +823,7 @@
         <div class="input-group">
           <label for="studentName">Your Name</label>
           <input type="text" id="studentName" placeholder="Enter your name" onchange="updateJoinButton()" onkeyup="updateJoinButton()">
+          <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Letters and spaces only — no special characters (e.g., no #, $, @)</div>
         </div>
 
         <div class="input-group">
@@ -785,19 +851,19 @@
         <p>There are three ways to approach pricing — from least strategic to most. You'll apply all three, then decide which one actually belongs in the board deck.</p>
 
         <div style="background: var(--case-light); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 20px 0;">
-          <div style="font-size: 13px; font-weight: 700; color: var(--case-primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">The Strategic Progression</div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--case-primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Three Methods — Three Different Lenses</div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: white; border-radius: 6px; border: 1px solid var(--border);">
               <div style="background: #94a3b8; color: white; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">ROUND 1</div>
-              <div><strong>Cost-Plus</strong> — least strategic. Start with your costs, add a markup.</div>
+              <div><strong>Cost-Plus</strong> — focus: <strong>your company</strong>. Start with what it costs you to operate, then add a markup.</div>
             </div>
             <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: white; border-radius: 6px; border: 1px solid var(--border);">
               <div style="background: var(--case-primary); color: white; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">ROUND 2</div>
-              <div><strong>Competitive</strong> — market-aware. Anchor your price against what competitors charge.</div>
+              <div><strong>Competitive</strong> — focus: <strong>your competition</strong>. Set your price based on what rivals are charging.</div>
             </div>
             <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: white; border-radius: 6px; border: 1px solid #B45309;">
               <div style="background: #D97706; color: white; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">ROUND 3</div>
-              <div><strong>Value-Based</strong> — most strategic. Price what customers believe it's worth.</div>
+              <div><strong>Value-Based</strong> — focus: <strong>your customer</strong>. Price to what they believe it's actually worth to them.</div>
             </div>
           </div>
         </div>
@@ -835,15 +901,15 @@
           </div>
         </div>
 
-        <h3>Willingness to Pay (WTP)</h3>
+        <h3>Willingness to Pay</h3>
         <div class="data-grid">
           <div class="data-card">
             <h4>Price Segments</h4>
             <ul class="research-list" style="margin-bottom: 0;">
-              <li><strong>60%</strong> would pay $5–8/mo</li>
-              <li><strong>25%</strong> would pay $9–12/mo</li>
-              <li><strong>10%</strong> would pay $13–16/mo</li>
-              <li><strong>5%</strong> would pay $17+/mo</li>
+              <li><strong>35%</strong> would pay $12–15/mo</li>
+              <li><strong>40%</strong> would pay $16–19/mo</li>
+              <li><strong>20%</strong> would pay $20–23/mo</li>
+              <li><strong>5%</strong> would pay $24+/mo</li>
             </ul>
           </div>
           <div class="data-card">
@@ -874,6 +940,39 @@
         </div>
 
         <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px;">Choose a markup, see your price update in real time, and explain your choice. Then compare with your group.</p>
+
+        <details class="data-ref">
+          <summary>📊 StreamLocal Company Data — tap to expand</summary>
+          <div class="data-ref-body">
+            <div class="data-ref-section">
+              <h5>Costs &amp; Targets</h5>
+              <ul>
+                <li><strong>Fixed annual costs:</strong> $2,400,000</li>
+                <li><strong>Variable cost/sub/mo:</strong> $3.50</li>
+                <li><strong>Target subscribers:</strong> 50,000</li>
+                <li><strong>Fixed cost/sub/mo:</strong> $4.00</li>
+              </ul>
+            </div>
+            <div class="data-ref-section">
+              <h5>Willingness to Pay Segments</h5>
+              <ul>
+                <li><strong>35%</strong> → $12–15/mo (~17,500 subs)</li>
+                <li><strong>40%</strong> → $16–19/mo (~20,000 subs)</li>
+                <li><strong>20%</strong> → $20–23/mo (~10,000 subs)</li>
+                <li><strong>5%</strong> → $24+/mo (~2,500 subs)</li>
+              </ul>
+            </div>
+            <div class="data-ref-section">
+              <h5>Competitors</h5>
+              <ul>
+                <li>Netflix (w/ ads): $6.99</li>
+                <li>Hulu (w/ ads): $7.99</li>
+                <li>ESPN+: $10.99</li>
+                <li>FuboTV (local): $17.99</li>
+              </ul>
+            </div>
+          </div>
+        </details>
 
         <div id="round1Container"></div>
 
@@ -957,6 +1056,39 @@
 
         <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px;">Pick which competitor you're anchoring against, set your price, and explain your positioning. Then compare with your group.</p>
 
+        <details class="data-ref">
+          <summary>📊 StreamLocal Company Data — tap to expand</summary>
+          <div class="data-ref-body">
+            <div class="data-ref-section">
+              <h5>Costs &amp; Targets</h5>
+              <ul>
+                <li><strong>Fixed annual costs:</strong> $2,400,000</li>
+                <li><strong>Variable cost/sub/mo:</strong> $3.50</li>
+                <li><strong>Target subscribers:</strong> 50,000</li>
+                <li><strong>Fixed cost/sub/mo:</strong> $4.00</li>
+              </ul>
+            </div>
+            <div class="data-ref-section">
+              <h5>Willingness to Pay Segments</h5>
+              <ul>
+                <li><strong>35%</strong> → $12–15/mo (~17,500 subs)</li>
+                <li><strong>40%</strong> → $16–19/mo (~20,000 subs)</li>
+                <li><strong>20%</strong> → $20–23/mo (~10,000 subs)</li>
+                <li><strong>5%</strong> → $24+/mo (~2,500 subs)</li>
+              </ul>
+            </div>
+            <div class="data-ref-section">
+              <h5>Competitors</h5>
+              <ul>
+                <li>Netflix (w/ ads): $6.99</li>
+                <li>Hulu (w/ ads): $7.99</li>
+                <li>ESPN+: $10.99</li>
+                <li>FuboTV (local): $17.99</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
         <div id="round2Container"></div>
 
         <button id="round2SubmitBtn" onclick="submitRound2()" disabled style="width: 100%; margin-top: 24px;">Compare with Your Group</button>
@@ -1016,14 +1148,46 @@
 
         <p style="color: var(--muted); font-size: 14px; margin-top: 16px; margin-bottom: 20px;">Here's the trade-off: a higher price captures fewer subscribers, but more revenue per subscriber. You need to pick a target segment — then defend it.</p>
 
+        <details class="data-ref">
+          <summary>📊 StreamLocal Company Data — tap to expand</summary>
+          <div class="data-ref-body">
+            <div class="data-ref-section">
+              <h5>Costs &amp; Targets</h5>
+              <ul>
+                <li><strong>Fixed annual costs:</strong> $2,400,000</li>
+                <li><strong>Variable cost/sub/mo:</strong> $3.50</li>
+                <li><strong>Target subscribers:</strong> 50,000</li>
+                <li><strong>Fixed cost/sub/mo:</strong> $4.00</li>
+              </ul>
+            </div>
+            <div class="data-ref-section">
+              <h5>What Customers Value Most</h5>
+              <ul>
+                <li>Local sports: 78% say essential</li>
+                <li>Local news: 52% say essential</li>
+                <li>On-demand library: 41% say essential</li>
+              </ul>
+            </div>
+            <div class="data-ref-section">
+              <h5>Competitors</h5>
+              <ul>
+                <li>Netflix (w/ ads): $6.99</li>
+                <li>Hulu (w/ ads): $7.99</li>
+                <li>ESPN+: $10.99</li>
+                <li>FuboTV (local): $17.99</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
         <div class="data-grid" style="margin-bottom: 24px;">
           <div class="data-card">
-            <h4>WTP Segments (of 50,000 target subscribers)</h4>
+            <h4>Willingness to Pay Segments (of 50,000 target subscribers)</h4>
             <ul class="research-list" style="margin-bottom: 0;">
-              <li><strong>$5–8/mo</strong> — 60% of market → ~30,000 subscribers</li>
-              <li><strong>$9–12/mo</strong> — 25% of market → ~12,500 subscribers</li>
-              <li><strong>$13–16/mo</strong> — 10% of market → ~5,000 subscribers</li>
-              <li><strong>$17+/mo</strong> — 5% of market → ~2,500 subscribers</li>
+              <li><strong>$12–15/mo</strong> — 35% of market → ~17,500 subscribers</li>
+              <li><strong>$16–19/mo</strong> — 40% of market → ~20,000 subscribers</li>
+              <li><strong>$20–23/mo</strong> — 20% of market → ~10,000 subscribers</li>
+              <li><strong>$24+/mo</strong> — 5% of market → ~2,500 subscribers</li>
             </ul>
           </div>
           <div class="data-card">
@@ -1183,7 +1347,8 @@
           <h3>Your Group's Final Recommendation</h3>
           <div class="input-group">
             <label for="finalPrice">Recommended Price ($/month)</label>
-            <input type="number" id="finalPrice" placeholder="e.g., 9.99" step="0.01" min="1" max="50" onchange="checkFinalRecommendation()">
+            <input type="number" id="finalPrice" placeholder="e.g., 12.99" step="0.01" min="1" max="50" onchange="checkFinalRecommendation()">
+            <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Numbers only — no $ sign (e.g., type 12.99, not $12.99)</div>
           </div>
           <div class="input-group">
             <label for="finalJustification">Why this price?</label>
@@ -1313,12 +1478,12 @@
       fubotv:   { name: 'FuboTV (local tier)',   price: 17.99, note: 'Has local, but overloaded with extras' },
     };
 
-    // WTP segments for Round 3
+    // Willingness to Pay segments for Round 3
     const WTP_SEGMENTS = [
-      { label: '$5–8/mo',  pct: 60, subs: 30000, minPrice: 5,  maxPrice: 8  },
-      { label: '$9–12/mo', pct: 25, subs: 12500, minPrice: 9,  maxPrice: 12 },
-      { label: '$13–16/mo',pct: 10, subs: 5000,  minPrice: 13, maxPrice: 16 },
-      { label: '$17+/mo',  pct: 5,  subs: 2500,  minPrice: 17, maxPrice: 30 },
+      { label: '$12–15/mo', pct: 35, subs: 17500, minPrice: 12, maxPrice: 15 },
+      { label: '$16–19/mo', pct: 40, subs: 20000, minPrice: 16, maxPrice: 19 },
+      { label: '$20–23/mo', pct: 20, subs: 10000, minPrice: 20, maxPrice: 23 },
+      { label: '$24+/mo',   pct:  5, subs:  2500, minPrice: 24, maxPrice: 35 },
     ];
 
     // ============ Password Gate ============
@@ -1427,12 +1592,11 @@
             <label>Markup Percentage</label>
             <div class="calculator-row">
               <select class="markup-select" id="round1Markup" onchange="updateCostPlusPrice()">
+                <option value="10">10%</option>
                 <option value="20">20%</option>
                 <option value="30" selected>30%</option>
                 <option value="40">40%</option>
                 <option value="50">50%</option>
-                <option value="75">75%</option>
-                <option value="100">100%</option>
               </select>
             </div>
           </div>
@@ -1539,6 +1703,7 @@
           <div class="input-group" style="margin-top: 12px;">
             <label>Your Price ($/month)</label>
             <input type="number" id="round2Price" class="price-input" placeholder="e.g., 11.99" step="0.01" min="3" max="30" value="${defaultPrice}" onchange="updateCompetitivePrice()">
+            <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Numbers only — no $ sign (e.g., type 11.99, not $11.99)</div>
           </div>
           <div id="round2PositioningNote" class="price-display" style="font-size: 13px; margin-bottom: 12px;"></div>
           <div class="input-group">
@@ -1643,6 +1808,7 @@
           <div class="input-group" style="margin-top: 16px;">
             <label style="font-size: 15px; font-weight: 700;">Step 2: Set your price</label>
             <input type="number" id="round3Price" class="price-input" placeholder="Enter your price ($/mo)" step="0.01" min="5" max="30" onchange="updateValueBasedPrice()">
+            <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Numbers only — no $ sign (e.g., type 13.99, not $13.99)</div>
           </div>
 
           <div class="input-group">
@@ -1794,7 +1960,7 @@
       if (!WEBHOOK_URL) return;
 
       const payload = {
-        exercise: 'W11-price-the-stream',
+        exercise: 'W11.2',
         studentName: state.studentName,
         studentEmail: state.studentEmail,
         groupNumber: state.groupNum.toString(),
