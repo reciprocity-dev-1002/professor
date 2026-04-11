@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W13.2 — The Six-Tool Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --border: #e2e5eb;
+  --text: #1a1d23;
+  --muted: #6b7280;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+
+  /* Week 13 palette — continues burgundy + ST gold from W13.1 */
+  --burgundy:    #8B2E45;
+  --burgundy-lt: #f5e8ec;
+  --st-red:      #E50914;
+  --st-gold:     #F4B632;
+
+  /* Tool palette — one color per IMC tool */
+  --t-adv:    #1A4A7A;  /* Advertising — trust blue */
+  --t-adv-lt: #e6f0f9;
+  --t-pr:     #5A2E8C;  /* PR — credibility purple */
+  --t-pr-lt:  #efe6f9;
+  --t-sp:     #C8102E;  /* Sales Promo — incentive red */
+  --t-sp-lt:  #fce8eb;
+  --t-ps:     #0E7A50;  /* Personal Selling — relationship green */
+  --t-ps-lt:  #e6f4ee;
+  --t-dir:    #D97706;  /* Direct — targeting orange */
+  --t-dir-lt: #fdf0e0;
+  --t-dig:    #1a1d23;  /* Digital/Social — black */
+  --t-dig-lt: #e8e8ea;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── LAYOUT ── */
+.page-wrap {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+.week-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--burgundy);
+}
+
+.screen-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.screen-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+/* ── FORM ── */
+.field { margin-bottom: 18px; }
+.field:last-child { margin-bottom: 0; }
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--burgundy);
+  background: white;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.55;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+}
+
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-dark { background: #1a1d23; color: white; }
+.btn-dark:hover:not(:disabled) { background: #2d3139; }
+
+.btn-burgundy { background: var(--burgundy); color: white; }
+.btn-burgundy:hover:not(:disabled) { background: #6e233a; }
+
+/* ── PASSWORD ── */
+#pw-screen.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.pw-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--burgundy);
+}
+
+.pw-input-wrap { display: flex; gap: 8px; margin: 24px 0 12px; }
+
+.pw-input-wrap input {
+  flex: 1;
+  padding: 12px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  text-align: center;
+  background: var(--bg);
+}
+
+.pw-input-wrap input:focus { border-color: var(--burgundy); background: white; }
+.pw-err { color: #B03A2E; font-size: 13px; font-weight: 600; min-height: 20px; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.shake { animation: shake 0.4s ease; }
+
+/* ── SECTION LABELS ── */
+.section-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.char-count { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+.char-count.ok { color: #1D6349; font-weight: 700; }
+
+/* ── STEP SECTIONS ── */
+.step-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 14px;
+}
+
+.step-section.locked {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(0.3);
+}
+
+/* ── PHASE BANNER ── */
+.phase-banner {
+  background: #1a1d23;
+  color: white;
+  padding: 18px 22px;
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.phase-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--st-gold);
+  background: rgba(244,182,50,0.15);
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 1.5px;
+}
+.phase-title { font-size: 16px; font-weight: 800; }
+.phase-sub { font-size: 12px; color: #bbb; margin-top: 2px; }
+
+/* ── TOOL HEADER (individual phase) ── */
+.tool-header {
+  padding: 18px 24px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  color: white;
+  margin-bottom: 0;
+  transition: background 0.25s;
+}
+.tool-header.empty { background: #888; }
+.tool-header .tool-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.85;
+  margin-bottom: 6px;
+}
+.tool-header h2 {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+.tool-header .tool-hint {
+  font-size: 12px;
+  opacity: 0.88;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+.th-adv  { background: var(--t-adv); }
+.th-pr   { background: var(--t-pr); }
+.th-sp   { background: var(--t-sp); }
+.th-ps   { background: var(--t-ps); }
+.th-dir  { background: var(--t-dir); }
+.th-dig  { background: var(--t-dig); }
+
+.tool-body {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+/* ── WARNING BANNER ── */
+.warn-banner {
+  background: #fdf9e6;
+  border: 1.5px solid #C49A00;
+  color: #6B5000;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.warn-banner strong { color: #3B2B00; }
+
+/* ── IMC REFERENCE GRID ── */
+.imc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 6px;
+}
+.imc-tile {
+  border-radius: 8px;
+  padding: 14px;
+  color: white;
+}
+.imc-tile .imc-name {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.imc-tile .imc-desc { font-size: 11px; line-height: 1.55; opacity: 0.92; }
+
+/* ── STOP GATE ── */
+.stop-gate {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 14px;
+  display: none;
+}
+.stop-gate.visible { display: block; }
+
+.stop-gate .stop-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--st-gold);
+  margin-bottom: 8px;
+}
+
+.stop-gate h3 {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.stop-gate p {
+  font-size: 13px;
+  color: #bbb;
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.stop-gate .btn-gate {
+  display: block;
+  width: 100%;
+  padding: 11px 20px;
+  background: var(--st-gold);
+  color: #1a1d23;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+/* ── DRAG-TO-RANK SLOTS ── */
+.rank-hint {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  background: var(--burgundy-lt);
+  border-radius: 6px;
+  border-left: 3px solid var(--burgundy);
+}
+
+.slot {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 46px 16px 52px;
+  margin-bottom: 12px;
+  cursor: grab;
+  position: relative;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.slot:hover { border-color: #b0b6c0; }
+.slot.dragging {
+  opacity: 0.4;
+  border-style: dashed;
+}
+.slot.drag-over {
+  border-color: var(--burgundy);
+  box-shadow: 0 0 0 3px var(--burgundy-lt);
+}
+
+.slot-rank {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--burgundy);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.slot-drag-handle {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  color: #c0c4cc;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: -1px;
+  user-select: none;
+}
+
+.slot-move-btns {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.slot-move-btns button {
+  width: 26px;
+  height: 22px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--burgundy);
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+.slot-move-btns button:hover:not(:disabled) {
+  background: var(--burgundy-lt);
+  border-color: var(--burgundy);
+}
+.slot-move-btns button:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.slot-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.slot-row:last-child { margin-bottom: 0; }
+
+.slot-field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.slot-field select, .slot-field input {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+}
+
+.slot-field input:focus, .slot-field select:focus {
+  border-color: var(--burgundy);
+  background: white;
+}
+
+/* ── FUNNEL LEGEND ── */
+.funnel-legend {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.funnel-legend div {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 4px;
+  text-align: center;
+  background: var(--burgundy-lt);
+  color: var(--burgundy);
+}
+.funnel-legend div:first-child { background: #e6f0f9; color: #1A4A7A; }
+.funnel-legend div:last-child  { background: #e6f4ee; color: #1D6349; }
+
+/* ── SUMMARY ── */
+.student-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.confirm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e6f4ee;
+  border: 1px solid #1D6349;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1D6349;
+}
+
+.sum-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.sum-card-header {
+  padding: 14px 20px;
+  color: white;
+  background: var(--burgundy);
+}
+.sum-card-header h3 { font-size: 16px; font-weight: 800; }
+.sum-card-header span { font-size: 11px; opacity: 0.85; font-weight: 600; }
+
+.sum-card-body { padding: 18px 20px; }
+
+.sum-field { margin-bottom: 14px; }
+.sum-field:last-child { margin-bottom: 0; }
+
+.sum-field-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.sum-field-value {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.sum-slot {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.sum-slot-rank {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--burgundy);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.sum-slot-body { flex: 1; }
+.sum-slot-tool {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.sum-slot-head { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.4; }
+
+.debrief-box {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-top: 24px;
+}
+
+.debrief-box h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--st-gold);
+  margin-bottom: 14px;
+}
+
+.debrief-box p {
+  font-size: 13px;
+  color: #bbb;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+  .imc-grid { grid-template-columns: 1fr; }
+  .slot-row { grid-template-columns: 1fr; }
+  .funnel-legend { font-size: 9px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ PASSWORD ═══════════════════════════ -->
+<div id="pw-screen" class="screen active">
+  <div class="pw-box">
+    <div class="week-tag">Week 13 · Exercise 2</div>
+    <div class="screen-title" style="margin-top:4px;">The Six-Tool Plan</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;">
+      Six IMC tools. One story. Build the launch plan for a Stranger Things spin-off.
+    </p>
+    <div class="pw-input-wrap">
+      <input type="text" id="pw-input" maxlength="10" placeholder="CLASS PASSWORD" autocomplete="off"
+        onkeydown="if(event.key==='Enter') checkPw()">
+      <button class="btn btn-burgundy" style="width:auto;padding:12px 18px;" onclick="checkPw()">GO</button>
+    </div>
+    <div class="pw-err" id="pw-err"></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;">Password given in class · Chapter 17</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JOIN ═══════════════════════════ -->
+<div id="join-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 13 · Exercise 2</div>
+    <div class="screen-title">Get set up</div>
+    <div class="screen-sub">You're the launch agency. Netflix just greenlit a Stranger Things spin-off and they want a full IMC plan — one that uses the right tools, in the right order, to get people to actually watch.</div>
+    <div class="card">
+      <div class="field">
+        <label>Your First Name</label>
+        <input type="text" id="j-name" placeholder="First name only">
+      </div>
+      <div class="field">
+        <label>Your UC Email</label>
+        <input type="email" id="j-email" placeholder="m.lastname@mail.uc.edu">
+      </div>
+      <div class="field">
+        <label>Group Number</label>
+        <select id="j-group">
+          <option value="">— pick your group —</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </div>
+      <button class="btn btn-burgundy" id="join-btn" onclick="doJoin()" disabled>Let's go →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INSTRUCTIONS ═══════════════════════════ -->
+<div id="instructions-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 13 · Exercise 2</div>
+    <div class="screen-title">How This Works</div>
+    <div class="screen-sub">Yesterday you tore apart a real campaign. Today you build one. Same Netflix, same only-one-Action-matters rule: someone has to actually watch the show.</div>
+
+    <div class="card">
+      <p class="section-label">The brief from Netflix</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;margin-bottom:10px;"><strong>The show:</strong> <em>Stranger Things: Hawkins Class of '86</em> — a spin-off series following a new group of Hawkins High students one year after the events of the final season. 8 episodes. All drop on a Friday in October 2026.</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;margin-bottom:10px;"><strong>The target:</strong> fans of the original series (16–35) who are at real risk of not coming back for a spin-off they didn't ask for.</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;"><strong>The Action, again:</strong> open Netflix and watch episode 1. That's it. If they don't watch the pilot, none of this mattered.</p>
+    </div>
+
+    <div class="card">
+      <p class="section-label">Your six tools — reference card</p>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px;">These are the six tools in the IMC toolbox from Chapter 17. You'll each take one.</p>
+      <div class="imc-grid">
+        <div class="imc-tile" style="background:var(--t-adv);">
+          <div class="imc-name">Advertising</div>
+          <div class="imc-desc">Paid, non-personal, broad reach. TV spots, billboards, banner ads, pre-roll.</div>
+        </div>
+        <div class="imc-tile" style="background:var(--t-pr);">
+          <div class="imc-name">Public Relations</div>
+          <div class="imc-desc">Earned media. Press coverage, cast interviews, stunts that get reporters to write about you.</div>
+        </div>
+        <div class="imc-tile" style="background:var(--t-sp);">
+          <div class="imc-name">Sales Promotion</div>
+          <div class="imc-desc">Short-term incentives. Free-trial codes, bundle deals, co-promo with a retailer.</div>
+        </div>
+        <div class="imc-tile" style="background:var(--t-ps);">
+          <div class="imc-name">Personal Selling</div>
+          <div class="imc-desc">Human-to-human. Influencer partnerships, campus reps, cast-hosted watch parties.</div>
+        </div>
+        <div class="imc-tile" style="background:var(--t-dir);">
+          <div class="imc-name">Direct Marketing</div>
+          <div class="imc-desc">One-to-one, targeted. Email, push notifications, personalized in-app prompts.</div>
+        </div>
+        <div class="imc-tile" style="background:var(--t-dig);">
+          <div class="imc-name">Digital / Social</div>
+          <div class="imc-desc">Owned + organic. TikTok, Instagram, YouTube shorts, community, memes.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="section-label">The rules</p>
+      <div class="warn-banner">
+        <strong>One tool per student, no duplicates within your group.</strong><br>
+        Talk first. Agree who's taking what before anyone locks in. If your group has 3 people, pick any 3 tools. If your group has 5, pick any 5. You don't have to cover all six.
+      </div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;">Step 1 (~8 min): <strong>on your own</strong>, build a tactic card for your tool — headline, execution, target AIDA stage, and how Netflix would know it worked.</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;margin-top:6px;">Step 2 (~10 min): your group reads all the cards, picks the 3 strongest, drags them into order (top of funnel → Action), and writes the Big Idea + Handoff story + One Risk. You each enter the group's plan on your own device.</p>
+    </div>
+
+    <button class="btn btn-burgundy" onclick="show('individual-screen')">Start — Pick My Tool →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INDIVIDUAL PHASE ═══════════════════════════ -->
+<div id="individual-screen" class="screen">
+  <div class="page-wrap">
+    <div class="phase-banner">
+      <span class="phase-number">PHASE 1</span>
+      <div>
+        <div class="phase-title">Your Tactic Card</div>
+        <div class="phase-sub">Pick one IMC tool nobody else in your group has. Build one tactic.</div>
+      </div>
+    </div>
+
+    <div class="warn-banner">
+      <strong>Before you pick:</strong> Talk to your group. Each person takes a different tool. Don't let two people pick Advertising — you'll waste both slots.
+    </div>
+
+    <!-- Tool header -->
+    <div id="tool-header" class="tool-header empty">
+      <div class="tool-label" id="tool-label-text">Pick your IMC tool below</div>
+      <h2 id="tool-name">— your tool —</h2>
+      <div class="tool-hint" id="tool-hint">The header will change color once you pick.</div>
+    </div>
+
+    <div class="tool-body">
+      <div class="field">
+        <label>Which tool are you taking? (check with your group first)</label>
+        <select id="i-tool" onchange="onToolChange()">
+          <option value="">— pick one —</option>
+          <option value="adv">Advertising</option>
+          <option value="pr">Public Relations</option>
+          <option value="sp">Sales Promotion</option>
+          <option value="ps">Personal Selling</option>
+          <option value="dir">Direct Marketing</option>
+          <option value="dig">Digital / Social</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Headline — what is this tactic? (one line, under 60 chars)</label>
+        <input type="text" id="i-headline" maxlength="60" placeholder='e.g., "Billboard takeover at Times Square"' oninput="onIndInput()">
+        <div class="char-count" id="head-count">0 / 60 max</div>
+      </div>
+
+      <div class="field">
+        <label>Execution — how does it actually work? (3–4 sentences, 200 char min)</label>
+        <textarea id="i-execution" rows="4" placeholder="What does the audience see? Where do they see it? What do they do? What's the creative — not just the channel." oninput="onIndInput()"></textarea>
+        <div class="char-count" id="exec-count">0 / 200 minimum</div>
+      </div>
+
+      <div class="field">
+        <label>Target AIDA stage — which part of the funnel does this tactic push?</label>
+        <select id="i-aida" onchange="onIndInput()">
+          <option value="">— pick one —</option>
+          <option value="attention">Attention — they notice the show exists</option>
+          <option value="interest">Interest — they lean in, learn more</option>
+          <option value="desire">Desire — they want to watch</option>
+          <option value="action">Action — they open Netflix and press play</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Success metric — how would Netflix know this tactic worked? (60 char min)</label>
+        <input type="text" id="i-metric" placeholder='e.g., "Unique promo-code redemptions on Netflix landing page"' oninput="onIndInput()">
+        <div class="char-count" id="metric-count">0 / 60 minimum</div>
+      </div>
+    </div>
+
+    <div class="stop-gate" id="ind-gate">
+      <div class="stop-tag">Stop · Group Readout</div>
+      <h3>Share your tactic card with your group</h3>
+      <p>Go around. Each person reads their headline + execution + AIDA stage + metric out loud. You'll pick the 3 strongest together — but don't lock anything yet. Just read, listen, and decide which three make the best story.</p>
+      <button class="btn-gate" onclick="ackIndGate()">Our group shared all the cards — continue →</button>
+    </div>
+
+    <button class="btn btn-burgundy" id="ind-continue-btn" onclick="goGroupPhase()" disabled style="margin-top:6px;">
+      Continue to Phase 2 — Assemble the Plan →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ GROUP PHASE ═══════════════════════════ -->
+<div id="group-screen" class="screen">
+  <div class="page-wrap">
+    <div class="phase-banner">
+      <span class="phase-number">PHASE 2</span>
+      <div>
+        <div class="phase-title">Assemble the Plan</div>
+        <div class="phase-sub">Pick your 3 strongest tactics. Rank them. Tell the story.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="section-label">Drag to rank — top of funnel to Action</p>
+      <div class="rank-hint">Pick the 3 strongest tactics from your group. Enter each one below, then use the <strong>▲▼ arrows</strong> (or drag the card) to put them in order: Attention at the top, Action at the bottom. The ranking is the story — what hits the fan first, what moves them along, and what finally gets them to press play.</div>
+      <div class="funnel-legend">
+        <div>▲ Top (wide reach)</div>
+        <div>Middle (narrow)</div>
+        <div>▼ Action (convert)</div>
+      </div>
+      <div id="slots-container">
+        <!-- Slots injected here -->
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="section-label">The Big Idea — one story told three ways</p>
+      <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px;">IMC isn't 6 separate campaigns. It's one idea expressed through multiple tools. What's the through-line that holds your 3 tactics together?</p>
+      <div class="field">
+        <label>Big Idea — one sentence (40 char minimum)</label>
+        <textarea id="g-bigidea" rows="2" placeholder='e.g., "The Upside Down never really closed."' oninput="onGroupInput()"></textarea>
+        <div class="char-count" id="bi-count">0 / 40 minimum</div>
+      </div>
+      <div class="field">
+        <label>Handoff story — how does tactic 1 hand off to 2, and 2 to 3? (120 char min)</label>
+        <textarea id="g-handoff" rows="3" placeholder="Start with what the fan sees first, then how they get pulled deeper, then what finally makes them open Netflix and watch." oninput="onGroupInput()"></textarea>
+        <div class="char-count" id="ho-count">0 / 120 minimum</div>
+      </div>
+      <div class="field">
+        <label>One risk — what could kill this plan? (40 char min)</label>
+        <textarea id="g-risk" rows="2" placeholder="Be specific. What's the honest weak point?" oninput="onGroupInput()"></textarea>
+        <div class="char-count" id="risk-count">0 / 40 minimum</div>
+      </div>
+    </div>
+
+    <p id="submit-note" style="font-size:13px;color:var(--muted);margin-top:6px;text-align:center;">Submitting this exercise records your participation and case work for today's class.</p>
+    <button class="btn btn-burgundy" id="submit-btn" onclick="submitAll()" disabled style="margin-top:6px;">
+      Submit &amp; Record Participation →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SUMMARY ═══════════════════════════ -->
+<div id="summary-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 13 · Exercise 2 — Summary</div>
+    <div class="screen-title">Your Launch Plan</div>
+    <div class="confirm-pill">✓ Participation recorded — you're all set</div>
+    <div id="student-tag" class="student-tag"></div>
+
+    <p class="section-label">Your individual tactic card</p>
+    <div id="sum-individual"></div>
+
+    <p class="section-label" style="margin-top:20px;">Your group's 3-tactic plan</p>
+    <div id="sum-group"></div>
+
+    <div class="debrief-box">
+      <h3>Bring to the Debrief</h3>
+      <p>Be ready to share: (1) your group's Big Idea, (2) which tactic is doing the heavy lifting at Action — the one that actually closes the loop to a Netflix view, and (3) the risk you called out.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JAVASCRIPT ═══════════════════════════ -->
+<script>
+const PW = 'VECNA25';
+const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
+
+/* ── TOOL DATA ── */
+const TOOLS = {
+  adv: { name: 'Advertising',      colorClass: 'th-adv', hint: 'Paid, broad, non-personal. Reach is your job.' },
+  pr:  { name: 'Public Relations', colorClass: 'th-pr',  hint: 'Earned media. Credibility is your weapon.' },
+  sp:  { name: 'Sales Promotion',  colorClass: 'th-sp',  hint: 'Short-term incentives. Close the gap between want and watch.' },
+  ps:  { name: 'Personal Selling', colorClass: 'th-ps',  hint: 'Human-to-human. A person you trust is telling you about it.' },
+  dir: { name: 'Direct Marketing', colorClass: 'th-dir', hint: 'One-to-one, targeted. You know who you\'re talking to.' },
+  dig: { name: 'Digital / Social', colorClass: 'th-dig', hint: 'Owned + organic. The fans carry it for you.' }
+};
+
+const TOOL_ORDER = ['adv','pr','sp','ps','dir','dig'];
+
+/* ── STATE ── */
+const state = {
+  name: '', email: '', group: null,
+  individual: {
+    tool: '', headline: '', execution: '', aida: '', metric: '',
+    gateAcked: false
+  },
+  group: {
+    slots: [
+      { tool: '', headline: '', aida: '' },
+      { tool: '', headline: '', aida: '' },
+      { tool: '', headline: '', aida: '' }
+    ],
+    bigIdea: '',
+    handoff: '',
+    risk: ''
+  }
+};
+
+/* ── SCREEN HELPERS ── */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+/* ── PASSWORD ── */
+function checkPw() {
+  const input = document.getElementById('pw-input');
+  const err = document.getElementById('pw-err');
+  if (input.value.trim().toUpperCase() === PW) {
+    show('join-screen');
+  } else {
+    err.textContent = 'Not quite. Ask your instructor.';
+    input.classList.add('shake');
+    setTimeout(() => input.classList.remove('shake'), 400);
+  }
+}
+
+/* ── JOIN ── */
+document.addEventListener('DOMContentLoaded', () => {
+  ['j-name', 'j-email', 'j-group'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', validateJoin);
+    el.addEventListener('change', validateJoin);
+  });
+  renderSlots();
+});
+
+function validateJoin() {
+  const name = document.getElementById('j-name').value.trim();
+  const email = document.getElementById('j-email').value.trim();
+  const group = document.getElementById('j-group').value;
+  const validEmail = email.endsWith('@mail.uc.edu') || email.endsWith('@uc.edu');
+  document.getElementById('join-btn').disabled = !(name && validEmail && group);
+}
+
+function doJoin() {
+  state.name = document.getElementById('j-name').value.trim();
+  state.email = document.getElementById('j-email').value.trim();
+  state.group = parseInt(document.getElementById('j-group').value);
+  show('instructions-screen');
+}
+
+/* ── COUNT HELPERS ── */
+function updateCount(id, countId, min, max) {
+  const txt = document.getElementById(id).value.trim().length;
+  const el = document.getElementById(countId);
+  if (max && !min) {
+    el.textContent = `${txt} / ${max} max`;
+    el.className = 'char-count' + (txt > 0 && txt <= max ? ' ok' : '');
+  } else {
+    el.textContent = txt < min ? `${txt} / ${min} minimum` : `${txt} characters ✓`;
+    el.className = 'char-count' + (txt >= min ? ' ok' : '');
+  }
+}
+
+/* ── INDIVIDUAL PHASE ── */
+function onToolChange() {
+  const val = document.getElementById('i-tool').value;
+  state.individual.tool = val;
+  const header = document.getElementById('tool-header');
+  const label = document.getElementById('tool-label-text');
+  const name = document.getElementById('tool-name');
+  const hint = document.getElementById('tool-hint');
+  if (val) {
+    const t = TOOLS[val];
+    header.className = `tool-header ${t.colorClass}`;
+    label.textContent = 'Your IMC Tool';
+    name.textContent = t.name;
+    hint.textContent = t.hint;
+  } else {
+    header.className = 'tool-header empty';
+    label.textContent = 'Pick your IMC tool below';
+    name.textContent = '— your tool —';
+    hint.textContent = 'The header will change color once you pick.';
+  }
+  onIndInput();
+}
+
+function onIndInput() {
+  state.individual.headline = document.getElementById('i-headline').value;
+  state.individual.execution = document.getElementById('i-execution').value;
+  state.individual.aida = document.getElementById('i-aida').value;
+  state.individual.metric = document.getElementById('i-metric').value;
+  updateCount('i-headline', 'head-count', null, 60);
+  updateCount('i-execution', 'exec-count', 200);
+  updateCount('i-metric', 'metric-count', 60);
+  updateIndGate();
+}
+
+function updateIndGate() {
+  const i = state.individual;
+  const done =
+    i.tool &&
+    i.headline.trim().length > 0 && i.headline.length <= 60 &&
+    i.execution.trim().length >= 200 &&
+    i.aida &&
+    i.metric.trim().length >= 60;
+  const gate = document.getElementById('ind-gate');
+  if (done && !i.gateAcked) {
+    gate.classList.add('visible');
+  } else if (i.gateAcked) {
+    gate.classList.remove('visible');
+  } else {
+    gate.classList.remove('visible');
+  }
+  document.getElementById('ind-continue-btn').disabled = !(done && i.gateAcked);
+}
+
+function ackIndGate() {
+  state.individual.gateAcked = true;
+  document.getElementById('ind-gate').classList.remove('visible');
+  document.getElementById('ind-continue-btn').disabled = false;
+}
+
+function goGroupPhase() {
+  show('group-screen');
+}
+
+/* ── GROUP PHASE — DRAG TO RANK ── */
+function renderSlots() {
+  const container = document.getElementById('slots-container');
+  if (!container) return;
+  container.innerHTML = '';
+  state.group.slots.forEach((slot, idx) => {
+    const div = document.createElement('div');
+    div.className = 'slot';
+    div.draggable = true;
+    div.dataset.idx = idx;
+    div.innerHTML = `
+      <div class="slot-rank">${idx + 1}</div>
+
+      <div class="slot-move-btns">
+        <button type="button" onclick="moveSlot(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} aria-label="Move up">▲</button>
+        <button type="button" onclick="moveSlot(${idx}, 1)" ${idx === state.group.slots.length - 1 ? 'disabled' : ''} aria-label="Move down">▼</button>
+      </div>
+      <div class="slot-row">
+        <div class="slot-field">
+          <label>Tool used</label>
+          <select data-slot="${idx}" data-field="tool" onchange="onSlotChange(event)">
+            <option value="">— pick —</option>
+            ${TOOL_ORDER.map(k => `<option value="${k}" ${slot.tool===k?'selected':''}>${TOOLS[k].name}</option>`).join('')}
+          </select>
+        </div>
+        <div class="slot-field">
+          <label>Target AIDA stage</label>
+          <select data-slot="${idx}" data-field="aida" onchange="onSlotChange(event)">
+            <option value="">— pick —</option>
+            <option value="attention" ${slot.aida==='attention'?'selected':''}>Attention</option>
+            <option value="interest"  ${slot.aida==='interest'?'selected':''}>Interest</option>
+            <option value="desire"    ${slot.aida==='desire'?'selected':''}>Desire</option>
+            <option value="action"    ${slot.aida==='action'?'selected':''}>Action</option>
+          </select>
+        </div>
+      </div>
+      <div class="slot-row" style="grid-template-columns:1fr;">
+        <div class="slot-field">
+          <label>Headline — one line</label>
+          <input type="text" maxlength="60" data-slot="${idx}" data-field="headline" value="${slot.headline.replace(/"/g,'&quot;')}" placeholder="e.g., Times Square billboard takeover" oninput="onSlotChange(event)">
+        </div>
+      </div>
+    `;
+    // Drag events
+    div.addEventListener('dragstart', onDragStart);
+    div.addEventListener('dragover', onDragOver);
+    div.addEventListener('drop', onDrop);
+    div.addEventListener('dragend', onDragEnd);
+    div.addEventListener('dragleave', onDragLeave);
+    container.appendChild(div);
+  });
+  updateGroupGate();
+}
+
+function moveSlot(idx, dir) {
+  const target = idx + dir;
+  if (target < 0 || target >= state.group.slots.length) return;
+  const a = { ...state.group.slots[idx] };
+  const b = { ...state.group.slots[target] };
+  state.group.slots[idx] = b;
+  state.group.slots[target] = a;
+  renderSlots();
+}
+
+function onSlotChange(e) {
+  const idx = parseInt(e.target.dataset.slot);
+  const field = e.target.dataset.field;
+  state.group.slots[idx][field] = e.target.value;
+  updateGroupGate();
+}
+
+/* Drag handlers */
+let dragSrcIdx = null;
+function onDragStart(e) {
+  dragSrcIdx = parseInt(this.dataset.idx);
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  this.classList.add('drag-over');
+  return false;
+}
+function onDragLeave() {
+  this.classList.remove('drag-over');
+}
+function onDrop(e) {
+  e.stopPropagation();
+  const destIdx = parseInt(this.dataset.idx);
+  if (dragSrcIdx !== null && dragSrcIdx !== destIdx) {
+    // Swap in state
+    const srcSlot = { ...state.group.slots[dragSrcIdx] };
+    const destSlot = { ...state.group.slots[destIdx] };
+    state.group.slots[dragSrcIdx] = destSlot;
+    state.group.slots[destIdx] = srcSlot;
+    renderSlots();
+  }
+  return false;
+}
+function onDragEnd() {
+  document.querySelectorAll('.slot').forEach(s => {
+    s.classList.remove('dragging');
+    s.classList.remove('drag-over');
+  });
+  dragSrcIdx = null;
+}
+
+function onGroupInput() {
+  state.group.bigIdea = document.getElementById('g-bigidea').value;
+  state.group.handoff = document.getElementById('g-handoff').value;
+  state.group.risk = document.getElementById('g-risk').value;
+  updateCount('g-bigidea', 'bi-count', 40);
+  updateCount('g-handoff', 'ho-count', 120);
+  updateCount('g-risk', 'risk-count', 40);
+  updateGroupGate();
+}
+
+function updateGroupGate() {
+  const slotsDone = state.group.slots.every(s =>
+    s.tool && s.headline.trim().length > 0 && s.aida
+  );
+  // No duplicate tools
+  const tools = state.group.slots.map(s => s.tool).filter(Boolean);
+  const noDup = new Set(tools).size === tools.length;
+  const g = state.group;
+  const textDone =
+    g.bigIdea.trim().length >= 40 &&
+    g.handoff.trim().length >= 120 &&
+    g.risk.trim().length >= 40;
+  const btn = document.getElementById('submit-btn');
+  if (btn) btn.disabled = !(slotsDone && noDup && textDone);
+}
+
+/* ── SUBMIT ── */
+function submitAll() {
+  const payload = {
+    exercise: 'W13.2',
+    name: state.name,
+    email: state.email,
+    group: state.group,
+    individual: {
+      tool: state.individual.tool,
+      tool_name: TOOLS[state.individual.tool] ? TOOLS[state.individual.tool].name : '',
+      headline: state.individual.headline,
+      execution: state.individual.execution,
+      aida: state.individual.aida,
+      metric: state.individual.metric
+    },
+    group_plan: {
+      slots: state.group.slots.map((s, i) => ({
+        rank: i + 1,
+        tool: s.tool,
+        tool_name: TOOLS[s.tool] ? TOOLS[s.tool].name : '',
+        headline: s.headline,
+        aida: s.aida
+      })),
+      big_idea: state.group.bigIdea,
+      handoff: state.group.handoff,
+      risk: state.group.risk
+    },
+    timestamp: new Date().toISOString()
+  };
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {
+    console.log('Webhook delivery attempt made (may fail silently)');
+  });
+  renderSummary();
+  show('summary-screen');
+}
+
+/* ── SUMMARY ── */
+function renderSummary() {
+  document.getElementById('student-tag').textContent =
+    `${state.name} · Group ${state.group}`;
+
+  const stageName = id => ({attention:'Attention',interest:'Interest',desire:'Desire',action:'Action'}[id] || '—');
+  const toolName = id => TOOLS[id] ? TOOLS[id].name : '—';
+
+  // Individual
+  const i = state.individual;
+  document.getElementById('sum-individual').innerHTML = `
+    <div class="sum-card">
+      <div class="sum-card-header" style="background:var(--burgundy);">
+        <span>${toolName(i.tool)} · ${stageName(i.aida)}</span>
+        <h3>${i.headline || '—'}</h3>
+      </div>
+      <div class="sum-card-body">
+        <div class="sum-field">
+          <div class="sum-field-label">Execution</div>
+          <div class="sum-field-value">${(i.execution || '—').replace(/\n/g,'<br>')}</div>
+        </div>
+        <div class="sum-field">
+          <div class="sum-field-label">Success metric</div>
+          <div class="sum-field-value">${i.metric || '—'}</div>
+        </div>
+      </div>
+    </div>`;
+
+  // Group plan
+  const g = state.group;
+  let slotsHtml = '';
+  g.slots.forEach((s, idx) => {
+    slotsHtml += `
+      <div class="sum-slot">
+        <div class="sum-slot-rank">${idx + 1}</div>
+        <div class="sum-slot-body">
+          <div class="sum-slot-tool">${toolName(s.tool)} · ${stageName(s.aida)}</div>
+          <div class="sum-slot-head">${s.headline || '—'}</div>
+        </div>
+      </div>`;
+  });
+
+  document.getElementById('sum-group').innerHTML = `
+    <div class="sum-card">
+      <div class="sum-card-header">
+        <span>Ranked tactics · Top of funnel → Action</span>
+        <h3>The 3-Tactic Plan</h3>
+      </div>
+      <div class="sum-card-body">
+        ${slotsHtml}
+        <div class="sum-field" style="margin-top:14px;">
+          <div class="sum-field-label">Big Idea</div>
+          <div class="sum-field-value">${g.bigIdea || '—'}</div>
+        </div>
+        <div class="sum-field">
+          <div class="sum-field-label">Handoff story</div>
+          <div class="sum-field-value">${(g.handoff || '—').replace(/\n/g,'<br>')}</div>
+        </div>
+        <div class="sum-field">
+          <div class="sum-field-label">One risk</div>
+          <div class="sum-field-value">${g.risk || '—'}</div>
+        </div>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>

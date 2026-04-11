@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W13.1 — Spot the Funnel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --border: #e2e5eb;
+  --text: #1a1d23;
+  --muted: #6b7280;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+
+  /* Round palette — one color per activation */
+  --r1:    #1B7A56;  /* Google — trackable green */
+  --r1-lt: #e6f4ee;
+  --r2:    #C8102E;  /* Target — proxy red */
+  --r2-lt: #fce8eb;
+  --r3:    #FF7A00;  /* Discover — reach orange */
+  --r3-lt: #fff1e0;
+  --r4:    #0A0A0A;  /* Tide — unknowable black */
+  --r4-lt: #e8e8ea;
+
+  /* Week 13 subtle accent (pin-stripe) */
+  --burgundy: #8B2E45;
+  --st-red:   #E50914;
+  --st-gold:  #F4B632;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── LAYOUT ── */
+.page-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+.week-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--burgundy);
+}
+
+.screen-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.screen-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+/* ── FORM ── */
+.field { margin-bottom: 18px; }
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--st-red);
+  background: white;
+}
+
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.55; font-family: 'Inter', sans-serif; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+}
+
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-dark { background: #1a1d23; color: white; }
+.btn-dark:hover:not(:disabled) { background: #2d3139; }
+
+/* ── PASSWORD ── */
+#pw-screen.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.pw-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--st-red);
+}
+
+.pw-input-wrap { display: flex; gap: 8px; margin: 24px 0 12px; }
+
+.pw-input-wrap input {
+  flex: 1;
+  padding: 12px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  text-align: center;
+  background: var(--bg);
+}
+
+.pw-input-wrap input:focus { border-color: var(--st-red); background: white; }
+.pw-err { color: #B03A2E; font-size: 13px; font-weight: 600; min-height: 20px; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.shake { animation: shake 0.4s ease; }
+
+/* ── ROUND PROGRESS ── */
+.round-progress {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.round-pip {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+
+.round-pip.done { background: #1a1d23; }
+.round-pip.active-r1 { background: var(--r1); }
+.round-pip.active-r2 { background: var(--r2); }
+.round-pip.active-r3 { background: var(--r3); }
+.round-pip.active-r4 { background: var(--r4); }
+
+/* ── COMPANY HEADER ── */
+.company-header {
+  padding: 16px 24px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  color: white;
+  margin-bottom: 0;
+}
+
+.company-header .round-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.company-header h2 {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.company-header .company-frame {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.company-header .tool-chip {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-style: normal;
+}
+
+.ch-r1 { background: var(--r1); }
+.ch-r2 { background: var(--r2); }
+.ch-r3 { background: var(--r3); }
+.ch-r4 { background: var(--r4); }
+
+/* ── CONTEXT CARD ── */
+.context-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.context-p {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+.context-p:last-child { margin-bottom: 0; }
+
+/* ── STEP SECTION ── */
+.step-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 14px;
+}
+
+.step-section.locked {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(0.3);
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.char-count { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+.char-count.ok { color: #1D6349; font-weight: 700; }
+
+/* ── STOP GATE ── */
+.stop-gate {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 14px;
+  display: none;
+}
+.stop-gate.visible { display: block; }
+
+.stop-gate .stop-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--st-gold);
+  margin-bottom: 8px;
+}
+
+.stop-gate h3 {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.stop-gate p {
+  font-size: 13px;
+  color: #bbb;
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.stop-gate .btn-gate {
+  display: block;
+  width: 100%;
+  padding: 11px 20px;
+  background: var(--st-gold);
+  color: #1a1d23;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+/* ── VERDICT ── */
+.verdict-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 14px;
+}
+
+.verdict-section.locked { opacity: 0.45; pointer-events: none; }
+
+.verdict-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.verdict-btn {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.verdict-btn:hover { border-color: #aaa; color: var(--text); }
+.verdict-btn.v-track { border-color: #1D6349; color: #1D6349; background: #e6f4ee; }
+.verdict-btn.v-proxy { border-color: #C49A00; color: #C49A00; background: #fdf9e6; }
+.verdict-btn.v-unk   { border-color: #B03A2E; color: #B03A2E; background: #fcecea; }
+
+/* ── PHASE BANNER ── */
+.phase-banner {
+  background: #1a1d23;
+  color: white;
+  padding: 18px 22px;
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.phase-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--st-gold);
+  background: rgba(244,182,50,0.15);
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 1.5px;
+}
+.phase-title { font-size: 16px; font-weight: 800; }
+.phase-sub { font-size: 12px; color: #bbb; margin-top: 2px; }
+
+/* ── RUBRIC CHECKLIST ── */
+.rubric-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.rubric-item:hover { border-color: #aaa; }
+.rubric-item.checked { border-color: var(--st-red); background: #fde8ea; }
+.rubric-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: white;
+  transition: all 0.15s;
+}
+.rubric-item.checked .rubric-check {
+  background: var(--st-red);
+  border-color: var(--st-red);
+}
+.rubric-item.checked .rubric-check::after { content: '✓'; }
+.rubric-text { flex: 1; font-size: 13px; line-height: 1.5; color: var(--text); font-weight: 600; }
+
+/* ── SUMMARY ── */
+.summary-round {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+
+.summary-round-header {
+  padding: 12px 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.srh-left h3 { font-size: 16px; font-weight: 800; }
+.srh-left span { font-size: 11px; opacity: 0.85; font-weight: 600; }
+
+.verdict-pill {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.22);
+}
+
+.summary-round-body { padding: 18px 20px; }
+
+.sr-field { margin-bottom: 14px; }
+.sr-field:last-child { margin-bottom: 0; }
+
+.sr-field-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.sr-field-value {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.aida-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  background: #e6f0f9;
+  color: #1A4A7A;
+}
+
+.student-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.debrief-box {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-top: 24px;
+}
+
+.debrief-box h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--st-gold);
+  margin-bottom: 14px;
+}
+
+.debrief-box p {
+  font-size: 13px;
+  color: #bbb;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.confirm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e6f4ee;
+  border: 1px solid #1D6349;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1D6349;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ PASSWORD ═══════════════════════════ -->
+<div id="pw-screen" class="screen active">
+  <div class="pw-box">
+    <div class="week-tag">Week 13 · Exercise 1</div>
+    <div class="screen-title" style="margin-top:4px;">Spot the Funnel</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;">
+      Four activations. Same question: how would Netflix know it actually worked?
+    </p>
+    <div class="pw-input-wrap">
+      <input type="text" id="pw-input" maxlength="10" placeholder="CLASS PASSWORD" autocomplete="off"
+        onkeydown="if(event.key==='Enter') checkPw()">
+      <button class="btn btn-dark" style="width:auto;padding:12px 18px;" onclick="checkPw()">GO</button>
+    </div>
+    <div class="pw-err" id="pw-err"></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;">Password given in class · Chapter 17</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JOIN ═══════════════════════════ -->
+<div id="join-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 13 · Exercise 1</div>
+    <div class="screen-title">Get set up</div>
+    <div class="screen-sub">Four rounds. Each round is one real brand activation from the Stranger Things final-season campaign. You'll work on your own first, then your group discusses, then you lock a verdict together before moving on.</div>
+    <div class="card">
+      <div class="field">
+        <label>Your First Name</label>
+        <input type="text" id="j-name" placeholder="First name only">
+      </div>
+      <div class="field">
+        <label>Your UC Email</label>
+        <input type="email" id="j-email" placeholder="m.lastname@mail.uc.edu">
+      </div>
+      <div class="field">
+        <label>Group Number</label>
+        <select id="j-group">
+          <option value="">— pick your group —</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </div>
+      <button class="btn btn-dark" id="join-btn" onclick="doJoin()" disabled>Let's go →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INSTRUCTIONS ═══════════════════════════ -->
+<div id="instructions-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 13 · Exercise 1</div>
+    <div class="screen-title">How This Works</div>
+    <div class="screen-sub">Netflix spent the biggest brand-partnership budget of the decade on Stranger Things' final season. Your job is to figure out whether it worked — and how they'd even know.</div>
+
+    <div class="card">
+      <p class="section-label">The one action Netflix actually wants</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;margin-bottom:10px;">Every one of these activations exists to do <strong>one thing</strong>: get someone to watch Stranger Things. Not "feel warm about Netflix." Not "remember the show." <em>Watch it.</em> That's the only Action in Netflix's AIDA funnel.</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;">So for each activation, the real junior-marketer question is: <strong>how would you prove a single view came from this?</strong> Sometimes you can. Sometimes you get a proxy. Sometimes you're guessing with a spreadsheet.</p>
+    </div>
+
+    <div class="card">
+      <p class="section-label">Your two frameworks today</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div style="background:#e6f0f9;border-radius:8px;padding:14px;">
+          <div style="font-size:11px;font-weight:800;color:#1A4A7A;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">The AIDA Funnel</div>
+          <div style="font-size:12px;line-height:1.75;color:#1a1d23;">
+            <strong>Attention</strong> · did they notice?<br>
+            <strong>Interest</strong> · did they lean in?<br>
+            <strong>Desire</strong> · did they want it?<br>
+            <strong>Action</strong> · did they watch?
+          </div>
+        </div>
+        <div style="background:#fde8ea;border-radius:8px;padding:14px;">
+          <div style="font-size:11px;font-weight:800;color:#B4050E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Measurement Ladder</div>
+          <div style="font-size:12px;line-height:1.75;color:#1a1d23;">
+            <strong>Trackable</strong> · clean data<br>
+            <strong>Proxy</strong> · indirect signal<br>
+            <strong>Unknowable</strong> · brand vibes<br>
+            <span style="color:var(--muted);">What do you report Monday?</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;">The IMC tool is given to you at the top of each round. Your job isn't to guess what tool it is — it's to decide where in the funnel it pushes, and whether Netflix can actually prove it worked.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <p class="section-label">Four Rounds · One Case</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:var(--r1-lt);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:800;color:var(--r1);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Round 1</div>
+          <div style="font-size:14px;font-weight:700;">Google Upside Down Search</div>
+        </div>
+        <div style="background:var(--r2-lt);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:800;color:var(--r2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Round 2</div>
+          <div style="font-size:14px;font-weight:700;">Target In-Store Takeover</div>
+        </div>
+        <div style="background:var(--r3-lt);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:800;color:var(--r3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Round 3</div>
+          <div style="font-size:14px;font-weight:700;">Discover "Nancy &amp; Jonathan" Spot</div>
+        </div>
+        <div style="background:var(--r4-lt);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:800;color:var(--r4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Round 4</div>
+          <div style="font-size:14px;font-weight:700;">Tide "House of Kids" Ad</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-dark" onclick="startRound(1)">Start Round 1 — Google →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ROUND TEMPLATE ═══════════════════════════ -->
+<div id="round-screen" class="screen">
+  <div class="page-wrap">
+    <div id="round-progress-bar" class="round-progress">
+      <div class="round-pip" id="pip-1"></div>
+      <div class="round-pip" id="pip-2"></div>
+      <div class="round-pip" id="pip-3"></div>
+      <div class="round-pip" id="pip-4"></div>
+    </div>
+
+    <!-- Company header -->
+    <div id="r-company-header" class="company-header">
+      <div class="round-label" id="r-round-label"></div>
+      <h2 id="r-company-name"></h2>
+      <div class="company-frame" id="r-frame"></div>
+      <span class="tool-chip" id="r-tool-chip"></span>
+    </div>
+
+    <!-- Context -->
+    <div class="context-card" id="r-context"></div>
+
+    <!-- Step 1: AIDA pick -->
+    <div class="step-section" id="step1-section">
+      <div class="section-label">Step 1 — Which AIDA stage does this activation push? Defend your pick in one sentence.</div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>AIDA stage</label>
+        <select id="r-aida" onchange="onAidaChange()">
+          <option value="">— pick one —</option>
+          <option value="attention">Attention</option>
+          <option value="interest">Interest</option>
+          <option value="desire">Desire</option>
+          <option value="action">Action</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Why that stage?</label>
+        <textarea id="r-aida-why" rows="2" placeholder="" oninput="onAidaWhy()"></textarea>
+        <div class="char-count" id="aida-count">0 / 30 minimum</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Measurement -->
+    <div class="step-section locked" id="step2-section">
+      <div class="section-label">Step 2 — How would Netflix know this worked? (2–3 sentences)</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px;">Think like a marketer who has to report to a boss Monday morning. What would you measure? Can you actually connect this to a Netflix view — or are you reporting a proxy?</p>
+      <div class="field" style="margin-bottom:0;">
+        <textarea id="r-measure" rows="4" placeholder="" oninput="onMeasure()"></textarea>
+        <div class="char-count" id="measure-count">0 / 80 minimum</div>
+      </div>
+    </div>
+
+    <!-- Stop gate -->
+    <div class="stop-gate" id="stop-gate">
+      <div class="stop-tag">Stop · Group Discussion</div>
+      <h3>Share both answers with your group</h3>
+      <p id="gate-text">Go around the group. Say your AIDA stage and read your measurement answer aloud. Did your group agree? Did anyone find a metric you missed? You can keep your own answer — you just need to have heard theirs.</p>
+      <button class="btn-gate" onclick="acknowledgeGate()">Our group discussed it — continue →</button>
+    </div>
+
+    <!-- Step 3: Verdict -->
+    <div class="verdict-section locked" id="verdict-section">
+      <div class="section-label">Step 3 — Your group's verdict on measurement</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Agree on one verdict before anyone clicks.</p>
+      <div class="verdict-opts">
+        <button class="verdict-btn" id="v-track" onclick="pickVerdict('trackable')">✓ Clearly Trackable</button>
+        <button class="verdict-btn" id="v-proxy" onclick="pickVerdict('proxy')">~ Proxy at Best</button>
+        <button class="verdict-btn" id="v-unk" onclick="pickVerdict('unknowable')">✗ Unknowable</button>
+      </div>
+    </div>
+
+    <button class="btn btn-dark" id="next-round-btn" onclick="nextRound()" disabled style="margin-top:6px;">
+      <span id="next-round-label">Lock this round →</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ PHASE 2 — WEAK LINK ═══════════════════════════ -->
+<div id="phase2-screen" class="screen">
+  <div class="page-wrap">
+    <div class="phase-banner">
+      <span class="phase-number">PHASE 2</span>
+      <div>
+        <div class="phase-title">Find the Weak Link</div>
+        <div class="phase-sub">Step back and look at all four. Where is the campaign weakest?</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="font-size:13px;color:#333;line-height:1.7;margin-bottom:8px;"><strong>Zoom out.</strong> Across all four activations, which AIDA stage is getting pushed the least? Which activation is the hardest for Netflix to actually measure?</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;">Agree as a group. Your group answer doesn't have to match any one person's earlier tags.</p>
+    </div>
+
+    <div class="card">
+      <p class="section-label">Your group's call</p>
+      <div class="field">
+        <label>Weakest AIDA stage across the 4 activations</label>
+        <select id="p2-weak-stage" onchange="onP2Input()">
+          <option value="">— pick one —</option>
+          <option value="attention">Attention</option>
+          <option value="interest">Interest</option>
+          <option value="desire">Desire</option>
+          <option value="action">Action</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Hardest activation to measure</label>
+        <select id="p2-hard-measure" onchange="onP2Input()">
+          <option value="">— pick one —</option>
+          <option value="google">Google Upside Down Search</option>
+          <option value="target">Target In-Store Takeover</option>
+          <option value="discover">Discover "Nancy &amp; Jonathan" Spot</option>
+          <option value="tide">Tide "House of Kids" Ad</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>One sentence — why your group agreed on that pair (40 char minimum)</label>
+        <textarea id="p2-reasoning" rows="2" placeholder="e.g., Nothing in the slate pushes people to actually open Netflix, and Tide has zero path back to a single subscription..." oninput="onP2Input()"></textarea>
+        <div class="char-count" id="p2-count">0 / 40 minimum</div>
+      </div>
+    </div>
+
+    <button class="btn btn-dark" id="p2-next-btn" onclick="goPhase3()" disabled>
+      Continue to Phase 3 — Fix the Weak Link →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ PHASE 3 — FIX ═══════════════════════════ -->
+<div id="phase3-screen" class="screen">
+  <div class="page-wrap">
+    <div class="phase-banner">
+      <span class="phase-number">PHASE 3</span>
+      <div>
+        <div class="phase-title">Fix the Weak Link</div>
+        <div class="phase-sub">Rewrite one activation so it (a) pushes toward Action and (b) is actually measurable.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:16px;font-weight:800;margin-bottom:8px;">Individual — draft your fix</h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">Pick one of the four activations. Rewrite it so a real Stranger Things fan ends up <em>watching the show</em> — and so Netflix can actually prove it. Be specific: what's the new creative? What's the CTA? What metric would you report?</p>
+
+      <div class="field">
+        <label>Which activation are you fixing?</label>
+        <select id="p3-pick" onchange="onP3Input()">
+          <option value="">— pick one —</option>
+          <option value="google">Google Upside Down Search</option>
+          <option value="target">Target In-Store Takeover</option>
+          <option value="discover">Discover "Nancy &amp; Jonathan" Spot</option>
+          <option value="tide">Tide "House of Kids" Ad</option>
+        </select>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label>Your fix — 2 to 3 sentences (80 char minimum)</label>
+        <textarea id="p3-fix" rows="4" placeholder="What does it do now? What would you change? What's the measurable call-to-action that ties it back to a Netflix view?" oninput="onP3Input()"></textarea>
+        <div class="char-count" id="p3-count">0 / 80 minimum</div>
+      </div>
+    </div>
+
+    <div class="stop-gate" id="p3-gate">
+      <div class="stop-tag">Stop · Group Vote</div>
+      <h3>Share your fix with your group</h3>
+      <p>Each person reads their fix aloud. Which one actually gets a fan to watch the show — and which one could you prove? Pick ONE to submit on behalf of the group.</p>
+      <button class="btn-gate" onclick="ackP3Gate()">Our group picked one — continue →</button>
+    </div>
+
+    <div class="card step-section locked" id="p3-group-card">
+      <h3 style="font-size:16px;font-weight:800;margin-bottom:8px;">Group — lock your submission</h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">Record whose fix you picked and check every reason that applies. This is your junior-marketer scorecard.</p>
+
+      <div class="field">
+        <label>Whose fix did your group pick? (first name)</label>
+        <input type="text" id="p3-winner" placeholder="e.g., Alex" oninput="onP3WinnerInput()">
+      </div>
+
+      <div class="field">
+        <label>Which activation does the winning fix rewrite?</label>
+        <select id="p3-group-pick" onchange="onP3Input()">
+          <option value="">— pick one —</option>
+          <option value="google">Google Upside Down Search</option>
+          <option value="target">Target In-Store Takeover</option>
+          <option value="discover">Discover "Nancy &amp; Jonathan" Spot</option>
+          <option value="tide">Tide "House of Kids" Ad</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <label style="display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-bottom:10px;">We picked this fix because… (check all that apply — at least 2)</label>
+        <div id="rubric-list"></div>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label>Group — one sentence in your own words (30 char minimum)</label>
+        <textarea id="p3-rationale" rows="2" placeholder="Why this fix won the vote..." oninput="onP3RationaleInput()"></textarea>
+        <div class="char-count" id="p3-rat-count">0 / 30 minimum</div>
+      </div>
+    </div>
+
+    <p id="p3-participation-note" style="font-size:13px;color:var(--muted);margin-top:6px;text-align:center;">Submitting this exercise records your participation and case work for today's class.</p>
+    <button class="btn btn-dark" id="p3-submit-btn" onclick="submitAll()" disabled style="margin-top:6px;">
+      Submit &amp; Record Participation →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SUMMARY ═══════════════════════════ -->
+<div id="summary-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 13 · Exercise 1 — Summary</div>
+    <div class="screen-title">All Four Rounds</div>
+    <div class="confirm-pill">✓ Participation recorded — you're all set</div>
+    <div id="student-tag" class="student-tag"></div>
+
+    <div id="summary-body"></div>
+
+    <p class="section-label" style="margin-top:20px;">Phase 2 — Your group's weak link</p>
+    <div id="sum-phase2"></div>
+
+    <p class="section-label" style="margin-top:20px;">Phase 3 — Your group's fix</p>
+    <div id="sum-phase3"></div>
+
+    <div class="debrief-box">
+      <h3>Bring to the Debrief</h3>
+      <p>Be ready to share: (1) which activation was hardest to measure and why, (2) the weak stage your group found, and (3) the fix your group picked — especially the rubric boxes you checked.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JAVASCRIPT ═══════════════════════════ -->
+<script>
+const PW = 'HAWKIN55';
+const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
+
+/* ── ROUND DATA ── */
+const ROUNDS = [
+  {
+    id: 1,
+    key: 'google',
+    company: 'Google "Upside Down" Search Takeover',
+    colorClass: 'ch-r1',
+    pipActive: 'active-r1',
+    tool: 'Digital / Interactive',
+    frame: '"If you can count the clicks, you can count the fans."',
+    context: `
+      <p class="context-p">Search "Stranger Things" on Google and the entire results page flips upside-down. A hidden cursor appears that fans can drag around the screen to "find" clues — a small flashlight beam that reveals hidden images of the Demogorgon, Eleven, and references to the final season. The interaction ends with a clickable card that links straight to the Stranger Things page on Netflix.</p>
+      <p class="context-p">The takeover was engineered for virality. Within the first 48 hours, TikTok had tens of thousands of videos of fans filming themselves discovering the easter egg, dragging their mouse around, and reacting to the reveal. Google shared impression and interaction data with Netflix as part of the partnership deal — including how many people found the hidden elements and how many clicked the final link to Netflix.</p>`,
+    gateText: 'Share both answers with your group. On AIDA: did anyone disagree? On measurement: what metric would YOU be comfortable putting in a slide for Monday?'
+  },
+  {
+    id: 2,
+    key: 'target',
+    company: 'Target In-Store "Upside Down" Takeover',
+    colorClass: 'ch-r2',
+    pipActive: 'active-r2',
+    tool: 'Sales Promotion',
+    frame: '"You can count what sold. Good luck counting what they watched after."',
+    context: `
+      <p class="context-p">Target rolled out 150+ Stranger Things SKUs across 1,800+ stores. End-caps were redesigned to look like Hawkins Lab equipment. Ceiling installations dangled vines and papers from the "Upside Down" in flagship locations. Staff in select stores wore Hawkins Middle School tees. The products themselves ranged from $4 snacks branded with character artwork to $60 collectibles and exclusive themed apparel.</p>
+      <p class="context-p">Target could track every single SKU by UPC — how many Eleven cereal boxes sold, how many Hawkins Middle tees, which stores moved the most Demogorgon plushies. But none of that data ties to a Netflix view. A fan could buy a themed mug and have never planned to watch. A non-fan could walk past the entire takeover and subscribe to Netflix that night because a friend told them to. Target sees sales. Netflix sees a shrug.</p>`,
+    gateText: 'Share both answers with your group. The tricky one is the measurement question — Target has clean data on THEIR business. What does Netflix actually get out of it?'
+  },
+  {
+    id: 3,
+    key: 'discover',
+    company: 'Discover "Nancy &amp; Jonathan" TV Spot',
+    colorClass: 'ch-r3',
+    pipActive: 'active-r3',
+    tool: 'Advertising',
+    frame: '"Reach times frequency. That\'s all you can sell your CFO."',
+    context: `
+      <p class="context-p">Discover produced a 30-second TV spot starring Nancy and Jonathan from Stranger Things "earning cash back" on their investigation expenses — flashlight batteries, walkie-talkies, gas money for their stakeouts. The spot was polished, on-brand for both Discover and the show, and felt more like a scene than an ad. It ran in prime-time rotation on broadcast TV and as pre-roll on YouTube throughout November and December 2025.</p>
+      <p class="context-p">The media buy was reach-optimized — Discover wanted maximum eyeballs, heavy frequency. That means Discover and Netflix can report GRPs (gross rating points), total impressions, and reach/frequency curves. They know how many people saw the ad at least once, and how many times the average viewer saw it. But they have no way to tell who then opened Netflix and watched the show. The spot didn't contain a QR code, a promo link, or any trackable element pointing back to Stranger Things on Netflix.</p>`,
+    gateText: 'Share both answers with your group. Advertising metrics are old and trusted — but what do they actually prove? Can reach and frequency tell Netflix whether anyone watched?'
+  },
+  {
+    id: 4,
+    key: 'tide',
+    company: 'Tide "House of Kids" Ad',
+    colorClass: 'ch-r4',
+    pipActive: 'active-r4',
+    tool: 'Advertising',
+    frame: '"You will feel something. Nobody will know you felt it."',
+    context: `
+      <p class="context-p">Tide produced a 60-second broadcast spot showing exhausted '80s-styled parents cleaning up supernatural gore left behind by their Stranger Things–adjacent kids — blood, slime, demo-dog goo across the kitchen floor. The ad is a love letter to the show's aesthetic. It's funny, it's well-shot, it's perfect brand fit for Tide's "stains happen" positioning. It aired on broadcast TV, streamed on connected-TV platforms, and lived as a 60-second hero video on Tide's YouTube.</p>
+      <p class="context-p">There is no call to action. No promo code. No QR. No hashtag. No "watch now on Netflix." It is pure brand storytelling. Tide is selling laundry detergent. Netflix is hoping the vibes move people. If this ad works, it works through cultural osmosis — a fan sees it, laughs, remembers the show exists, maybe tells a friend. None of that produces data Netflix can put on a slide. Any attribution to actual viewership would be pure modeling — assumptions stacked on assumptions.</p>`,
+    gateText: 'Share both answers with your group. This is the hardest round. What does a brand ad like this actually do for Netflix? And could you defend ANY number you report Monday?'
+  }
+];
+
+/* ── RUBRIC ── */
+const RUBRIC = [
+  { id: 'action',  text: 'It drives real Action — a fan can actually watch the show because of this fix' },
+  { id: 'measurable', text: 'It has a measurable call-to-action (click, scan, show up, log in)' },
+  { id: 'realistic',  text: 'It\'s realistic — Netflix or the partner could actually ship this' },
+  { id: 'underused',  text: 'It strengthens an IMC tool the campaign is under-using' },
+  { id: 'specific',   text: 'It targets a specific audience, not just "everyone who sees it"' },
+  { id: 'attribution','text': 'It closes the attribution gap — Netflix can connect dollars in to views out' }
+];
+// fix trailing quote
+RUBRIC[5] = { id: 'attribution', text: 'It closes the attribution gap — Netflix can connect dollars in to views out' };
+
+/* ── STATE ── */
+const state = {
+  name: '', email: '', group: null,
+  currentRound: 1,
+  rounds: {
+    1: { aida: '', aidaWhy: '', measure: '', gateAcked: false, verdict: '', locked: false },
+    2: { aida: '', aidaWhy: '', measure: '', gateAcked: false, verdict: '', locked: false },
+    3: { aida: '', aidaWhy: '', measure: '', gateAcked: false, verdict: '', locked: false },
+    4: { aida: '', aidaWhy: '', measure: '', gateAcked: false, verdict: '', locked: false }
+  },
+  p2: { weakStage: '', hardMeasure: '', reasoning: '' },
+  p3: {
+    pick: '', fix: '', gateAcked: false,
+    winner: '', groupPick: '', rubric: [], rationale: ''
+  }
+};
+
+/* ── SCREEN HELPERS ── */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+/* ── PASSWORD ── */
+function checkPw() {
+  const input = document.getElementById('pw-input');
+  const err = document.getElementById('pw-err');
+  if (input.value.trim().toUpperCase() === PW) {
+    show('join-screen');
+  } else {
+    err.textContent = 'Not quite. Ask your instructor.';
+    input.classList.add('shake');
+    setTimeout(() => input.classList.remove('shake'), 400);
+  }
+}
+
+/* ── JOIN ── */
+document.addEventListener('DOMContentLoaded', () => {
+  ['j-name', 'j-email', 'j-group'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', validateJoin);
+    el.addEventListener('change', validateJoin);
+  });
+});
+
+function validateJoin() {
+  const name = document.getElementById('j-name').value.trim();
+  const email = document.getElementById('j-email').value.trim();
+  const group = document.getElementById('j-group').value;
+  const validEmail = email.endsWith('@mail.uc.edu') || email.endsWith('@uc.edu');
+  document.getElementById('join-btn').disabled = !(name && validEmail && group);
+}
+
+function doJoin() {
+  state.name = document.getElementById('j-name').value.trim();
+  state.email = document.getElementById('j-email').value.trim();
+  state.group = parseInt(document.getElementById('j-group').value);
+  show('instructions-screen');
+}
+
+/* ── ROUND RENDERING ── */
+function startRound(n) {
+  state.currentRound = n;
+  renderRound(n);
+  show('round-screen');
+}
+
+function renderRound(n) {
+  const round = ROUNDS[n - 1];
+  const rs = state.rounds[n];
+
+  // Progress pips
+  for (let i = 1; i <= 4; i++) {
+    const pip = document.getElementById(`pip-${i}`);
+    pip.className = 'round-pip';
+    if (i < n) pip.classList.add('done');
+    else if (i === n) pip.classList.add(round.pipActive);
+  }
+
+  // Header
+  document.getElementById('r-company-header').className = `company-header ${round.colorClass}`;
+  document.getElementById('r-round-label').textContent = `Round ${n} of 4`;
+  document.getElementById('r-company-name').innerHTML = round.company;
+  document.getElementById('r-frame').textContent = round.frame;
+  document.getElementById('r-tool-chip').textContent = 'IMC Tool · ' + round.tool;
+
+  // Context
+  document.getElementById('r-context').innerHTML = round.context;
+
+  // Step 1 — AIDA
+  document.getElementById('step1-section').className = 'step-section';
+  document.getElementById('r-aida').value = rs.aida;
+  document.getElementById('r-aida-why').value = rs.aidaWhy;
+  updateCount('r-aida-why', 'aida-count', 30);
+
+  // Step 2 — Measurement (locked until step 1 done)
+  const step1Done = rs.aida && rs.aidaWhy.trim().length >= 30;
+  document.getElementById('step2-section').className = 'step-section' + (step1Done ? '' : ' locked');
+  document.getElementById('r-measure').value = rs.measure;
+  updateCount('r-measure', 'measure-count', 80);
+
+  // Stop gate
+  const gate = document.getElementById('stop-gate');
+  const step2Done = rs.measure.trim().length >= 80;
+  gate.className = 'stop-gate' + ((step1Done && step2Done && !rs.gateAcked) ? ' visible' : '');
+  document.getElementById('gate-text').textContent = round.gateText;
+
+  // Step 3 — Verdict
+  document.getElementById('verdict-section').className = 'verdict-section' + (rs.gateAcked ? '' : ' locked');
+  ['v-track', 'v-proxy', 'v-unk'].forEach(id => document.getElementById(id).className = 'verdict-btn');
+  if (rs.verdict === 'trackable')   document.getElementById('v-track').classList.add('v-track');
+  if (rs.verdict === 'proxy')       document.getElementById('v-proxy').classList.add('v-proxy');
+  if (rs.verdict === 'unknowable')  document.getElementById('v-unk').classList.add('v-unk');
+
+  // Next button
+  const nextBtn = document.getElementById('next-round-btn');
+  nextBtn.disabled = !rs.verdict;
+  document.getElementById('next-round-label').textContent =
+    n < 4 ? `Lock Round ${n} — start Round ${n + 1} →` : 'Lock Round 4 — continue to Phase 2 →';
+}
+
+function updateCount(textId, countId, min) {
+  const txt = document.getElementById(textId).value.trim().length;
+  const el = document.getElementById(countId);
+  el.textContent = txt < min ? `${txt} / ${min} minimum` : `${txt} characters ✓`;
+  el.className = 'char-count' + (txt >= min ? ' ok' : '');
+}
+
+function onAidaChange() {
+  state.rounds[state.currentRound].aida = document.getElementById('r-aida').value;
+  renderRound(state.currentRound);
+}
+
+function onAidaWhy() {
+  const val = document.getElementById('r-aida-why').value;
+  state.rounds[state.currentRound].aidaWhy = val;
+  updateCount('r-aida-why', 'aida-count', 30);
+  const rs = state.rounds[state.currentRound];
+  const step1Done = rs.aida && val.trim().length >= 30;
+  document.getElementById('step2-section').className = 'step-section' + (step1Done ? '' : ' locked');
+}
+
+function onMeasure() {
+  const val = document.getElementById('r-measure').value;
+  state.rounds[state.currentRound].measure = val;
+  updateCount('r-measure', 'measure-count', 80);
+  const rs = state.rounds[state.currentRound];
+  const step1Done = rs.aida && rs.aidaWhy.trim().length >= 30;
+  const gate = document.getElementById('stop-gate');
+  if (step1Done && val.trim().length >= 80 && !rs.gateAcked) {
+    gate.classList.add('visible');
+  }
+}
+
+function acknowledgeGate() {
+  state.rounds[state.currentRound].gateAcked = true;
+  document.getElementById('stop-gate').classList.remove('visible');
+  document.getElementById('verdict-section').classList.remove('locked');
+}
+
+function pickVerdict(v) {
+  state.rounds[state.currentRound].verdict = v;
+  ['v-track', 'v-proxy', 'v-unk'].forEach(id => document.getElementById(id).className = 'verdict-btn');
+  if (v === 'trackable')  document.getElementById('v-track').classList.add('v-track');
+  if (v === 'proxy')      document.getElementById('v-proxy').classList.add('v-proxy');
+  if (v === 'unknowable') document.getElementById('v-unk').classList.add('v-unk');
+  document.getElementById('next-round-btn').disabled = false;
+}
+
+function nextRound() {
+  state.rounds[state.currentRound].locked = true;
+  const n = state.currentRound;
+  if (n < 4) {
+    startRound(n + 1);
+  } else {
+    show('phase2-screen');
+  }
+}
+
+/* ── PHASE 2 ── */
+function onP2Input() {
+  state.p2.weakStage = document.getElementById('p2-weak-stage').value;
+  state.p2.hardMeasure = document.getElementById('p2-hard-measure').value;
+  state.p2.reasoning = document.getElementById('p2-reasoning').value;
+  updateCount('p2-reasoning', 'p2-count', 40);
+  document.getElementById('p2-next-btn').disabled =
+    !(state.p2.weakStage && state.p2.hardMeasure && state.p2.reasoning.trim().length >= 40);
+}
+
+function goPhase3() {
+  renderRubric();
+  show('phase3-screen');
+}
+
+/* ── PHASE 3 ── */
+function renderRubric() {
+  const list = document.getElementById('rubric-list');
+  list.innerHTML = '';
+  RUBRIC.forEach(r => {
+    const checked = state.p3.rubric.includes(r.id) ? 'checked' : '';
+    list.innerHTML += `
+      <div class="rubric-item ${checked}" onclick="toggleRubric('${r.id}')">
+        <div class="rubric-check"></div>
+        <div class="rubric-text">${r.text}</div>
+      </div>`;
+  });
+}
+
+function toggleRubric(id) {
+  const idx = state.p3.rubric.indexOf(id);
+  if (idx >= 0) state.p3.rubric.splice(idx, 1);
+  else state.p3.rubric.push(id);
+  renderRubric();
+  updateSubmitBtn();
+}
+
+function onP3Input() {
+  state.p3.pick = document.getElementById('p3-pick').value;
+  state.p3.fix = document.getElementById('p3-fix').value;
+  const gpEl = document.getElementById('p3-group-pick');
+  if (gpEl) state.p3.groupPick = gpEl.value;
+  updateCount('p3-fix', 'p3-count', 80);
+  updateP3Gate();
+}
+
+function updateP3Gate() {
+  const individualDone = state.p3.pick && state.p3.fix.trim().length >= 80;
+  const gate = document.getElementById('p3-gate');
+  const groupCard = document.getElementById('p3-group-card');
+
+  if (individualDone && !state.p3.gateAcked) {
+    gate.classList.add('visible');
+    groupCard.classList.add('locked');
+  } else if (individualDone && state.p3.gateAcked) {
+    gate.classList.remove('visible');
+    groupCard.classList.remove('locked');
+  } else {
+    gate.classList.remove('visible');
+    groupCard.classList.add('locked');
+  }
+  updateSubmitBtn();
+}
+
+function ackP3Gate() {
+  state.p3.gateAcked = true;
+  updateP3Gate();
+}
+
+function onP3WinnerInput() {
+  state.p3.winner = document.getElementById('p3-winner').value;
+  updateSubmitBtn();
+}
+
+function onP3RationaleInput() {
+  state.p3.rationale = document.getElementById('p3-rationale').value;
+  updateCount('p3-rationale', 'p3-rat-count', 30);
+  updateSubmitBtn();
+}
+
+function updateSubmitBtn() {
+  const ready =
+    state.p3.pick &&
+    state.p3.fix.trim().length >= 80 &&
+    state.p3.gateAcked &&
+    state.p3.winner.trim().length > 0 &&
+    state.p3.groupPick &&
+    state.p3.rubric.length >= 2 &&
+    state.p3.rationale.trim().length >= 30;
+  document.getElementById('p3-submit-btn').disabled = !ready;
+}
+
+/* ── SUBMIT ── */
+function submitAll() {
+  const payload = {
+    exercise: 'W13.1',
+    name: state.name,
+    email: state.email,
+    group: state.group,
+    rounds: Object.fromEntries(
+      ROUNDS.map((r, i) => [r.key, {
+        activation: r.company.replace(/&amp;/g,'&'),
+        tool: r.tool,
+        aida: state.rounds[i + 1].aida,
+        aida_reason: state.rounds[i + 1].aidaWhy,
+        measurement: state.rounds[i + 1].measure,
+        verdict: state.rounds[i + 1].verdict
+      }])
+    ),
+    phase2_weak_link: state.p2,
+    phase3_fix: state.p3,
+    timestamp: new Date().toISOString()
+  };
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {
+    console.log('Webhook delivery attempt made (may fail silently)');
+  });
+  renderSummary();
+  show('summary-screen');
+}
+
+/* ── SUMMARY ── */
+function renderSummary() {
+  document.getElementById('student-tag').textContent =
+    `${state.name} · Group ${state.group}`;
+
+  const verdictLabel = {
+    'trackable': '✓ Trackable',
+    'proxy': '~ Proxy',
+    'unknowable': '✗ Unknowable'
+  };
+  const stageName = id => ({attention:'Attention',interest:'Interest',desire:'Desire',action:'Action'}[id] || '—');
+  const actName = id => {
+    const r = ROUNDS.find(x => x.key === id);
+    return r ? r.company.replace(/&amp;/g,'&') : '—';
+  };
+
+  // Rounds
+  let html = '';
+  ROUNDS.forEach((round, i) => {
+    const n = i + 1;
+    const rs = state.rounds[n];
+    const vLabel = verdictLabel[rs.verdict] || '—';
+    html += `
+      <div class="summary-round">
+        <div class="summary-round-header ${round.colorClass}">
+          <div class="srh-left">
+            <span>Round ${n} · ${round.tool}</span>
+            <h3>${round.company}</h3>
+          </div>
+          <div class="verdict-pill">${vLabel}</div>
+        </div>
+        <div class="summary-round-body">
+          <div class="sr-field">
+            <div class="sr-field-label">AIDA Stage</div>
+            <span class="aida-tag">${stageName(rs.aida)}</span>
+          </div>
+          <div class="sr-field">
+            <div class="sr-field-label">Your AIDA reasoning</div>
+            <div class="sr-field-value">${rs.aidaWhy || '—'}</div>
+          </div>
+          <div class="sr-field">
+            <div class="sr-field-label">How Netflix would know it worked</div>
+            <div class="sr-field-value">${rs.measure || '—'}</div>
+          </div>
+        </div>
+      </div>`;
+  });
+  document.getElementById('summary-body').innerHTML = html;
+
+  // Phase 2
+  document.getElementById('sum-phase2').innerHTML = `
+    <div class="summary-round">
+      <div class="summary-round-body">
+        <div class="sr-field">
+          <div class="sr-field-label">Weakest AIDA stage</div>
+          <span class="aida-tag">${stageName(state.p2.weakStage)}</span>
+        </div>
+        <div class="sr-field">
+          <div class="sr-field-label">Hardest to measure</div>
+          <div class="sr-field-value">${actName(state.p2.hardMeasure)}</div>
+        </div>
+        <div class="sr-field">
+          <div class="sr-field-label">Group reasoning</div>
+          <div class="sr-field-value">${state.p2.reasoning}</div>
+        </div>
+      </div>
+    </div>`;
+
+  // Phase 3
+  const rubricText = state.p3.rubric
+    .map(id => RUBRIC.find(r => r.id === id))
+    .filter(Boolean)
+    .map(r => '• ' + r.text)
+    .join('<br>');
+  document.getElementById('sum-phase3').innerHTML = `
+    <div class="summary-round">
+      <div class="summary-round-body">
+        <div class="sr-field">
+          <div class="sr-field-label">Activation being fixed</div>
+          <div class="sr-field-value">${actName(state.p3.groupPick)}</div>
+        </div>
+        <div class="sr-field">
+          <div class="sr-field-label">Your individual fix</div>
+          <div class="sr-field-value">${state.p3.fix}</div>
+        </div>
+        <div class="sr-field">
+          <div class="sr-field-label">Whose fix the group picked</div>
+          <div class="sr-field-value">${state.p3.winner || '—'}</div>
+        </div>
+        <div class="sr-field">
+          <div class="sr-field-label">Rubric — why it won</div>
+          <div class="sr-field-value">${rubricText || '—'}</div>
+        </div>
+        <div class="sr-field">
+          <div class="sr-field-label">Group rationale</div>
+          <div class="sr-field-value">${state.p3.rationale}</div>
+        </div>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>
