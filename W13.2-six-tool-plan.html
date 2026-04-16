@@ -936,7 +936,7 @@ body {
     <button class="back-btn" onclick="show('join-screen')">← Back</button>
     <div class="week-tag">Week 13 · Exercise 2 · The Brief</div>
     <div class="screen-title">The Netflix Brief</div>
-    <div class="screen-sub">Read this together. You'll build one IMC plan — one brand voice, three tools, within budget.</div>
+    <div class="screen-sub">Read this together. You'll build one IMC plan — one brand voice, 2 or 3 tools, within $3.5M.</div>
 
     <div class="card">
       <p class="section-label">The show</p>
@@ -979,11 +979,11 @@ body {
     <div class="card">
       <p class="section-label">The rules</p>
       <div class="warn-banner">
-        <strong>One brand voice across three tools. Stay within $3.5M.</strong><br>
+        <strong>One brand voice across 2 or 3 tools. Full $3.5M is yours to spend.</strong><br>
         Any of the six tools can be picked. Two people in a group can write for the same tool — in Phase 2 you'll decide whose tactic is stronger.
       </div>
       <p style="font-size:13px;color:var(--muted);line-height:1.65;"><strong>Step 1 (~8 min):</strong> Pick one tool, write your own tactic.</p>
-      <p style="font-size:13px;color:var(--muted);line-height:1.65;margin-top:6px;"><strong>Step 2 (~12 min):</strong> As a group, pick 3 tools within budget, write the group's headlines, Big Idea, Handoff, and Risk.</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;margin-top:6px;"><strong>Step 2 (~12 min):</strong> As a group, pick 2 or 3 tools within $3.5M, write the group's headlines, Big Idea, Handoff, and Risk.</p>
       <p style="font-size:13px;color:var(--muted);line-height:1.65;margin-top:6px;"><strong>Step 3 (~3 min):</strong> Score your plan on brand consistency.</p>
     </div>
 
@@ -1063,7 +1063,7 @@ body {
     <div class="stop-gate" id="ind-gate">
       <div class="stop-tag">Stop · Group Readout</div>
       <h3>Share your tactic card with your group</h3>
-      <p>Go around. Each person reads their headline + execution + AIDA stage + metric out loud. Next phase is the group plan — you'll pick 3 tools within budget together.</p>
+      <p>Go around. Each person reads their headline + execution + AIDA stage + metric out loud. Next phase is the group plan — you'll pick 2 or 3 tools within $3.5M together.</p>
       <button class="btn-gate" onclick="ackIndGate()">Our group shared all the cards — continue →</button>
     </div>
 
@@ -1081,7 +1081,7 @@ body {
       <span class="phase-number">PHASE 2</span>
       <div>
         <div class="phase-title">Build the Group Plan</div>
-        <div class="phase-sub">Pick 3 tools within budget. One brand voice across all of them.</div>
+        <div class="phase-sub">Pick 2 or 3 tools within $3.5M. One brand voice across all of them.</div>
       </div>
     </div>
 
@@ -1098,12 +1098,12 @@ body {
       <div class="budget-bar-wrap">
         <div class="budget-bar" id="budget-bar" style="width:0%;"></div>
       </div>
-      <div class="budget-msg" id="budget-msg">Pick up to 3 tools from the list below. Watch the counter.</div>
+      <div class="budget-msg" id="budget-msg">Pick 2 or 3 tools. Spend up to $3.5M.</div>
     </div>
 
     <div class="card">
-      <p class="section-label">Pick your 3 tools</p>
-      <p style="font-size:12px;color:var(--muted);line-height:1.55;">Click to add. Click again to remove. Each tool has a cost — stay within $3.5M.</p>
+      <p class="section-label">Pick your tools (2 or 3)</p>
+      <p style="font-size:12px;color:var(--muted);line-height:1.55;">Click to add. Click again to remove. Each tool has a cost — stay within $3.5M. Pick 2 or 3 tools total.</p>
       <div class="tool-option-grid" id="tool-option-grid">
         <!-- tool options injected by JS -->
       </div>
@@ -1119,14 +1119,14 @@ body {
 
     <div class="card">
       <p class="section-label">The Big Idea — one story told three ways</p>
-      <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px;">IMC isn't 3 separate campaigns. It's one idea expressed through three tools. What's the through-line that holds your plan together?</p>
+      <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px;">IMC isn't separate campaigns. It's one idea expressed through each tool. What's the through-line that holds your plan together?</p>
       <div class="field">
         <label>Big Idea — one sentence (40 char minimum)</label>
         <textarea id="g-bigidea" rows="2" placeholder='e.g., "The Upside Down never really closed."' oninput="onGroupInput()"></textarea>
         <div class="char-count" id="bi-count">0 / 40 minimum</div>
       </div>
       <div class="field">
-        <label>Handoff story — how do the 3 tactics reinforce each other? (120 char min)</label>
+        <label>Handoff story — how do the tactics reinforce each other? (120 char min)</label>
         <textarea id="g-handoff" rows="3" placeholder="Start with what the fan sees first, then how they get pulled deeper, then what finally makes them open Netflix and watch. How does each tactic make the others hit harder?" oninput="onGroupInput()"></textarea>
         <div class="char-count" id="ho-count">0 / 120 minimum</div>
       </div>
@@ -1230,17 +1230,17 @@ const TOOL_ORDER = ['adv','pr','sp','ps','dir','dig'];
 
 /* ── BRAND SCORE QUESTIONS ── */
 const BRAND_QUESTIONS = [
-  "Does your Big Idea show up in all 3 tactics — or does one feel off-brand?",
-  "Would a Stranger Things fan recognize all 3 as the same campaign without being told?",
+  "Does your Big Idea show up in every tactic — or does one feel off-brand?",
+  "Would a Stranger Things fan recognize all of them as the same campaign without being told?",
   "Does the tone match across tactics (same vibe on PR as on social)?",
   "Do visual motifs or language carry across (imagery, taglines, a recurring phrase)?",
   "Does each tactic reinforce the others — or could one be swapped for a competitor's and no one would notice?"
 ];
 
 function bandLabel(score) {
-  if (score <= 11) return { label: "Six campaigns, one logo.", msg: "Pieces don't cohere. The tools don't recognize each other." };
+  if (score <= 11) return { label: "Separate campaigns, one logo.", msg: "Pieces don't cohere. The tools don't recognize each other." };
   if (score <= 18) return { label: "Getting there.", msg: "There's a through-line, but one tactic is drifting off-brand." };
-  return { label: "One voice, three tools.", msg: "This is what IMC is supposed to feel like." };
+  return { label: "One voice, many tools.", msg: "This is what IMC is supposed to feel like." };
 }
 
 /* ── STATE ── */
@@ -1573,19 +1573,20 @@ function updateBudgetPanel() {
     val.classList.remove('over');
     msg.classList.remove('over');
     if (state.plan.picked.length === 0) {
-      msg.textContent = 'Pick 3 tools from the list below. Stay within budget.';
-    } else if (state.plan.picked.length < 3) {
-      const picksLeft = 3 - state.plan.picked.length;
+      msg.textContent = 'Pick 2 or 3 tools. Spend up to $3.5M.';
+    } else if (state.plan.picked.length === 1) {
+      msg.textContent = `1 picked · $${remaining.toFixed(1)}M left. Pick at least 1 more.`;
+    } else if (state.plan.picked.length === 2) {
       const anyFits = TOOL_ORDER.some(k =>
         !state.plan.picked.includes(k) && TOOLS[k].cost <= remaining + 0.0001
       );
-      if (!anyFits) {
-        msg.textContent = `${state.plan.picked.length} picked · no room for a ${picksLeft === 1 ? '3rd' : picksLeft + ' more'} tool within budget. Swap one out.`;
+      if (anyFits) {
+        msg.textContent = `2 picked · $${remaining.toFixed(1)}M left. Add a 3rd or continue with 2.`;
       } else {
-        msg.textContent = `${state.plan.picked.length} picked · room for ${picksLeft} more within budget.`;
+        msg.textContent = `2 picked · budget fully spent. You can continue with 2 tools or swap one out to fit a 3rd.`;
       }
     } else {
-      msg.textContent = `All 3 picked · $${remaining.toFixed(1)}M within budget unspent.`;
+      msg.textContent = `3 picked · $${remaining.toFixed(1)}M unspent. Continue or swap.`;
     }
   }
 }
@@ -1603,7 +1604,7 @@ function onGroupInput() {
 function updateGroupGate() {
   const spent = state.plan.picked.reduce((s, k) => s + TOOLS[k].cost, 0);
   const inBudget = spent <= BUDGET_CAP + 0.0001;
-  const threePicked = state.plan.picked.length === 3;
+  const validCount = state.plan.picked.length >= 2 && state.plan.picked.length <= 3;
   const allHeadlines = state.plan.picked.every(k => (state.plan.headlines[k] || '').trim().length > 0);
   const g = state.plan;
   const textDone =
@@ -1611,7 +1612,7 @@ function updateGroupGate() {
     g.handoff.trim().length >= 120 &&
     g.risk.trim().length >= 40;
   const btn = document.getElementById('group-continue-btn');
-  if (btn) btn.disabled = !(inBudget && threePicked && allHeadlines && textDone);
+  if (btn) btn.disabled = !(inBudget && validCount && allHeadlines && textDone);
 }
 
 /* ── BRAND SCORE PHASE ── */
