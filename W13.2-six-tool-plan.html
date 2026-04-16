@@ -16,24 +16,24 @@
   --radius: 10px;
   --shadow: 0 2px 12px rgba(0,0,0,0.07);
 
-  /* Week 13 palette — continues burgundy + ST gold from W13.1 */
+  /* Week 13 palette */
   --burgundy:    #8B2E45;
   --burgundy-lt: #f5e8ec;
   --st-red:      #E50914;
   --st-gold:     #F4B632;
 
-  /* Tool palette — one color per IMC tool */
-  --t-adv:    #1A4A7A;  /* Advertising — trust blue */
+  /* Tool palette */
+  --t-adv:    #1A4A7A;
   --t-adv-lt: #e6f0f9;
-  --t-pr:     #5A2E8C;  /* PR — credibility purple */
+  --t-pr:     #5A2E8C;
   --t-pr-lt:  #efe6f9;
-  --t-sp:     #C8102E;  /* Sales Promo — incentive red */
+  --t-sp:     #C8102E;
   --t-sp-lt:  #fce8eb;
-  --t-ps:     #0E7A50;  /* Personal Selling — relationship green */
+  --t-ps:     #0E7A50;
   --t-ps-lt:  #e6f4ee;
-  --t-dir:    #D97706;  /* Direct — targeting orange */
+  --t-dir:    #D97706;
   --t-dir-lt: #fdf0e0;
-  --t-dig:    #1a1d23;  /* Digital/Social — black */
+  --t-dig:    #1a1d23;
   --t-dig-lt: #e8e8ea;
 }
 
@@ -46,15 +46,15 @@ body {
   min-height: 100vh;
 }
 
-/* ── SCREENS ── */
+/* ── SCREENS (CRITICAL: ID specificity bug fix) ── */
 .screen { display: none; }
 .screen.active { display: block; }
 
 /* ── LAYOUT ── */
 .page-wrap {
-  max-width: 800px;
+  max-width: 820px;
   margin: 0 auto;
-  padding: 40px 20px 60px;
+  padding: 20px 20px 60px;
 }
 
 .week-tag {
@@ -79,15 +79,36 @@ body {
   font-size: 14px;
   color: var(--muted);
   line-height: 1.6;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
+
+/* ── BACK BUTTON ── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.15s;
+}
+.back-btn:hover { border-color: var(--burgundy); color: var(--burgundy); }
 
 /* ── CARD ── */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 22px;
   box-shadow: var(--shadow);
   margin-bottom: 16px;
 }
@@ -149,13 +170,10 @@ body {
 
 .btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.btn-dark { background: #1a1d23; color: white; }
-.btn-dark:hover:not(:disabled) { background: #2d3139; }
-
 .btn-burgundy { background: var(--burgundy); color: white; }
 .btn-burgundy:hover:not(:disabled) { background: #6e233a; }
 
-/* ── PASSWORD ── */
+/* ── PASSWORD ── CRITICAL: #pw-screen.active with ID specificity ── */
 #pw-screen.active {
   display: flex;
   align-items: center;
@@ -218,21 +236,6 @@ body {
 .char-count { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
 .char-count.ok { color: #1D6349; font-weight: 700; }
 
-/* ── STEP SECTIONS ── */
-.step-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px;
-  margin-bottom: 14px;
-}
-
-.step-section.locked {
-  opacity: 0.45;
-  pointer-events: none;
-  filter: grayscale(0.3);
-}
-
 /* ── PHASE BANNER ── */
 .phase-banner {
   background: #1a1d23;
@@ -257,15 +260,135 @@ body {
 .phase-title { font-size: 16px; font-weight: 800; }
 .phase-sub { font-size: 12px; color: #bbb; margin-top: 2px; }
 
-/* ── TOOL HEADER (individual phase) ── */
+/* ── AIDA FUNNEL VISUAL ── */
+.aida-funnel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.aida-funnel-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--burgundy);
+  margin-bottom: 10px;
+  text-align: center;
+}
+.aida-stages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.aida-stage {
+  color: white;
+  font-weight: 800;
+  padding: 8px 12px;
+  text-align: center;
+  border-radius: 4px;
+  position: relative;
+  line-height: 1.25;
+}
+.aida-stage .stage-name {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.aida-stage .stage-desc {
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.92;
+  margin-top: 2px;
+}
+.aida-stage.attention { width: 100%; background: #1A4A7A; }
+.aida-stage.interest  { width: 82%;  background: #5A2E8C; }
+.aida-stage.desire    { width: 62%;  background: #D97706; }
+.aida-stage.action    { width: 42%;  background: var(--burgundy); }
+.aida-note {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.5;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  text-align: center;
+}
+
+/* ── CLICKABLE TOOL PICKER CARDS ── */
+.tool-pick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+.tool-pick-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+}
+.tool-pick-card:hover { border-color: #b0b6c0; transform: translateY(-1px); box-shadow: var(--shadow); }
+.tool-pick-card.selected {
+  border-color: var(--burgundy);
+  box-shadow: 0 0 0 3px var(--burgundy-lt);
+  background: var(--burgundy-lt);
+}
+.tool-pick-card .tp-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--burgundy);
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.tool-pick-card.selected .tp-check { display: flex; }
+.tool-pick-card .tp-color-bar {
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+.tp-color-bar.adv  { background: var(--t-adv); }
+.tp-color-bar.pr   { background: var(--t-pr); }
+.tp-color-bar.sp   { background: var(--t-sp); }
+.tp-color-bar.ps   { background: var(--t-ps); }
+.tp-color-bar.dir  { background: var(--t-dir); }
+.tp-color-bar.dig  { background: var(--t-dig); }
+.tool-pick-card .tp-name {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.tool-pick-card .tp-desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ── TOOL HEADER (Phase 1) ── */
 .tool-header {
   padding: 18px 24px;
-  border-radius: var(--radius) var(--radius) 0 0;
+  border-radius: var(--radius);
   color: white;
   margin-bottom: 0;
-  transition: background 0.25s;
 }
-.tool-header.empty { background: #888; }
 .tool-header .tool-label {
   font-size: 10px;
   font-weight: 800;
@@ -285,7 +408,6 @@ body {
   margin-top: 6px;
   font-style: italic;
 }
-
 .th-adv  { background: var(--t-adv); }
 .th-pr   { background: var(--t-pr); }
 .th-sp   { background: var(--t-sp); }
@@ -298,7 +420,7 @@ body {
   border: 1px solid var(--border);
   border-top: none;
   border-radius: 0 0 var(--radius) var(--radius);
-  padding: 24px;
+  padding: 22px;
   margin-bottom: 16px;
 }
 
@@ -316,38 +438,16 @@ body {
 }
 .warn-banner strong { color: #3B2B00; }
 
-/* ── IMC REFERENCE GRID ── */
-.imc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 6px;
-}
-.imc-tile {
-  border-radius: 8px;
-  padding: 14px;
-  color: white;
-}
-.imc-tile .imc-name {
-  font-size: 13px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-.imc-tile .imc-desc { font-size: 11px; line-height: 1.55; opacity: 0.92; }
-
 /* ── STOP GATE ── */
 .stop-gate {
   background: #1a1d23;
   color: white;
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 22px;
   margin-bottom: 14px;
   display: none;
 }
 .stop-gate.visible { display: block; }
-
 .stop-gate .stop-tag {
   font-family: 'Space Mono', monospace;
   font-size: 10px;
@@ -357,21 +457,8 @@ body {
   color: var(--st-gold);
   margin-bottom: 8px;
 }
-
-.stop-gate h3 {
-  font-size: 17px;
-  font-weight: 800;
-  margin-bottom: 8px;
-  line-height: 1.3;
-}
-
-.stop-gate p {
-  font-size: 13px;
-  color: #bbb;
-  line-height: 1.65;
-  margin-bottom: 16px;
-}
-
+.stop-gate h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+.stop-gate p { font-size: 13px; color: #bbb; line-height: 1.65; margin-bottom: 16px; }
 .stop-gate .btn-gate {
   display: block;
   width: 100%;
@@ -386,106 +473,177 @@ body {
   cursor: pointer;
 }
 
-/* ── DRAG-TO-RANK SLOTS ── */
-.rank-hint {
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 600;
-  margin-bottom: 10px;
-  padding: 10px 14px;
-  background: var(--burgundy-lt);
-  border-radius: 6px;
-  border-left: 3px solid var(--burgundy);
+/* ── BUDGET PANEL ── */
+.budget-panel {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 16px;
 }
+.budget-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.budget-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--st-gold);
+}
+.budget-value {
+  font-family: 'Space Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+}
+.budget-value.over { color: #FF5B5B; }
+.budget-bar-wrap {
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.budget-bar {
+  height: 100%;
+  background: var(--st-gold);
+  transition: width 0.2s, background 0.2s;
+}
+.budget-bar.over { background: #FF5B5B; }
+.budget-msg {
+  font-size: 12px;
+  color: #bbb;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+.budget-msg.over { color: #FF8B8B; font-weight: 700; }
 
-.slot {
+/* ── TOOL OPTION GRID (Phase 2) ── */
+.tool-option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.tool-option {
   background: var(--surface);
   border: 2px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 46px 16px 52px;
-  margin-bottom: 12px;
-  cursor: grab;
+  border-radius: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
   position: relative;
-  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
-.slot:hover { border-color: #b0b6c0; }
-.slot.dragging {
-  opacity: 0.4;
-  border-style: dashed;
+.tool-option:hover:not(.disabled) { border-color: #b0b6c0; }
+.tool-option.picked {
+  border-color: var(--burgundy);
+  background: var(--burgundy-lt);
 }
-.slot.drag-over {
+.tool-option.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: #f0f0f2;
+}
+.to-left { display: flex; align-items: center; gap: 10px; }
+.to-color { width: 4px; height: 32px; border-radius: 2px; }
+.to-color.adv  { background: var(--t-adv); }
+.to-color.pr   { background: var(--t-pr); }
+.to-color.sp   { background: var(--t-sp); }
+.to-color.ps   { background: var(--t-ps); }
+.to-color.dir  { background: var(--t-dir); }
+.to-color.dig  { background: var(--t-dig); }
+.to-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.15;
+}
+.to-cost {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.tool-option.picked .to-cost { color: var(--burgundy); }
+
+/* ── PICKED TOOL CARDS (Phase 2, with headline inputs) ── */
+.picked-card {
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  cursor: grab;
+  transition: transform 0.15s, box-shadow 0.15s;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.picked-card.dragging { opacity: 0.4; }
+.picked-card.drag-over {
   border-color: var(--burgundy);
   box-shadow: 0 0 0 3px var(--burgundy-lt);
 }
-
-.slot-rank {
-  position: absolute;
-  top: 50%;
-  left: 14px;
-  transform: translateY(-50%);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--burgundy);
+.pc-header {
+  padding: 10px 14px;
   color: white;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-  font-size: 13px;
 }
-
-.slot-drag-handle {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  color: #c0c4cc;
-  font-size: 18px;
-  line-height: 1;
+.pc-header.adv  { background: var(--t-adv); }
+.pc-header.pr   { background: var(--t-pr); }
+.pc-header.sp   { background: var(--t-sp); }
+.pc-header.ps   { background: var(--t-ps); }
+.pc-header.dir  { background: var(--t-dir); }
+.pc-header.dig  { background: var(--t-dig); }
+.pc-rank {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.2);
+}
+.pc-tool {
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex: 1;
+  margin-left: 12px;
+}
+.pc-drag {
+  color: rgba(255,255,255,0.6);
+  font-size: 16px;
   letter-spacing: -1px;
   user-select: none;
 }
-
-.slot-move-btns {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.slot-move-btns button {
-  width: 26px;
+.pc-moves { display: flex; gap: 4px; }
+.pc-moves button {
+  width: 22px;
   height: 22px;
-  border: 1.5px solid var(--border);
-  background: var(--bg);
-  color: var(--burgundy);
-  border-radius: 5px;
-  font-size: 13px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
   line-height: 1;
   padding: 0;
 }
-.slot-move-btns button:hover:not(:disabled) {
-  background: var(--burgundy-lt);
-  border-color: var(--burgundy);
-}
-.slot-move-btns button:disabled {
-  opacity: 0.25;
-  cursor: not-allowed;
-}
-
-.slot-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.slot-row:last-child { margin-bottom: 0; }
-
-.slot-field label {
+.pc-moves button:disabled { opacity: 0.3; cursor: not-allowed; }
+.pc-moves button:hover:not(:disabled) { background: rgba(255,255,255,0.35); }
+.pc-body { padding: 14px; }
+.pc-body label {
   display: block;
   font-size: 10px;
   font-weight: 800;
@@ -494,10 +652,9 @@ body {
   color: var(--muted);
   margin-bottom: 4px;
 }
-
-.slot-field select, .slot-field input {
+.pc-body input {
   width: 100%;
-  padding: 8px 10px;
+  padding: 9px 12px;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   color: var(--text);
@@ -506,39 +663,113 @@ body {
   border-radius: 6px;
   outline: none;
 }
-
-.slot-field input:focus, .slot-field select:focus {
-  border-color: var(--burgundy);
-  background: white;
+.pc-body input:focus { border-color: var(--burgundy); background: white; }
+.pc-note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+  font-style: italic;
 }
 
-/* ── FUNNEL LEGEND ── */
-.funnel-legend {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 16px;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-.funnel-legend div {
-  flex: 1;
-  padding: 6px 8px;
-  border-radius: 4px;
+.picked-empty {
   text-align: center;
-  background: var(--burgundy-lt);
-  color: var(--burgundy);
+  padding: 28px 18px;
+  background: var(--bg);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
-.funnel-legend div:first-child { background: #e6f0f9; color: #1A4A7A; }
-.funnel-legend div:last-child  { background: #e6f4ee; color: #1D6349; }
+
+/* ── BRAND SCORE ── */
+.brand-q {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.brand-q-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.brand-q-text .qn {
+  display: inline-block;
+  background: var(--burgundy);
+  color: white;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-right: 8px;
+  vertical-align: baseline;
+}
+.score-scale {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.score-btn {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.score-btn:hover:not(.selected) { border-color: #b0b6c0; }
+.score-btn.selected {
+  background: var(--burgundy);
+  color: white;
+  border-color: var(--burgundy);
+}
+.score-anchors {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.live-band {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.live-band-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--st-gold);
+  margin-bottom: 6px;
+}
+.live-band-score { font-size: 34px; font-weight: 900; font-family: 'Space Mono', monospace; line-height: 1; }
+.live-band-out { font-size: 14px; color: #bbb; font-weight: 600; }
+.live-band-msg { font-size: 13px; color: #ddd; margin-top: 8px; font-style: italic; line-height: 1.5; }
 
 /* ── SUMMARY ── */
 .student-tag {
   font-size: 13px;
   font-weight: 700;
   color: var(--muted);
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
 .confirm-pill {
@@ -549,7 +780,7 @@ body {
   border: 1px solid #1D6349;
   border-radius: 8px;
   padding: 10px 16px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   font-size: 13px;
   font-weight: 700;
   color: #1D6349;
@@ -560,10 +791,9 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   box-shadow: var(--shadow);
 }
-
 .sum-card-header {
   padding: 14px 20px;
   color: white;
@@ -573,10 +803,8 @@ body {
 .sum-card-header span { font-size: 11px; opacity: 0.85; font-weight: 600; }
 
 .sum-card-body { padding: 18px 20px; }
-
-.sum-field { margin-bottom: 14px; }
+.sum-field { margin-bottom: 12px; }
 .sum-field:last-child { margin-bottom: 0; }
-
 .sum-field-label {
   font-size: 10px;
   font-weight: 800;
@@ -585,12 +813,7 @@ body {
   color: var(--muted);
   margin-bottom: 4px;
 }
-
-.sum-field-value {
-  font-size: 13px;
-  color: var(--text);
-  line-height: 1.6;
-}
+.sum-field-value { font-size: 13px; color: var(--text); line-height: 1.6; }
 
 .sum-slot {
   display: flex;
@@ -623,15 +846,20 @@ body {
   margin-bottom: 2px;
 }
 .sum-slot-head { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.4; }
+.sum-slot-cost {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
 
 .debrief-box {
   background: #1a1d23;
   color: white;
   border-radius: var(--radius);
-  padding: 28px;
-  margin-top: 24px;
+  padding: 24px;
+  margin-top: 20px;
 }
-
 .debrief-box h3 {
   font-size: 13px;
   font-weight: 800;
@@ -640,7 +868,6 @@ body {
   color: var(--st-gold);
   margin-bottom: 14px;
 }
-
 .debrief-box p {
   font-size: 13px;
   color: #bbb;
@@ -649,9 +876,8 @@ body {
 }
 
 @media (max-width: 600px) {
-  .imc-grid { grid-template-columns: 1fr; }
-  .slot-row { grid-template-columns: 1fr; }
-  .funnel-legend { font-size: 9px; }
+  .tool-pick-grid { grid-template-columns: 1fr; }
+  .tool-option-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -680,7 +906,7 @@ body {
   <div class="page-wrap">
     <div class="week-tag">Week 13 · Exercise 2</div>
     <div class="screen-title">Get set up</div>
-    <div class="screen-sub">You're the launch agency. Netflix just greenlit a Stranger Things spin-off and they want a full IMC plan — one that uses the right tools, in the right order, to get people to actually watch.</div>
+    <div class="screen-sub">You're the launch agency. Netflix just greenlit a Stranger Things spin-off and they want a full IMC plan — one brand voice across the tools you choose.</div>
     <div class="card">
       <div class="field">
         <label>Your First Name</label>
@@ -704,101 +930,106 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════ INSTRUCTIONS ═══════════════════════════ -->
-<div id="instructions-screen" class="screen">
+<!-- ═══════════════════════════ BRIEF ═══════════════════════════ -->
+<div id="brief-screen" class="screen">
   <div class="page-wrap">
-    <div class="week-tag">Week 13 · Exercise 2</div>
-    <div class="screen-title">How This Works</div>
-    <div class="screen-sub">Yesterday you tore apart a real campaign. Today you build one. Same Netflix, same only-one-Action-matters rule: someone has to actually watch the show.</div>
+    <button class="back-btn" onclick="show('join-screen')">← Back</button>
+    <div class="week-tag">Week 13 · Exercise 2 · The Brief</div>
+    <div class="screen-title">The Netflix Brief</div>
+    <div class="screen-sub">Read this together. You'll build one IMC plan — one brand voice, three tools, under budget.</div>
 
     <div class="card">
-      <p class="section-label">The brief from Netflix</p>
-      <p style="font-size:14px;line-height:1.7;color:#333;margin-bottom:10px;"><strong>The show:</strong> <em>Stranger Things: Hawkins Class of '86</em> — a spin-off series following a new group of Hawkins High students one year after the events of the final season. 8 episodes. All drop on a Friday in October 2026.</p>
-      <p style="font-size:14px;line-height:1.7;color:#333;margin-bottom:10px;"><strong>The target:</strong> fans of the original series (16–35) who are at real risk of not coming back for a spin-off they didn't ask for.</p>
-      <p style="font-size:14px;line-height:1.7;color:#333;"><strong>The Action, again:</strong> open Netflix and watch episode 1. That's it. If they don't watch the pilot, none of this mattered.</p>
+      <p class="section-label">The show</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;"><em>Stranger Things: Hawkins Class of '86</em> — a spin-off following a new group of Hawkins High students one year after the events of the final season. 8 episodes. All drop on a Friday in October 2026.</p>
     </div>
 
     <div class="card">
-      <p class="section-label">Your six tools — reference card</p>
-      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px;">These are the six tools in the IMC toolbox from Chapter 17. You'll each take one.</p>
-      <div class="imc-grid">
-        <div class="imc-tile" style="background:var(--t-adv);">
-          <div class="imc-name">Advertising</div>
-          <div class="imc-desc">Paid, non-personal, broad reach. TV spots, billboards, banner ads, pre-roll.</div>
+      <p class="section-label">The target</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;">Fans of the original series (16–35) who are at real risk of not coming back for a spin-off they didn't ask for.</p>
+    </div>
+
+    <div class="card">
+      <p class="section-label">The Action</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;">Open Netflix and watch episode 1. That's it. If they don't watch the pilot, none of this mattered.</p>
+    </div>
+
+    <div class="aida-funnel">
+      <div class="aida-funnel-title">AIDA — how a fan gets to "press play"</div>
+      <div class="aida-stages">
+        <div class="aida-stage attention">
+          <div class="stage-name">Attention</div>
+          <div class="stage-desc">They notice the show exists</div>
         </div>
-        <div class="imc-tile" style="background:var(--t-pr);">
-          <div class="imc-name">Public Relations</div>
-          <div class="imc-desc">Earned media. Press coverage, cast interviews, stunts that get reporters to write about you.</div>
+        <div class="aida-stage interest">
+          <div class="stage-name">Interest</div>
+          <div class="stage-desc">They lean in, learn more</div>
         </div>
-        <div class="imc-tile" style="background:var(--t-sp);">
-          <div class="imc-name">Sales Promotion</div>
-          <div class="imc-desc">Short-term incentives. Free-trial codes, bundle deals, co-promo with a retailer.</div>
+        <div class="aida-stage desire">
+          <div class="stage-name">Desire</div>
+          <div class="stage-desc">They want to watch</div>
         </div>
-        <div class="imc-tile" style="background:var(--t-ps);">
-          <div class="imc-name">Personal Selling</div>
-          <div class="imc-desc">Human-to-human. Influencer partnerships, campus reps, cast-hosted watch parties.</div>
-        </div>
-        <div class="imc-tile" style="background:var(--t-dir);">
-          <div class="imc-name">Direct Marketing</div>
-          <div class="imc-desc">One-to-one, targeted. Email, push notifications, personalized in-app prompts.</div>
-        </div>
-        <div class="imc-tile" style="background:var(--t-dig);">
-          <div class="imc-name">Digital / Social</div>
-          <div class="imc-desc">Owned + organic. TikTok, Instagram, YouTube shorts, community, memes.</div>
+        <div class="aida-stage action">
+          <div class="stage-name">Action</div>
+          <div class="stage-desc">They open Netflix, press play</div>
         </div>
       </div>
+      <div class="aida-note">These stages describe one consumer's journey. Your tools run in parallel — the ranking shows where each does its heaviest lifting, not the only stage it touches.</div>
     </div>
 
     <div class="card">
       <p class="section-label">The rules</p>
       <div class="warn-banner">
-        <strong>One tool per student, no duplicates within your group.</strong><br>
-        Talk first. Agree who's taking what before anyone locks in. If your group has 3 people, pick any 3 tools. If your group has 5, pick any 5. You don't have to cover all six.
+        <strong>One brand voice across three tools. Stay under $3.5M.</strong><br>
+        Any of the six tools can be picked. Two people in a group can write for the same tool — in Phase 2 you'll decide whose tactic is stronger.
       </div>
-      <p style="font-size:13px;color:var(--muted);line-height:1.65;">Step 1 (~8 min): <strong>on your own</strong>, build a tactic card for your tool — headline, execution, target AIDA stage, and how Netflix would know it worked.</p>
-      <p style="font-size:13px;color:var(--muted);line-height:1.65;margin-top:6px;">Step 2 (~10 min): your group reads all the cards, picks the 3 strongest, drags them into order (top of funnel → Action), and writes the Big Idea + Handoff story + One Risk. You each enter the group's plan on your own device.</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;"><strong>Step 1 (~8 min):</strong> Pick one tool, write your own tactic.</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;margin-top:6px;"><strong>Step 2 (~12 min):</strong> As a group, pick 3 tools within budget, write the group's headlines, Big Idea, Handoff, and Risk.</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.65;margin-top:6px;"><strong>Step 3 (~3 min):</strong> Score your plan on brand consistency.</p>
     </div>
 
-    <button class="btn btn-burgundy" onclick="show('individual-screen')">Start — Pick My Tool →</button>
+    <button class="btn btn-burgundy" onclick="show('tool-pick-screen')">Continue — Pick Your Tool →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ TOOL PICK ═══════════════════════════ -->
+<div id="tool-pick-screen" class="screen">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="show('brief-screen')">← Back to the brief</button>
+    <div class="week-tag">Week 13 · Exercise 2 · Phase 1 setup</div>
+    <div class="screen-title">Pick Your IMC Tool</div>
+    <div class="screen-sub">Read all six together out loud as a group. Each person picks one tool to write a tactic for. It's fine if two people pick the same tool — you'll compare in Phase 2.</div>
+
+    <div class="card">
+      <p class="section-label">The six tools from Chapter 17</p>
+      <div class="tool-pick-grid" id="tool-pick-grid">
+        <!-- cards injected by JS -->
+      </div>
+    </div>
+
+    <button class="btn btn-burgundy" id="pick-continue-btn" onclick="show('individual-screen'); onEnterIndividual();" disabled>Continue — Write My Tactic →</button>
   </div>
 </div>
 
 <!-- ═══════════════════════════ INDIVIDUAL PHASE ═══════════════════════════ -->
 <div id="individual-screen" class="screen">
   <div class="page-wrap">
+    <button class="back-btn" onclick="show('tool-pick-screen')">← Change tool</button>
     <div class="phase-banner">
       <span class="phase-number">PHASE 1</span>
       <div>
         <div class="phase-title">Your Tactic Card</div>
-        <div class="phase-sub">Pick one IMC tool nobody else in your group has. Build one tactic.</div>
+        <div class="phase-sub">One tool, one tactic. Go deep, not wide.</div>
       </div>
     </div>
 
-    <div class="warn-banner">
-      <strong>Before you pick:</strong> Talk to your group. Each person takes a different tool. Don't let two people pick Advertising — you'll waste both slots.
-    </div>
-
-    <!-- Tool header -->
-    <div id="tool-header" class="tool-header empty">
-      <div class="tool-label" id="tool-label-text">Pick your IMC tool below</div>
-      <h2 id="tool-name">— your tool —</h2>
-      <div class="tool-hint" id="tool-hint">The header will change color once you pick.</div>
+    <!-- Tool header (filled from prior pick) -->
+    <div id="tool-header" class="tool-header th-adv">
+      <div class="tool-label">Your IMC Tool</div>
+      <h2 id="tool-name">—</h2>
+      <div class="tool-hint" id="tool-hint">—</div>
     </div>
 
     <div class="tool-body">
-      <div class="field">
-        <label>Which tool are you taking? (check with your group first)</label>
-        <select id="i-tool" onchange="onToolChange()">
-          <option value="">— pick one —</option>
-          <option value="adv">Advertising</option>
-          <option value="pr">Public Relations</option>
-          <option value="sp">Sales Promotion</option>
-          <option value="ps">Personal Selling</option>
-          <option value="dir">Direct Marketing</option>
-          <option value="dig">Digital / Social</option>
-        </select>
-      </div>
-
       <div class="field">
         <label>Headline — what is this tactic? (one line, under 60 chars)</label>
         <input type="text" id="i-headline" maxlength="60" placeholder='e.g., "Billboard takeover at Times Square"' oninput="onIndInput()">
@@ -812,7 +1043,7 @@ body {
       </div>
 
       <div class="field">
-        <label>Target AIDA stage — which part of the funnel does this tactic push?</label>
+        <label>Target AIDA stage — where does this tactic push the fan?</label>
         <select id="i-aida" onchange="onIndInput()">
           <option value="">— pick one —</option>
           <option value="attention">Attention — they notice the show exists</option>
@@ -832,12 +1063,12 @@ body {
     <div class="stop-gate" id="ind-gate">
       <div class="stop-tag">Stop · Group Readout</div>
       <h3>Share your tactic card with your group</h3>
-      <p>Go around. Each person reads their headline + execution + AIDA stage + metric out loud. You'll pick the 3 strongest together — but don't lock anything yet. Just read, listen, and decide which three make the best story.</p>
+      <p>Go around. Each person reads their headline + execution + AIDA stage + metric out loud. Next phase is the group plan — you'll pick 3 tools within budget together.</p>
       <button class="btn-gate" onclick="ackIndGate()">Our group shared all the cards — continue →</button>
     </div>
 
-    <button class="btn btn-burgundy" id="ind-continue-btn" onclick="goGroupPhase()" disabled style="margin-top:6px;">
-      Continue to Phase 2 — Assemble the Plan →
+    <button class="btn btn-burgundy" id="ind-continue-btn" onclick="show('group-screen'); onEnterGroup();" disabled style="margin-top:6px;">
+      Continue to Phase 2 — Build the Plan →
     </button>
   </div>
 </div>
@@ -845,38 +1076,58 @@ body {
 <!-- ═══════════════════════════ GROUP PHASE ═══════════════════════════ -->
 <div id="group-screen" class="screen">
   <div class="page-wrap">
+    <button class="back-btn" onclick="show('individual-screen')">← Back to my tactic</button>
     <div class="phase-banner">
       <span class="phase-number">PHASE 2</span>
       <div>
-        <div class="phase-title">Assemble the Plan</div>
-        <div class="phase-sub">Pick your 3 strongest tactics. Rank them. Tell the story.</div>
+        <div class="phase-title">Build the Group Plan</div>
+        <div class="phase-sub">Pick 3 tools within budget. One brand voice across all of them.</div>
+      </div>
+    </div>
+
+    <!-- Budget panel -->
+    <div class="budget-panel">
+      <div class="budget-row">
+        <span class="budget-label">Budget Remaining</span>
+        <span class="budget-value" id="budget-val">$3.5M</span>
+      </div>
+      <div class="budget-row" style="margin-bottom:0;">
+        <span class="budget-label" style="color:#bbb;">Total Cap · $3.5M</span>
+        <span class="budget-label" id="budget-spent" style="color:#bbb;">Spent · $0.0M</span>
+      </div>
+      <div class="budget-bar-wrap">
+        <div class="budget-bar" id="budget-bar" style="width:0%;"></div>
+      </div>
+      <div class="budget-msg" id="budget-msg">Pick up to 3 tools from the list below. Watch the counter.</div>
+    </div>
+
+    <div class="card">
+      <p class="section-label">Pick your 3 tools</p>
+      <p style="font-size:12px;color:var(--muted);line-height:1.55;">Click to add. Click again to remove. Each tool has a cost — stay under $3.5M.</p>
+      <div class="tool-option-grid" id="tool-option-grid">
+        <!-- tool options injected by JS -->
       </div>
     </div>
 
     <div class="card">
-      <p class="section-label">Drag to rank — top of funnel to Action</p>
-      <div class="rank-hint">Pick the 3 strongest tactics from your group. Enter each one below, then use the <strong>▲▼ arrows</strong> (or drag the card) to put them in order: Attention at the top, Action at the bottom. The ranking is the story — what hits the fan first, what moves them along, and what finally gets them to press play.</div>
-      <div class="funnel-legend">
-        <div>▲ Top (wide reach)</div>
-        <div>Middle (narrow)</div>
-        <div>▼ Action (convert)</div>
-      </div>
-      <div id="slots-container">
-        <!-- Slots injected here -->
+      <p class="section-label">Your picked tools — ranked top-of-funnel → Action</p>
+      <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:10px;">Drag the cards or use ▲▼ to reorder. Enter each tactic's headline.</p>
+      <div id="picked-container">
+        <div class="picked-empty" id="picked-empty">Pick tools above and they'll appear here as cards.</div>
       </div>
     </div>
 
     <div class="card">
       <p class="section-label">The Big Idea — one story told three ways</p>
-      <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px;">IMC isn't 6 separate campaigns. It's one idea expressed through multiple tools. What's the through-line that holds your 3 tactics together?</p>
+      <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px;">IMC isn't 3 separate campaigns. It's one idea expressed through three tools. What's the through-line that holds your plan together?</p>
       <div class="field">
         <label>Big Idea — one sentence (40 char minimum)</label>
         <textarea id="g-bigidea" rows="2" placeholder='e.g., "The Upside Down never really closed."' oninput="onGroupInput()"></textarea>
         <div class="char-count" id="bi-count">0 / 40 minimum</div>
       </div>
       <div class="field">
-        <label>Handoff story — how does tactic 1 hand off to 2, and 2 to 3? (120 char min)</label>
-        <textarea id="g-handoff" rows="3" placeholder="Start with what the fan sees first, then how they get pulled deeper, then what finally makes them open Netflix and watch." oninput="onGroupInput()"></textarea>
+        <label>Handoff story — how do the 3 tactics reinforce each other? (120 char min)</label>
+        <textarea id="g-handoff" rows="3" placeholder="Start with what the fan sees first, then how they get pulled deeper, then what finally makes them open Netflix and watch. How does each tactic make the others hit harder?" oninput="onGroupInput()"></textarea>
         <div class="char-count" id="ho-count">0 / 120 minimum</div>
       </div>
       <div class="field">
@@ -886,7 +1137,37 @@ body {
       </div>
     </div>
 
-    <p id="submit-note" style="font-size:13px;color:var(--muted);margin-top:6px;text-align:center;">Submitting this exercise records your participation and case work for today's class.</p>
+    <button class="btn btn-burgundy" id="group-continue-btn" onclick="show('brand-score-screen'); onEnterBrandScore();" disabled style="margin-top:6px;">
+      Continue to Self-Score →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ BRAND SCORE ═══════════════════════════ -->
+<div id="brand-score-screen" class="screen">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="show('group-screen')">← Back to the plan</button>
+    <div class="phase-banner">
+      <span class="phase-number">PHASE 3</span>
+      <div>
+        <div class="phase-title">Brand Consistency Self-Score</div>
+        <div class="phase-sub">Does your plan sound like one brand — or three?</div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:16px;">IMC is about <strong>one brand voice across tools</strong>. Rate your group's plan honestly. 1 = "three different campaigns with a Netflix logo." 5 = "one campaign, three instruments."</p>
+
+    <div id="brand-q-container">
+      <!-- questions injected by JS -->
+    </div>
+
+    <div class="live-band">
+      <div class="live-band-label">Live Score</div>
+      <div><span class="live-band-score" id="live-score">0</span><span class="live-band-out"> / 25</span></div>
+      <div class="live-band-msg" id="live-msg">Answer all 5 to see your band.</div>
+    </div>
+
+    <p id="submit-note" style="font-size:13px;color:var(--muted);margin-top:6px;text-align:center;">Submitting records your participation and case work for today's class.</p>
     <button class="btn btn-burgundy" id="submit-btn" onclick="submitAll()" disabled style="margin-top:6px;">
       Submit &amp; Record Participation →
     </button>
@@ -904,12 +1185,15 @@ body {
     <p class="section-label">Your individual tactic card</p>
     <div id="sum-individual"></div>
 
-    <p class="section-label" style="margin-top:20px;">Your group's 3-tactic plan</p>
+    <p class="section-label" style="margin-top:18px;">Your group's 3-tactic plan</p>
     <div id="sum-group"></div>
+
+    <p class="section-label" style="margin-top:18px;">Brand consistency self-score</p>
+    <div id="sum-score"></div>
 
     <div class="debrief-box">
       <h3>Bring to the Debrief</h3>
-      <p>Be ready to share: (1) your group's Big Idea, (2) which tactic is doing the heavy lifting at Action — the one that actually closes the loop to a Netflix view, and (3) the risk you called out.</p>
+      <p>Be ready to share: (1) your group's Big Idea, (2) what you cut to stay on budget and whether it hurt the story, (3) your brand-consistency score and which question you scored lowest on.</p>
     </div>
   </div>
 </div>
@@ -918,18 +1202,46 @@ body {
 <script>
 const PW = 'VECNA25';
 const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
+const BUDGET_CAP = 3.5;  // $3.5M
 
 /* ── TOOL DATA ── */
 const TOOLS = {
-  adv: { name: 'Advertising',      colorClass: 'th-adv', hint: 'Paid, broad, non-personal. Reach is your job.' },
-  pr:  { name: 'Public Relations', colorClass: 'th-pr',  hint: 'Earned media. Credibility is your weapon.' },
-  sp:  { name: 'Sales Promotion',  colorClass: 'th-sp',  hint: 'Short-term incentives. Close the gap between want and watch.' },
-  ps:  { name: 'Personal Selling', colorClass: 'th-ps',  hint: 'Human-to-human. A person you trust is telling you about it.' },
-  dir: { name: 'Direct Marketing', colorClass: 'th-dir', hint: 'One-to-one, targeted. You know who you\'re talking to.' },
-  dig: { name: 'Digital / Social', colorClass: 'th-dig', hint: 'Owned + organic. The fans carry it for you.' }
+  adv: { name: 'Advertising',      colorClass: 'th-adv', colorKey: 'adv', cost: 2.5,
+         desc: 'Paid, non-personal, broad reach. TV spots, billboards, banner ads, pre-roll.',
+         hint: 'Paid, broad, non-personal. Reach is your job.' },
+  pr:  { name: 'Public Relations', colorClass: 'th-pr',  colorKey: 'pr',  cost: 0.8,
+         desc: 'Earned media. Press coverage, cast interviews, stunts that get reporters to write about you.',
+         hint: 'Earned media. Credibility is your weapon.' },
+  sp:  { name: 'Sales Promotion',  colorClass: 'th-sp',  colorKey: 'sp',  cost: 1.0,
+         desc: 'Short-term incentives. Free-trial codes, bundle deals, co-promo with a retailer.',
+         hint: 'Short-term incentives. Close the gap between want and watch.' },
+  ps:  { name: 'Personal Selling', colorClass: 'th-ps',  colorKey: 'ps',  cost: 1.5,
+         desc: 'Human-to-human. Influencer partnerships, campus reps, cast-hosted watch parties.',
+         hint: 'Human-to-human. A person you trust is telling you about it.' },
+  dir: { name: 'Direct Marketing', colorClass: 'th-dir', colorKey: 'dir', cost: 0.3,
+         desc: 'One-to-one, targeted. Email, push notifications, personalized in-app prompts.',
+         hint: 'One-to-one, targeted. You know who you\'re talking to.' },
+  dig: { name: 'Digital / Social', colorClass: 'th-dig', colorKey: 'dig', cost: 0.5,
+         desc: 'Owned + organic. TikTok, Instagram, YouTube shorts, community, memes.',
+         hint: 'Owned + organic. The fans carry it for you.' }
 };
 
 const TOOL_ORDER = ['adv','pr','sp','ps','dir','dig'];
+
+/* ── BRAND SCORE QUESTIONS ── */
+const BRAND_QUESTIONS = [
+  "Does your Big Idea show up in all 3 tactics — or does one feel off-brand?",
+  "Would a Stranger Things fan recognize all 3 as the same campaign without being told?",
+  "Does the tone match across tactics (same vibe on PR as on social)?",
+  "Do visual motifs or language carry across (imagery, taglines, a recurring phrase)?",
+  "Does each tactic reinforce the others — or could one be swapped for a competitor's and no one would notice?"
+];
+
+function bandLabel(score) {
+  if (score <= 11) return { label: "Six campaigns, one logo.", msg: "Pieces don't cohere. The tools don't recognize each other." };
+  if (score <= 18) return { label: "Getting there.", msg: "There's a through-line, but one tactic is drifting off-brand." };
+  return { label: "One voice, three tools.", msg: "This is what IMC is supposed to feel like." };
+}
 
 /* ── STATE ── */
 const state = {
@@ -938,16 +1250,16 @@ const state = {
     tool: '', headline: '', execution: '', aida: '', metric: '',
     gateAcked: false
   },
-  group: {
-    slots: [
-      { tool: '', headline: '', aida: '' },
-      { tool: '', headline: '', aida: '' },
-      { tool: '', headline: '', aida: '' }
-    ],
+  plan: {
+    picked: [],   // array of tool keys, ordered (top→action)
+    headlines: {  // keyed by tool
+      adv: '', pr: '', sp: '', ps: '', dir: '', dig: ''
+    },
     bigIdea: '',
     handoff: '',
     risk: ''
-  }
+  },
+  brandScore: [0, 0, 0, 0, 0]  // 5 questions, 1-5 each
 };
 
 /* ── SCREEN HELPERS ── */
@@ -978,7 +1290,8 @@ document.addEventListener('DOMContentLoaded', () => {
     el.addEventListener('input', validateJoin);
     el.addEventListener('change', validateJoin);
   });
-  renderSlots();
+  renderToolPickGrid();
+  renderBrandQuestions();
 });
 
 function validateJoin() {
@@ -993,7 +1306,30 @@ function doJoin() {
   state.name = document.getElementById('j-name').value.trim();
   state.email = document.getElementById('j-email').value.trim();
   state.group = parseInt(document.getElementById('j-group').value);
-  show('instructions-screen');
+  show('brief-screen');
+}
+
+/* ── TOOL PICKER (clickable cards before Phase 1) ── */
+function renderToolPickGrid() {
+  const grid = document.getElementById('tool-pick-grid');
+  if (!grid) return;
+  grid.innerHTML = TOOL_ORDER.map(k => {
+    const t = TOOLS[k];
+    const sel = state.individual.tool === k ? 'selected' : '';
+    return `
+      <button type="button" class="tool-pick-card ${sel}" data-tool="${k}" onclick="pickTool('${k}')">
+        <div class="tp-check">✓</div>
+        <div class="tp-color-bar ${t.colorKey}"></div>
+        <div class="tp-name">${t.name}</div>
+        <div class="tp-desc">${t.desc}</div>
+      </button>`;
+  }).join('');
+  document.getElementById('pick-continue-btn').disabled = !state.individual.tool;
+}
+
+function pickTool(key) {
+  state.individual.tool = key;
+  renderToolPickGrid();
 }
 
 /* ── COUNT HELPERS ── */
@@ -1010,25 +1346,21 @@ function updateCount(id, countId, min, max) {
 }
 
 /* ── INDIVIDUAL PHASE ── */
-function onToolChange() {
-  const val = document.getElementById('i-tool').value;
-  state.individual.tool = val;
+function onEnterIndividual() {
+  // Update header from selected tool
+  const t = TOOLS[state.individual.tool];
+  if (!t) return;
   const header = document.getElementById('tool-header');
-  const label = document.getElementById('tool-label-text');
-  const name = document.getElementById('tool-name');
-  const hint = document.getElementById('tool-hint');
-  if (val) {
-    const t = TOOLS[val];
-    header.className = `tool-header ${t.colorClass}`;
-    label.textContent = 'Your IMC Tool';
-    name.textContent = t.name;
-    hint.textContent = t.hint;
-  } else {
-    header.className = 'tool-header empty';
-    label.textContent = 'Pick your IMC tool below';
-    name.textContent = '— your tool —';
-    hint.textContent = 'The header will change color once you pick.';
-  }
+  header.className = `tool-header ${t.colorClass}`;
+  document.getElementById('tool-name').textContent = t.name;
+  document.getElementById('tool-hint').textContent = t.hint;
+
+  // Restore any prior input values
+  document.getElementById('i-headline').value = state.individual.headline;
+  document.getElementById('i-execution').value = state.individual.execution;
+  document.getElementById('i-aida').value = state.individual.aida;
+  document.getElementById('i-metric').value = state.individual.metric;
+
   onIndInput();
 }
 
@@ -1054,8 +1386,6 @@ function updateIndGate() {
   const gate = document.getElementById('ind-gate');
   if (done && !i.gateAcked) {
     gate.classList.add('visible');
-  } else if (i.gateAcked) {
-    gate.classList.remove('visible');
   } else {
     gate.classList.remove('visible');
   }
@@ -1068,122 +1398,194 @@ function ackIndGate() {
   document.getElementById('ind-continue-btn').disabled = false;
 }
 
-function goGroupPhase() {
-  show('group-screen');
+/* ── GROUP PHASE ── */
+function onEnterGroup() {
+  // Auto-add student's tool to plan on first entry, with their headline
+  if (state.plan.picked.length === 0 && state.individual.tool) {
+    state.plan.picked = [state.individual.tool];
+    state.plan.headlines[state.individual.tool] = state.individual.headline || '';
+  }
+  // Restore group text fields
+  document.getElementById('g-bigidea').value = state.plan.bigIdea;
+  document.getElementById('g-handoff').value = state.plan.handoff;
+  document.getElementById('g-risk').value = state.plan.risk;
+
+  renderToolOptions();
+  renderPickedCards();
+  updateBudgetPanel();
+  onGroupInput();
 }
 
-/* ── GROUP PHASE — DRAG TO RANK ── */
-function renderSlots() {
-  const container = document.getElementById('slots-container');
-  if (!container) return;
-  container.innerHTML = '';
-  state.group.slots.forEach((slot, idx) => {
-    const div = document.createElement('div');
-    div.className = 'slot';
-    div.draggable = true;
-    div.dataset.idx = idx;
-    div.innerHTML = `
-      <div class="slot-rank">${idx + 1}</div>
+function renderToolOptions() {
+  const grid = document.getElementById('tool-option-grid');
+  if (!grid) return;
+  const spent = state.plan.picked.reduce((s, k) => s + TOOLS[k].cost, 0);
+  const atMax = state.plan.picked.length >= 3;
+  grid.innerHTML = TOOL_ORDER.map(k => {
+    const t = TOOLS[k];
+    const picked = state.plan.picked.includes(k);
+    const remaining = BUDGET_CAP - spent;
+    const wouldOver = !picked && t.cost > remaining + 0.0001;
+    const disabled = !picked && (atMax || wouldOver);
+    const classes = ['tool-option'];
+    if (picked) classes.push('picked');
+    if (disabled) classes.push('disabled');
+    return `
+      <div class="${classes.join(' ')}" onclick="${disabled ? '' : `toggleTool('${k}')`}">
+        <div class="to-left">
+          <div class="to-color ${t.colorKey}"></div>
+          <div class="to-name">${t.name}</div>
+        </div>
+        <div class="to-cost">$${t.cost.toFixed(1)}M</div>
+      </div>`;
+  }).join('');
+}
 
-      <div class="slot-move-btns">
-        <button type="button" onclick="moveSlot(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} aria-label="Move up">▲</button>
-        <button type="button" onclick="moveSlot(${idx}, 1)" ${idx === state.group.slots.length - 1 ? 'disabled' : ''} aria-label="Move down">▼</button>
-      </div>
-      <div class="slot-row">
-        <div class="slot-field">
-          <label>Tool used</label>
-          <select data-slot="${idx}" data-field="tool" onchange="onSlotChange(event)">
-            <option value="">— pick —</option>
-            ${TOOL_ORDER.map(k => `<option value="${k}" ${slot.tool===k?'selected':''}>${TOOLS[k].name}</option>`).join('')}
-          </select>
-        </div>
-        <div class="slot-field">
-          <label>Target AIDA stage</label>
-          <select data-slot="${idx}" data-field="aida" onchange="onSlotChange(event)">
-            <option value="">— pick —</option>
-            <option value="attention" ${slot.aida==='attention'?'selected':''}>Attention</option>
-            <option value="interest"  ${slot.aida==='interest'?'selected':''}>Interest</option>
-            <option value="desire"    ${slot.aida==='desire'?'selected':''}>Desire</option>
-            <option value="action"    ${slot.aida==='action'?'selected':''}>Action</option>
-          </select>
-        </div>
-      </div>
-      <div class="slot-row" style="grid-template-columns:1fr;">
-        <div class="slot-field">
-          <label>Headline — one line</label>
-          <input type="text" maxlength="60" data-slot="${idx}" data-field="headline" value="${slot.headline.replace(/"/g,'&quot;')}" placeholder="e.g., Times Square billboard takeover" oninput="onSlotChange(event)">
-        </div>
-      </div>
-    `;
-    // Drag events
-    div.addEventListener('dragstart', onDragStart);
-    div.addEventListener('dragover', onDragOver);
-    div.addEventListener('drop', onDrop);
-    div.addEventListener('dragend', onDragEnd);
-    div.addEventListener('dragleave', onDragLeave);
-    container.appendChild(div);
-  });
+function toggleTool(key) {
+  const idx = state.plan.picked.indexOf(key);
+  if (idx >= 0) {
+    state.plan.picked.splice(idx, 1);
+    state.plan.headlines[key] = '';
+  } else {
+    if (state.plan.picked.length >= 3) return;
+    const spent = state.plan.picked.reduce((s, k) => s + TOOLS[k].cost, 0);
+    if (spent + TOOLS[key].cost > BUDGET_CAP + 0.0001) return;
+    state.plan.picked.push(key);
+    // Auto-fill headline if this is the student's own tool
+    if (key === state.individual.tool && !state.plan.headlines[key]) {
+      state.plan.headlines[key] = state.individual.headline || '';
+    }
+  }
+  renderToolOptions();
+  renderPickedCards();
+  updateBudgetPanel();
   updateGroupGate();
 }
 
-function moveSlot(idx, dir) {
+function renderPickedCards() {
+  const container = document.getElementById('picked-container');
+  const empty = document.getElementById('picked-empty');
+  if (state.plan.picked.length === 0) {
+    container.innerHTML = `<div class="picked-empty" id="picked-empty">Pick tools above and they'll appear here as cards.</div>`;
+    return;
+  }
+  container.innerHTML = state.plan.picked.map((k, idx) => {
+    const t = TOOLS[k];
+    const isMine = k === state.individual.tool;
+    const headline = state.plan.headlines[k] || '';
+    const safeHeadline = headline.replace(/"/g, '&quot;');
+    return `
+      <div class="picked-card" draggable="true" data-idx="${idx}"
+           ondragstart="onCardDragStart(event)" ondragover="onCardDragOver(event)"
+           ondrop="onCardDrop(event)" ondragend="onCardDragEnd(event)" ondragleave="onCardDragLeave(event)">
+        <div class="pc-header ${t.colorKey}">
+          <span class="pc-rank">#${idx+1}</span>
+          <span class="pc-tool">${t.name} · $${t.cost.toFixed(1)}M</span>
+          <div class="pc-moves">
+            <button type="button" onclick="movePicked(${idx}, -1)" ${idx===0?'disabled':''} aria-label="Move up">▲</button>
+            <button type="button" onclick="movePicked(${idx}, 1)" ${idx===state.plan.picked.length-1?'disabled':''} aria-label="Move down">▼</button>
+          </div>
+          <span class="pc-drag">⋮⋮</span>
+        </div>
+        <div class="pc-body">
+          <label>Headline — what this tactic is (one line)</label>
+          <input type="text" maxlength="60" value="${safeHeadline}"
+                 placeholder="e.g., Times Square billboard takeover"
+                 oninput="onHeadlineChange('${k}', this.value)">
+          ${isMine ? '<div class="pc-note">This is your tool — we pre-filled your Phase 1 headline. Edit if the group agreed on something different.</div>' : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function onHeadlineChange(key, val) {
+  state.plan.headlines[key] = val;
+  updateGroupGate();
+}
+
+function movePicked(idx, dir) {
   const target = idx + dir;
-  if (target < 0 || target >= state.group.slots.length) return;
-  const a = { ...state.group.slots[idx] };
-  const b = { ...state.group.slots[target] };
-  state.group.slots[idx] = b;
-  state.group.slots[target] = a;
-  renderSlots();
+  if (target < 0 || target >= state.plan.picked.length) return;
+  const a = state.plan.picked[idx];
+  state.plan.picked[idx] = state.plan.picked[target];
+  state.plan.picked[target] = a;
+  renderPickedCards();
 }
 
-function onSlotChange(e) {
-  const idx = parseInt(e.target.dataset.slot);
-  const field = e.target.dataset.field;
-  state.group.slots[idx][field] = e.target.value;
-  updateGroupGate();
-}
-
-/* Drag handlers */
+/* Drag + drop for picked cards */
 let dragSrcIdx = null;
-function onDragStart(e) {
-  dragSrcIdx = parseInt(this.dataset.idx);
-  this.classList.add('dragging');
+function onCardDragStart(e) {
+  dragSrcIdx = parseInt(e.currentTarget.dataset.idx);
+  e.currentTarget.classList.add('dragging');
   e.dataTransfer.effectAllowed = 'move';
+  // Required in Firefox
+  try { e.dataTransfer.setData('text/plain', String(dragSrcIdx)); } catch (_) {}
 }
-function onDragOver(e) {
+function onCardDragOver(e) {
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
-  this.classList.add('drag-over');
+  e.currentTarget.classList.add('drag-over');
   return false;
 }
-function onDragLeave() {
-  this.classList.remove('drag-over');
+function onCardDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
 }
-function onDrop(e) {
+function onCardDrop(e) {
+  e.preventDefault();
   e.stopPropagation();
-  const destIdx = parseInt(this.dataset.idx);
+  const destIdx = parseInt(e.currentTarget.dataset.idx);
   if (dragSrcIdx !== null && dragSrcIdx !== destIdx) {
-    // Swap in state
-    const srcSlot = { ...state.group.slots[dragSrcIdx] };
-    const destSlot = { ...state.group.slots[destIdx] };
-    state.group.slots[dragSrcIdx] = destSlot;
-    state.group.slots[destIdx] = srcSlot;
-    renderSlots();
+    const moved = state.plan.picked.splice(dragSrcIdx, 1)[0];
+    state.plan.picked.splice(destIdx, 0, moved);
+    renderPickedCards();
   }
   return false;
 }
-function onDragEnd() {
-  document.querySelectorAll('.slot').forEach(s => {
-    s.classList.remove('dragging');
-    s.classList.remove('drag-over');
+function onCardDragEnd() {
+  document.querySelectorAll('.picked-card').forEach(c => {
+    c.classList.remove('dragging');
+    c.classList.remove('drag-over');
   });
   dragSrcIdx = null;
 }
 
+function updateBudgetPanel() {
+  const spent = state.plan.picked.reduce((s, k) => s + TOOLS[k].cost, 0);
+  const remaining = BUDGET_CAP - spent;
+  const pct = Math.min(100, (spent / BUDGET_CAP) * 100);
+  const bar = document.getElementById('budget-bar');
+  const val = document.getElementById('budget-val');
+  const spentLabel = document.getElementById('budget-spent');
+  const msg = document.getElementById('budget-msg');
+
+  bar.style.width = pct + '%';
+  val.textContent = `$${remaining.toFixed(1)}M`;
+  spentLabel.textContent = `Spent · $${spent.toFixed(1)}M`;
+
+  const over = spent > BUDGET_CAP + 0.0001;
+  if (over) {
+    bar.classList.add('over');
+    val.classList.add('over');
+    msg.classList.add('over');
+    msg.textContent = 'Over budget. Remove a tool to continue.';
+  } else {
+    bar.classList.remove('over');
+    val.classList.remove('over');
+    msg.classList.remove('over');
+    if (state.plan.picked.length === 0) {
+      msg.textContent = 'Pick up to 3 tools from the list below. Watch the counter.';
+    } else if (state.plan.picked.length < 3) {
+      msg.textContent = `${state.plan.picked.length} picked · room for ${3 - state.plan.picked.length} more.`;
+    } else {
+      msg.textContent = `All 3 picked · $${remaining.toFixed(1)}M unspent.`;
+    }
+  }
+}
+
 function onGroupInput() {
-  state.group.bigIdea = document.getElementById('g-bigidea').value;
-  state.group.handoff = document.getElementById('g-handoff').value;
-  state.group.risk = document.getElementById('g-risk').value;
+  state.plan.bigIdea = document.getElementById('g-bigidea').value;
+  state.plan.handoff = document.getElementById('g-handoff').value;
+  state.plan.risk = document.getElementById('g-risk').value;
   updateCount('g-bigidea', 'bi-count', 40);
   updateCount('g-handoff', 'ho-count', 120);
   updateCount('g-risk', 'risk-count', 40);
@@ -1191,23 +1593,67 @@ function onGroupInput() {
 }
 
 function updateGroupGate() {
-  const slotsDone = state.group.slots.every(s =>
-    s.tool && s.headline.trim().length > 0 && s.aida
-  );
-  // No duplicate tools
-  const tools = state.group.slots.map(s => s.tool).filter(Boolean);
-  const noDup = new Set(tools).size === tools.length;
-  const g = state.group;
+  const spent = state.plan.picked.reduce((s, k) => s + TOOLS[k].cost, 0);
+  const inBudget = spent <= BUDGET_CAP + 0.0001;
+  const threePicked = state.plan.picked.length === 3;
+  const allHeadlines = state.plan.picked.every(k => (state.plan.headlines[k] || '').trim().length > 0);
+  const g = state.plan;
   const textDone =
     g.bigIdea.trim().length >= 40 &&
     g.handoff.trim().length >= 120 &&
     g.risk.trim().length >= 40;
-  const btn = document.getElementById('submit-btn');
-  if (btn) btn.disabled = !(slotsDone && noDup && textDone);
+  const btn = document.getElementById('group-continue-btn');
+  if (btn) btn.disabled = !(inBudget && threePicked && allHeadlines && textDone);
+}
+
+/* ── BRAND SCORE PHASE ── */
+function renderBrandQuestions() {
+  const container = document.getElementById('brand-q-container');
+  if (!container) return;
+  container.innerHTML = BRAND_QUESTIONS.map((q, i) => {
+    const buttons = [1,2,3,4,5].map(n => {
+      const sel = state.brandScore[i] === n ? 'selected' : '';
+      return `<button type="button" class="score-btn ${sel}" data-q="${i}" data-n="${n}" onclick="pickScore(${i}, ${n})">${n}</button>`;
+    }).join('');
+    return `
+      <div class="brand-q">
+        <div class="brand-q-text"><span class="qn">Q${i+1}</span>${q}</div>
+        <div class="score-scale">${buttons}</div>
+        <div class="score-anchors"><span>Off-brand</span><span>On-brand</span></div>
+      </div>`;
+  }).join('');
+  updateLiveScore();
+}
+
+function pickScore(qIdx, val) {
+  state.brandScore[qIdx] = val;
+  renderBrandQuestions();
+}
+
+function onEnterBrandScore() {
+  renderBrandQuestions();
+}
+
+function updateLiveScore() {
+  const filled = state.brandScore.filter(v => v > 0).length;
+  const total = state.brandScore.reduce((a, b) => a + b, 0);
+  document.getElementById('live-score').textContent = total;
+  const msgEl = document.getElementById('live-msg');
+  if (filled < 5) {
+    msgEl.textContent = `${filled} of 5 answered. Answer all 5 to see your band.`;
+  } else {
+    const band = bandLabel(total);
+    msgEl.innerHTML = `<strong style="color:white;">${band.label}</strong> — ${band.msg}`;
+  }
+  document.getElementById('submit-btn').disabled = filled < 5;
 }
 
 /* ── SUBMIT ── */
 function submitAll() {
+  const spent = state.plan.picked.reduce((s, k) => s + TOOLS[k].cost, 0);
+  const scoreTotal = state.brandScore.reduce((a, b) => a + b, 0);
+  const band = bandLabel(scoreTotal);
+
   const payload = {
     exercise: 'W13.2',
     name: state.name,
@@ -1222,16 +1668,27 @@ function submitAll() {
       metric: state.individual.metric
     },
     group_plan: {
-      slots: state.group.slots.map((s, i) => ({
+      picked_tools: state.plan.picked.map((k, i) => ({
         rank: i + 1,
-        tool: s.tool,
-        tool_name: TOOLS[s.tool] ? TOOLS[s.tool].name : '',
-        headline: s.headline,
-        aida: s.aida
+        tool: k,
+        tool_name: TOOLS[k].name,
+        cost_millions: TOOLS[k].cost,
+        headline: state.plan.headlines[k] || ''
       })),
-      big_idea: state.group.bigIdea,
-      handoff: state.group.handoff,
-      risk: state.group.risk
+      budget_cap_millions: BUDGET_CAP,
+      budget_spent_millions: Number(spent.toFixed(2)),
+      big_idea: state.plan.bigIdea,
+      handoff: state.plan.handoff,
+      risk: state.plan.risk
+    },
+    brand_score: {
+      q1: state.brandScore[0],
+      q2: state.brandScore[1],
+      q3: state.brandScore[2],
+      q4: state.brandScore[3],
+      q5: state.brandScore[4],
+      total: scoreTotal,
+      band: band.label
     },
     timestamp: new Date().toISOString()
   };
@@ -1260,30 +1717,33 @@ function renderSummary() {
     <div class="sum-card">
       <div class="sum-card-header" style="background:var(--burgundy);">
         <span>${toolName(i.tool)} · ${stageName(i.aida)}</span>
-        <h3>${i.headline || '—'}</h3>
+        <h3>${escapeHtml(i.headline) || '—'}</h3>
       </div>
       <div class="sum-card-body">
         <div class="sum-field">
           <div class="sum-field-label">Execution</div>
-          <div class="sum-field-value">${(i.execution || '—').replace(/\n/g,'<br>')}</div>
+          <div class="sum-field-value">${escapeHtml(i.execution).replace(/\n/g,'<br>') || '—'}</div>
         </div>
         <div class="sum-field">
           <div class="sum-field-label">Success metric</div>
-          <div class="sum-field-value">${i.metric || '—'}</div>
+          <div class="sum-field-value">${escapeHtml(i.metric) || '—'}</div>
         </div>
       </div>
     </div>`;
 
   // Group plan
-  const g = state.group;
+  const g = state.plan;
+  const spent = state.plan.picked.reduce((s, k) => s + TOOLS[k].cost, 0);
   let slotsHtml = '';
-  g.slots.forEach((s, idx) => {
+  g.picked.forEach((k, idx) => {
+    const t = TOOLS[k];
     slotsHtml += `
       <div class="sum-slot">
         <div class="sum-slot-rank">${idx + 1}</div>
         <div class="sum-slot-body">
-          <div class="sum-slot-tool">${toolName(s.tool)} · ${stageName(s.aida)}</div>
-          <div class="sum-slot-head">${s.headline || '—'}</div>
+          <div class="sum-slot-tool">${t.name}</div>
+          <div class="sum-slot-head">${escapeHtml(g.headlines[k]) || '—'}</div>
+          <div class="sum-slot-cost">Cost: $${t.cost.toFixed(1)}M</div>
         </div>
       </div>`;
   });
@@ -1291,25 +1751,59 @@ function renderSummary() {
   document.getElementById('sum-group').innerHTML = `
     <div class="sum-card">
       <div class="sum-card-header">
-        <span>Ranked tactics · Top of funnel → Action</span>
+        <span>Ranked tactics · Top of funnel → Action · $${spent.toFixed(1)}M of $${BUDGET_CAP.toFixed(1)}M</span>
         <h3>The 3-Tactic Plan</h3>
       </div>
       <div class="sum-card-body">
         ${slotsHtml}
         <div class="sum-field" style="margin-top:14px;">
           <div class="sum-field-label">Big Idea</div>
-          <div class="sum-field-value">${g.bigIdea || '—'}</div>
+          <div class="sum-field-value">${escapeHtml(g.bigIdea) || '—'}</div>
         </div>
         <div class="sum-field">
           <div class="sum-field-label">Handoff story</div>
-          <div class="sum-field-value">${(g.handoff || '—').replace(/\n/g,'<br>')}</div>
+          <div class="sum-field-value">${escapeHtml(g.handoff).replace(/\n/g,'<br>') || '—'}</div>
         </div>
         <div class="sum-field">
           <div class="sum-field-label">One risk</div>
-          <div class="sum-field-value">${g.risk || '—'}</div>
+          <div class="sum-field-value">${escapeHtml(g.risk) || '—'}</div>
         </div>
       </div>
     </div>`;
+
+  // Brand score
+  const scoreTotal = state.brandScore.reduce((a, b) => a + b, 0);
+  const band = bandLabel(scoreTotal);
+  let qRows = '';
+  BRAND_QUESTIONS.forEach((q, idx) => {
+    qRows += `
+      <div class="sum-field">
+        <div class="sum-field-label">Q${idx+1}: ${escapeHtml(q)}</div>
+        <div class="sum-field-value"><strong>${state.brandScore[idx]}</strong> / 5</div>
+      </div>`;
+  });
+
+  document.getElementById('sum-score').innerHTML = `
+    <div class="sum-card">
+      <div class="sum-card-header" style="background:#1a1d23;">
+        <span>Brand consistency self-score</span>
+        <h3>${scoreTotal} / 25 · "${band.label}"</h3>
+      </div>
+      <div class="sum-card-body">
+        <div class="sum-field-value" style="font-style:italic;color:var(--muted);margin-bottom:12px;">${band.msg}</div>
+        ${qRows}
+      </div>
+    </div>`;
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 </script>
 </body>
