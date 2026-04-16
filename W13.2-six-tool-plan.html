@@ -879,6 +879,17 @@ body {
   .tool-pick-grid { grid-template-columns: 1fr; }
   .tool-option-grid { grid-template-columns: 1fr; }
 }
+
+/* ── NORTH STAR HINT ── persistent brand voice reminder */
+.north-star-hint {
+  font-size: 0.82rem;
+  font-style: italic;
+  color: #555;
+  margin: 0.4rem 0 0.6rem 0;
+  padding: 0.3rem 0.6rem;
+  border-left: 3px solid #2E7D32;
+  background: #f6fbf6;
+}
 </style>
 </head>
 <body>
@@ -891,6 +902,7 @@ body {
     <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;">
       Six IMC tools. One story. Build the launch plan for a Stranger Things spin-off.
     </p>
+    <p class="north-star-hint">One brand voice. Every tactic sounds like the same show.</p>
     <div class="pw-input-wrap">
       <input type="text" id="pw-input" maxlength="10" placeholder="CLASS PASSWORD" autocomplete="off"
         onkeydown="if(event.key==='Enter') checkPw()">
@@ -907,6 +919,7 @@ body {
     <div class="week-tag">Week 13 · Exercise 2</div>
     <div class="screen-title">Get set up</div>
     <div class="screen-sub">You're the launch agency. Netflix just greenlit a Stranger Things spin-off and they want a full IMC plan — one brand voice across the tools you choose.</div>
+    <p class="north-star-hint">Your job: one brand voice across every tool your group picks.</p>
     <div class="card">
       <div class="field">
         <label>Your First Name</label>
@@ -979,7 +992,7 @@ body {
     <div class="card">
       <p class="section-label">The rules</p>
       <div class="warn-banner">
-        <strong>One brand voice across 2 or 3 tools. Full $3.5M is yours to spend.</strong><br>
+        <strong><strong style="color:#2E7D32;">One brand voice</strong> across 2 or 3 tools. Full $3.5M is yours to spend.</strong><br>
         Any of the six tools can be picked. Two people in a group can write for the same tool — in Phase 2 you'll decide whose tactic is stronger.
       </div>
       <p style="font-size:13px;color:var(--muted);line-height:1.65;"><strong>Step 1 (~8 min):</strong> Pick one tool, write your own tactic.</p>
@@ -1030,6 +1043,7 @@ body {
     </div>
 
     <div class="tool-body">
+      <p class="north-star-hint">Write this as if the audience has already seen your other tools. Same show. Same voice.</p>
       <div class="field">
         <label>Headline — what is this tactic? (one line, under 60 chars)</label>
         <input type="text" id="i-headline" maxlength="60" placeholder='e.g., "Billboard takeover at Times Square"' oninput="onIndInput()">
@@ -1067,6 +1081,7 @@ body {
       <button class="btn-gate" onclick="ackIndGate()">Our group shared all the cards — continue →</button>
     </div>
 
+    <p class="north-star-hint">Does every tactic sound like it's advertising the same show? If not, fix it before Phase 2.</p>
     <button class="btn btn-burgundy" id="ind-continue-btn" onclick="show('group-screen'); onEnterGroup();" disabled style="margin-top:6px;">
       Continue to Phase 2 — Build the Plan →
     </button>
@@ -1101,6 +1116,8 @@ body {
       <div class="budget-msg" id="budget-msg">Pick 2 or 3 tools. Spend up to $3.5M.</div>
     </div>
 
+    <p class="north-star-hint">The tools change. The story doesn't.</p>
+
     <div class="card">
       <p class="section-label">Pick your tools (2 or 3)</p>
       <p style="font-size:12px;color:var(--muted);line-height:1.55;">Click to add. Click again to remove. Each tool has a cost — stay within $3.5M. Pick 2 or 3 tools total.</p>
@@ -1122,6 +1139,7 @@ body {
       <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px;">IMC isn't separate campaigns. It's one idea expressed through each tool. What's the through-line that holds your plan together?</p>
       <div class="field">
         <label>Big Idea — one sentence (40 char minimum)</label>
+        <p class="north-star-hint">Big Idea = the one sentence every tactic is trying to say.</p>
         <textarea id="g-bigidea" rows="2" placeholder='e.g., "The Upside Down never really closed."' oninput="onGroupInput()"></textarea>
         <div class="char-count" id="bi-count">0 / 40 minimum</div>
       </div>
@@ -1156,6 +1174,8 @@ body {
     </div>
 
     <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:16px;">IMC is about <strong>one brand voice across tools</strong>. Rate your group's plan honestly. 1 = "three different campaigns with a Netflix logo." 5 = "one campaign, three instruments."</p>
+
+    <p class="north-star-hint">You're scoring whether your plan tells one story — not whether you used the tools correctly.</p>
 
     <div id="brand-q-container">
       <!-- questions injected by JS -->
