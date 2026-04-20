@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W14.2 — Build the Content Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #f5f6f8;
+  --surface: #ffffff;
+  --border:  #e2e5eb;
+  --text:    #1a1d23;
+  --muted:   #6b7280;
+  --radius:  10px;
+  --shadow:  0 2px 12px rgba(0,0,0,0.07);
+
+  /* TAYA palette */
+  --taya-slate:  #1E3A5F;
+  --taya-amber:  #F59E0B;
+  --taya-rust:   #B45309;
+
+  /* 4E colors */
+  --excite:        #DC2626;
+  --excite-lt:     #FEE2E2;
+  --educate:       #1D4ED8;
+  --educate-lt:    #DBEAFE;
+  --experience:    #059669;
+  --experience-lt: #D1FAE5;
+  --engage:        #7C3AED;
+  --engage-lt:     #EDE9FE;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── SCREENS — CRITICAL: ID specificity bug fix ── */
+.screen { display: none; }
+.screen.active { display: block; }
+#pw-screen.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* ── LAYOUT ── */
+.page-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 20px 20px 80px;
+}
+
+.week-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--taya-rust);
+}
+
+.screen-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.screen-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ── BACK BUTTON ── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.15s;
+}
+.back-btn:hover { border-color: var(--taya-rust); color: var(--taya-rust); }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+/* ── FORM ── */
+.field { margin-bottom: 18px; }
+.field:last-child { margin-bottom: 0; }
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--taya-rust);
+  background: white;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.55;
+  font-family: 'Inter', sans-serif;
+}
+
+.char-count { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+.char-count.ok { color: #1D6349; font-weight: 700; }
+
+.field-hint {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+}
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-taya { background: var(--taya-slate); color: white; }
+.btn-taya:hover:not(:disabled) { background: #162d49; }
+
+/* ── PASSWORD ── */
+.pw-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--taya-rust);
+}
+
+.pw-input-wrap { display: flex; gap: 8px; margin: 24px 0 12px; }
+
+.pw-input-wrap input {
+  flex: 1;
+  padding: 12px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  text-align: center;
+  background: var(--bg);
+}
+.pw-input-wrap input:focus { border-color: var(--taya-rust); background: white; }
+.pw-err { color: #B03A2E; font-size: 13px; font-weight: 600; min-height: 20px; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.shake { animation: shake 0.4s ease; }
+
+/* ── TAYA BANNER ── */
+.taya-banner {
+  background: var(--taya-slate);
+  color: white;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.taya-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--taya-amber);
+  background: rgba(245,158,11,0.15);
+  padding: 3px 8px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.taya-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.9);
+}
+.taya-text strong { color: var(--taya-amber); }
+
+/* ── PHASE BANNER ── */
+.phase-banner {
+  background: #1a1d23;
+  color: white;
+  padding: 18px 22px;
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.phase-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--taya-amber);
+  background: rgba(245,158,11,0.15);
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 1.5px;
+  flex-shrink: 0;
+}
+.phase-title { font-size: 16px; font-weight: 800; }
+.phase-sub { font-size: 12px; color: #bbb; margin-top: 2px; }
+
+/* ── 4E PICK GRID ── */
+.four-e-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.e-tile {
+  border-radius: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s;
+  position: relative;
+}
+.e-tile:hover:not(.picked) { opacity: 0.85; }
+.e-tile.picked { border-color: #000 !important; box-shadow: 0 0 0 3px rgba(0,0,0,0.15); }
+.e-tile.excite     { background: var(--excite-lt);     border-left-color: var(--excite); }
+.e-tile.educate    { background: var(--educate-lt);    border-left-color: var(--educate); }
+.e-tile.experience { background: var(--experience-lt); border-left-color: var(--experience); }
+.e-tile.engage     { background: var(--engage-lt);     border-left-color: var(--engage); }
+.e-tile-name {
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+.e-tile.excite     .e-tile-name { color: var(--excite); }
+.e-tile.educate    .e-tile-name { color: var(--educate); }
+.e-tile.experience .e-tile-name { color: var(--experience); }
+.e-tile.engage     .e-tile-name { color: var(--engage); }
+.e-tile-def { font-size: 12px; color: var(--muted); line-height: 1.45; }
+.e-tile-ex { font-size: 11px; font-style: italic; margin-top: 6px; color: #555; }
+.e-check {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 16px;
+  display: none;
+}
+.e-tile.picked .e-check { display: block; }
+
+/* ── E HEADER (shows on individual screen after pick) ── */
+.e-header {
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  color: white;
+}
+.e-header.excite     { background: var(--excite); }
+.e-header.educate    { background: var(--educate); }
+.e-header.experience { background: var(--experience); }
+.e-header.engage     { background: var(--engage); }
+.e-header-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
+.e-header-name { font-size: 20px; font-weight: 900; }
+.e-header-hint { font-size: 12px; opacity: 0.85; margin-top: 4px; line-height: 1.45; }
+
+/* ── STOP GATE ── */
+.stop-gate {
+  background: #FEF3C7;
+  border: 2px solid #F59E0B;
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin: 20px 0;
+}
+.stop-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--taya-rust);
+  margin-bottom: 8px;
+}
+.stop-gate h3 { font-size: 16px; font-weight: 800; color: #92400E; margin-bottom: 8px; }
+.stop-gate p { font-size: 13px; color: #78350F; line-height: 1.6; margin-bottom: 12px; }
+.btn-gate {
+  background: var(--taya-amber);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-gate:hover { background: var(--taya-rust); }
+.btn-gate:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── 4E MAP ASSEMBLY (group phase) ── */
+.map-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.map-card {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.map-card-header {
+  padding: 10px 14px;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.map-card.excite     .map-card-header { background: var(--excite); }
+.map-card.educate    .map-card-header { background: var(--educate); }
+.map-card.experience .map-card-header { background: var(--experience); }
+.map-card.engage     .map-card-header { background: var(--engage); }
+.map-card-body { padding: 12px 14px; background: white; }
+.map-card-body label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.map-card-body input, .map-card-body select {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+}
+.map-card-body input:last-child, .map-card-body select:last-child { margin-bottom: 0; }
+.map-card-body input:focus, .map-card-body select:focus {
+  background: white;
+}
+.map-card.excite     .map-card-body input:focus,
+.map-card.excite     .map-card-body select:focus { border-color: var(--excite); }
+.map-card.educate    .map-card-body input:focus,
+.map-card.educate    .map-card-body select:focus { border-color: var(--educate); }
+.map-card.experience .map-card-body input:focus,
+.map-card.experience .map-card-body select:focus { border-color: var(--experience); }
+.map-card.engage     .map-card-body input:focus,
+.map-card.engage     .map-card-body select:focus { border-color: var(--engage); }
+.map-card-placeholder {
+  font-size: 11px;
+  color: #aaa;
+  font-style: italic;
+}
+
+/* ── TRUST STATEMENT FIELD ── */
+.trust-wrap {
+  background: var(--surface);
+  border: 2px solid var(--engage);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+}
+.trust-wrap label {
+  display: block;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--engage);
+  margin-bottom: 8px;
+}
+.trust-wrap textarea {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.55;
+  transition: border-color 0.15s;
+}
+.trust-wrap textarea:focus { border-color: var(--engage); background: white; }
+.trust-hint { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 6px; line-height: 1.5; }
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+/* ── SUMMARY ── */
+.confirm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e6f4ee;
+  border: 1px solid #1D6349;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1D6349;
+}
+
+.student-tag { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 18px; }
+
+.sum-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.sum-card-header {
+  padding: 12px 18px;
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.sum-card.excite     .sum-card-header { background: var(--excite); }
+.sum-card.educate    .sum-card-header { background: var(--educate); }
+.sum-card.experience .sum-card-header { background: var(--experience); }
+.sum-card.engage     .sum-card-header { background: var(--engage); }
+.sum-card.slate      .sum-card-header { background: var(--taya-slate); }
+.sum-card-body { padding: 16px 18px; }
+.sum-row { margin-bottom: 10px; }
+.sum-row:last-child { margin-bottom: 0; }
+.sum-row-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 3px; }
+.sum-row-val { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+.debrief-box {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 20px;
+}
+.debrief-box h3 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--taya-amber);
+  margin-bottom: 14px;
+}
+.debrief-box p { font-size: 13px; color: #bbb; line-height: 1.7; margin-bottom: 8px; }
+.debrief-box p:last-child { margin-bottom: 0; }
+
+@media (max-width: 600px) {
+  .four-e-grid { grid-template-columns: 1fr; }
+  .map-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ PASSWORD ═══════════════════════════ -->
+<div id="pw-screen" class="screen active">
+  <div class="pw-box">
+    <div class="week-tag">Week 14 · Exercise 2</div>
+    <div class="screen-title" style="margin-top:4px;">Build the Content Map</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:10px 0 4px;">
+      One gym. Four types of content. One trust statement. Build the full 4E content map.
+    </p>
+    <div class="pw-input-wrap">
+      <input type="text" id="pw-input" maxlength="10" placeholder="CLASS PASSWORD" autocomplete="off"
+        onkeydown="if(event.key==='Enter') checkPw()">
+      <button class="btn btn-taya" style="width:auto;padding:12px 18px;" onclick="checkPw()">GO</button>
+    </div>
+    <div class="pw-err" id="pw-err"></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;">Password given in class · Chapter 3</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JOIN ═══════════════════════════ -->
+<div id="join-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 14 · Exercise 2</div>
+    <div class="screen-title">Get set up</div>
+    <div class="screen-sub">You're the content marketing team for a local independent gym trying to earn new members through trust — not ads.</div>
+    <div class="card">
+      <div class="field">
+        <label>Your First Name</label>
+        <input type="text" id="j-name" placeholder="First name only" oninput="onJoin()">
+      </div>
+      <div class="field">
+        <label>Your UC Email</label>
+        <input type="email" id="j-email" placeholder="m.lastname@mail.uc.edu" oninput="onJoin()">
+      </div>
+      <div class="field">
+        <label>Group Number</label>
+        <select id="j-group" onchange="onJoin()">
+          <option value="">— pick your group —</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </div>
+      <button class="btn btn-taya" id="join-btn" onclick="show('brief-screen')" disabled>Let's go →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ BRIEF ═══════════════════════════ -->
+<div id="brief-screen" class="screen">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="show('join-screen')">← Back</button>
+    <div class="week-tag">Week 14 · Exercise 2 · The Brief</div>
+    <div class="screen-title">The Client: Iron Ridge Gym</div>
+    <div class="screen-sub">A local independent gym competing against Planet Fitness on price, and against boutique studios on vibe. They can't win on either. Their only play is trust.</div>
+
+    <div class="taya-banner">
+      <span class="taya-label">TAYA</span>
+      <div class="taya-text">
+        Marcus Sheridan's roofing company generated <strong>$14M in revenue</strong> by doing one thing: publicly answering every question their customers were afraid to ask. That's the strategy. Your gym client is going to try the same thing — but for fitness.
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="section-label">The client</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;"><strong>Iron Ridge Gym</strong> — a single-location, owner-operated gym in a college neighborhood. $39/month. No classes, no frills. Free weights, squat racks, good lighting. They're trying to attract first-time gym members who've never walked into a gym and feel intimidated.</p>
+    </div>
+
+    <div class="card">
+      <p class="section-label">The challenge</p>
+      <p style="font-size:14px;line-height:1.7;color:#333;">First-time gym members have a list of fears: What if I look stupid? Do I need to know what I'm doing? Can I actually afford this? Will it be crowded? Will anyone judge me? Iron Ridge can't answer these fears with a discount. They have to answer them with <strong>content that tells the truth</strong>.</p>
+    </div>
+
+    <div class="card">
+      <p class="section-label">The 4E Framework</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+        <div style="background:var(--excite-lt);border-left:3px solid var(--excite);border-radius:6px;padding:10px 12px;">
+          <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.8px;color:var(--excite);margin-bottom:4px;">Excite</div>
+          <div style="font-size:12px;color:#555;line-height:1.45;">Create desire. Make them want in. Stop the scroll.</div>
+        </div>
+        <div style="background:var(--educate-lt);border-left:3px solid var(--educate);border-radius:6px;padding:10px 12px;">
+          <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.8px;color:var(--educate);margin-bottom:4px;">Educate</div>
+          <div style="font-size:12px;color:#555;line-height:1.45;">Arm them with answers. Kill the objections before they arise.</div>
+        </div>
+        <div style="background:var(--experience-lt);border-left:3px solid var(--experience);border-radius:6px;padding:10px 12px;">
+          <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.8px;color:var(--experience);margin-bottom:4px;">Experience</div>
+          <div style="font-size:12px;color:#555;line-height:1.45;">Let them preview before they commit. Reduce the first-visit fear.</div>
+        </div>
+        <div style="background:var(--engage-lt);border-left:3px solid var(--engage);border-radius:6px;padding:10px 12px;">
+          <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.8px;color:var(--engage);margin-bottom:4px;">Engage</div>
+          <div style="font-size:12px;color:#555;line-height:1.45;">Keep them in the story. Community, progress, conversation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="section-label">What you'll do</p>
+      <p style="font-size:13px;color:#333;line-height:1.65;"><strong>Step 1 (~10 min):</strong> Each person picks one E, and creates a real content piece — a specific title, media type, and trust rationale. Go deep on your one piece.</p>
+      <p style="font-size:13px;color:#333;line-height:1.65;margin-top:8px;"><strong>Step 2 (~3 min):</strong> Stop gate — share your piece with your group out loud. Push each other on specificity.</p>
+      <p style="font-size:13px;color:#333;line-height:1.65;margin-top:8px;"><strong>Step 3 (~12 min):</strong> As a group, assemble the full 4E content map — one piece per E — then write a Content Trust Statement that ties the whole strategy together.</p>
+    </div>
+
+    <button class="btn btn-taya" onclick="show('e-pick-screen')">Continue — Pick Your E →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ E PICK ═══════════════════════════ -->
+<div id="e-pick-screen" class="screen">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="show('brief-screen')">← Back to brief</button>
+    <div class="week-tag">Week 14 · Exercise 2 · Phase 1 Setup</div>
+    <div class="screen-title">Pick Your E</div>
+    <div class="screen-sub">Read all four out loud together. Each person picks one E to own. Two people can take the same E — you'll compare in Phase 2 and pick the stronger piece.</div>
+
+    <div class="four-e-grid">
+      <div class="e-tile excite" id="tile-excite" onclick="pickE('excite')">
+        <div class="e-check">✓</div>
+        <div class="e-tile-name">Excite</div>
+        <div class="e-tile-def">Create desire. Stop the scroll. Give someone a reason to want to walk through the door for the first time.</div>
+        <div class="e-tile-ex">e.g., "Here's what your first hour at Iron Ridge actually looks like" — an authentic walk-through reel</div>
+      </div>
+      <div class="e-tile educate" id="tile-educate" onclick="pickE('educate')">
+        <div class="e-check">✓</div>
+        <div class="e-tile-name">Educate</div>
+        <div class="e-tile-def">Answer the scary questions honestly. Kill the objections before they stop someone from coming in.</div>
+        <div class="e-tile-ex">e.g., "How much does a gym membership actually cost? (All the fees, no surprises)" — a pricing transparency post</div>
+      </div>
+      <div class="e-tile experience" id="tile-experience" onclick="pickE('experience')">
+        <div class="e-check">✓</div>
+        <div class="e-tile-name">Experience</div>
+        <div class="e-tile-def">Let them preview the gym before committing. Reduce the first-visit fear. Help them feel less like a stranger before they arrive.</div>
+        <div class="e-tile-ex">e.g., A 3-minute virtual tour starting from the parking lot — narrated by a first-week member, not a trainer</div>
+      </div>
+      <div class="e-tile engage" id="tile-engage" onclick="pickE('engage')">
+        <div class="e-check">✓</div>
+        <div class="e-tile-name">Engage</div>
+        <div class="e-tile-def">Keep people in the story after they join. Build community, celebrate progress, invite conversation.</div>
+        <div class="e-tile-ex">e.g., A "30 Days In" member spotlight series where new members share what surprised them most</div>
+      </div>
+    </div>
+
+    <button class="btn btn-taya" id="e-pick-btn" onclick="show('individual-screen'); onEnterIndividual();" disabled>
+      Continue — Build My Content Piece →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INDIVIDUAL PHASE ═══════════════════════════ -->
+<div id="individual-screen" class="screen">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="show('e-pick-screen')">← Change my E</button>
+    <div class="phase-banner">
+      <span class="phase-number">PHASE 1</span>
+      <div>
+        <div class="phase-title">Your Content Piece</div>
+        <div class="phase-sub">Own your E. Make it real enough that Iron Ridge could actually publish it.</div>
+      </div>
+    </div>
+
+    <div class="e-header" id="ind-e-header">
+      <div class="e-header-label">Your E</div>
+      <div class="e-header-name" id="ind-e-name">—</div>
+      <div class="e-header-hint" id="ind-e-hint">—</div>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label>Content Title — what would you actually call this piece? (5 words minimum)</label>
+        <input type="text" id="i-title" placeholder='e.g., "How Much Does a Gym Membership Actually Cost? (No Hidden Fees)"' oninput="onIndInput()">
+        <p class="field-hint">Be specific. A real title that a first-time gym member would click on. Not "gym content idea."</p>
+      </div>
+
+      <div class="field">
+        <label>Media Type — what format is this content?</label>
+        <select id="i-media" onchange="onIndInput()">
+          <option value="">— pick a format —</option>
+          <option value="blog">Blog post / article</option>
+          <option value="video">Short video (30–90 sec)</option>
+          <option value="faq">FAQ page / Q&amp;A list</option>
+          <option value="social">Social post (Instagram / TikTok / Facebook)</option>
+          <option value="email">Email to prospective members</option>
+          <option value="virtual-tour">Virtual tour / 360° walkthrough</option>
+          <option value="guide">Downloadable guide / checklist</option>
+          <option value="testimonial">Member story / testimonial</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Media Channel — owned, earned, or paid?</label>
+        <select id="i-channel" onchange="onIndInput()">
+          <option value="">— pick one —</option>
+          <option value="owned">Owned — we publish it ourselves (website, social, email)</option>
+          <option value="earned">Earned — someone else shares it (press, word-of-mouth, shares)</option>
+          <option value="paid">Paid — we pay to distribute it (boosted post, ad)</option>
+        </select>
+        <p class="field-hint">Most content marketing is Owned. That's fine — just be intentional about it.</p>
+      </div>
+
+      <div class="field">
+        <label>Trust Rationale — why does publishing this build trust? (50 char minimum)</label>
+        <textarea id="i-trust" rows="3" placeholder='e.g., "It shows we have nothing to hide about our pricing — most gyms bury their fees. Answering honestly makes us credible before they walk in."' oninput="onIndInput()"></textarea>
+        <div class="char-count" id="trust-count">0 / 50 minimum</div>
+        <p class="field-hint">Connect it to TAYA: what fear, question, or objection does this content answer? Why does answering it publicly build credibility?</p>
+      </div>
+    </div>
+
+    <!-- Stop gate -->
+    <div class="stop-gate" id="ind-gate" style="display:none;">
+      <div class="stop-tag">Stop · Group Share-Out</div>
+      <h3>Share your content piece with your group</h3>
+      <p>Go around. Each person reads their title, media type, and trust rationale out loud. Push each other: Is the title specific enough that a real person would click it? Does the trust rationale connect to a real fear?</p>
+      <div class="field" style="margin-top:12px;">
+        <label style="color:#92400E;">What feedback did your group give you on your piece? (30 char min)</label>
+        <textarea id="gate-feedback" rows="2" placeholder="What did they push back on? What did they say worked?" oninput="onGateFeedback()" style="font-family:'Inter',sans-serif;font-size:13px;"></textarea>
+        <div class="char-count" id="gate-feedback-count">0 / 30 minimum</div>
+      </div>
+      <button class="btn-gate" id="gate-ack-btn" onclick="ackGate()" disabled style="margin-top:10px;">Continue to Phase 2 →</button>
+    </div>
+
+    <button class="btn btn-taya" id="ind-continue-btn" onclick="show('group-screen'); onEnterGroup();" disabled style="margin-top:6px;">
+      Continue to Phase 2 — Build the Group Map →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ GROUP PHASE ═══════════════════════════ -->
+<div id="group-screen" class="screen">
+  <div class="page-wrap">
+    <button class="back-btn" onclick="show('individual-screen')">← Back to my piece</button>
+    <div class="phase-banner">
+      <span class="phase-number">PHASE 2</span>
+      <div>
+        <div class="phase-title">Assemble the 4E Content Map</div>
+        <div class="phase-sub">One piece per E. As a group, pick the strongest title for each quadrant — then write your Content Trust Statement.</div>
+      </div>
+    </div>
+
+    <div class="taya-banner">
+      <span class="taya-label">TAYA</span>
+      <div class="taya-text">
+        A content map only works if <strong>every quadrant earns trust</strong>. Excite draws them in. Educate removes the fear. Experience lets them preview without risk. Engage keeps them after they join. All four have to point at the same belief: <em>Iron Ridge tells the truth.</em>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">For each E below, pick the strongest content piece your group came up with (it can be from anyone, or a combination). Fill in the title and media type your group is going with.</p>
+
+    <div class="map-grid">
+      <div class="map-card excite">
+        <div class="map-card-header">Excite — Create Desire</div>
+        <div class="map-card-body">
+          <label>Content title</label>
+          <input type="text" id="g-excite-title" placeholder='e.g., "First Hour at Iron Ridge (Real Walk-Through)"' oninput="onGroupInput()">
+          <label>Format</label>
+          <select id="g-excite-media" onchange="onGroupInput()">
+            <option value="">— pick format —</option>
+            <option value="blog">Blog / article</option>
+            <option value="video">Short video</option>
+            <option value="faq">FAQ / Q&amp;A</option>
+            <option value="social">Social post</option>
+            <option value="email">Email</option>
+            <option value="virtual-tour">Virtual tour</option>
+            <option value="guide">Guide / checklist</option>
+            <option value="testimonial">Member story</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="map-card educate">
+        <div class="map-card-header">Educate — Kill Objections</div>
+        <div class="map-card-body">
+          <label>Content title</label>
+          <input type="text" id="g-educate-title" placeholder='e.g., "Every Fee, Explained. No Surprises."' oninput="onGroupInput()">
+          <label>Format</label>
+          <select id="g-educate-media" onchange="onGroupInput()">
+            <option value="">— pick format —</option>
+            <option value="blog">Blog / article</option>
+            <option value="video">Short video</option>
+            <option value="faq">FAQ / Q&amp;A</option>
+            <option value="social">Social post</option>
+            <option value="email">Email</option>
+            <option value="virtual-tour">Virtual tour</option>
+            <option value="guide">Guide / checklist</option>
+            <option value="testimonial">Member story</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="map-card experience">
+        <div class="map-card-header">Experience — Preview, No Risk</div>
+        <div class="map-card-body">
+          <label>Content title</label>
+          <input type="text" id="g-experience-title" placeholder='e.g., "A 3-Minute Tour: What You'll See Before You Sign Anything"' oninput="onGroupInput()">
+          <label>Format</label>
+          <select id="g-experience-media" onchange="onGroupInput()">
+            <option value="">— pick format —</option>
+            <option value="blog">Blog / article</option>
+            <option value="video">Short video</option>
+            <option value="faq">FAQ / Q&amp;A</option>
+            <option value="social">Social post</option>
+            <option value="email">Email</option>
+            <option value="virtual-tour">Virtual tour</option>
+            <option value="guide">Guide / checklist</option>
+            <option value="testimonial">Member story</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="map-card engage">
+        <div class="map-card-header">Engage — Keep the Story Going</div>
+        <div class="map-card-body">
+          <label>Content title</label>
+          <input type="text" id="g-engage-title" placeholder='e.g., "30 Days In: What Actually Changed (Member Spotlights)"' oninput="onGroupInput()">
+          <label>Format</label>
+          <select id="g-engage-media" onchange="onGroupInput()">
+            <option value="">— pick format —</option>
+            <option value="blog">Blog / article</option>
+            <option value="video">Short video</option>
+            <option value="faq">FAQ / Q&amp;A</option>
+            <option value="social">Social post</option>
+            <option value="email">Email</option>
+            <option value="virtual-tour">Virtual tour</option>
+            <option value="guide">Guide / checklist</option>
+            <option value="testimonial">Member story</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Trust Statement -->
+    <div class="trust-wrap">
+      <label>Content Trust Statement — what does this whole map say about Iron Ridge? (60 char minimum)</label>
+      <textarea id="g-trust" rows="4"
+        placeholder='e.g., "We publicly answer every question a first-time member is afraid to ask — including the ones that make us look less than perfect — so that by the time someone walks through our door, they already trust us."'
+        oninput="onGroupInput()"></textarea>
+      <div class="char-count" id="cts-count">0 / 60 minimum</div>
+      <div class="trust-hint">
+        This is your group's TAYA statement. It should describe the <em>strategy</em>, not the tactics. Don't list your content pieces — explain the belief that connects all four of them. Finish this sentence: "We publish content publicly because we believe that…"
+      </div>
+    </div>
+
+    <p id="submit-note" style="font-size:13px;color:var(--muted);margin-top:6px;text-align:center;">Submitting records your participation and content map work for today's class.</p>
+    <button class="btn btn-taya" id="group-submit-btn" onclick="submitAll()" disabled style="margin-top:6px;">
+      Submit &amp; Record Participation →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SUMMARY ═══════════════════════════ -->
+<div id="summary-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 14 · Exercise 2 — Summary</div>
+    <div class="screen-title">Your Content Map</div>
+    <div class="confirm-pill">✓ Participation recorded — you're all set</div>
+    <div id="student-tag" class="student-tag"></div>
+
+    <p class="section-label">Your individual content piece</p>
+    <div id="sum-individual"></div>
+
+    <p class="section-label" style="margin-top:18px;">Your group's 4E content map</p>
+    <div id="sum-group"></div>
+
+    <p class="section-label" style="margin-top:18px;">Content Trust Statement</p>
+    <div id="sum-trust"></div>
+
+    <div class="debrief-box">
+      <h3>Bring to the Debrief</h3>
+      <p>Be ready to share: (1) Which E did your group find hardest to fill — and why? (2) Read your Content Trust Statement out loud. Does it describe a strategy, or just list tactics? (3) The roofing company that generated $14M did this with blogs and YouTube. Could Iron Ridge do the same? What would have to be true?</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JAVASCRIPT ═══════════════════════════ -->
+<script>
+const PW = 'MAP426';
+const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
+
+/* Firebase block — dormant */
+// const firebaseConfig = { /* ... */ };
+
+/* ── UTILS ── */
+function show(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function cc(id, val, min, suffix) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = val + (suffix || ' / ' + min + ' minimum');
+  el.classList.toggle('ok', val >= min);
+}
+
+/* ── STATE ── */
+let state = {
+  name: '', email: '', group: '',
+  ePick: '',
+  ind: { title: '', media: '', channel: '', trust: '' },
+  gateAcked: false,
+  gateFeedback: '',
+  group: {
+    exciteTitle: '', exciteMedia: '',
+    educateTitle: '', educateMedia: '',
+    experienceTitle: '', experienceMedia: '',
+    engageTitle: '', engageMedia: '',
+    trustStatement: ''
+  }
+};
+
+/* ── PASSWORD ── */
+function checkPw() {
+  const val = document.getElementById('pw-input').value.trim().toUpperCase();
+  if (val === PW) {
+    show('join-screen');
+  } else {
+    const box = document.getElementById('pw-input').closest('.pw-box') ||
+                document.getElementById('pw-input').parentElement;
+    box.classList.remove('shake');
+    void box.offsetWidth;
+    box.classList.add('shake');
+    document.getElementById('pw-err').textContent = 'Wrong password — try again.';
+  }
+}
+
+/* ── JOIN ── */
+function onJoin() {
+  const name  = document.getElementById('j-name').value.trim();
+  const email = document.getElementById('j-email').value.trim();
+  const group = document.getElementById('j-group').value;
+  const emailOk = /^[^\s@]+@(mail\.uc\.edu|uc\.edu)$/i.test(email);
+  document.getElementById('join-btn').disabled = !(name && emailOk && group);
+  if (name)  state.name  = name;
+  if (email) state.email = email;
+  if (group) state.group = group;
+}
+
+/* ── E PICK ── */
+const E_DATA = {
+  excite:     { name: 'Excite',     hint: 'Create desire. Stop the scroll. Give someone a reason to want to walk through the door for the first time.' },
+  educate:    { name: 'Educate',    hint: 'Answer the scary questions honestly. Kill the objections before they stop someone from coming in.' },
+  experience: { name: 'Experience', hint: 'Let them preview the gym before committing. Reduce the first-visit fear. Help them feel less like a stranger before they arrive.' },
+  engage:     { name: 'Engage',     hint: 'Keep people in the story after they join. Build community, celebrate progress, invite conversation.' }
+};
+
+function pickE(e) {
+  state.ePick = e;
+  ['excite','educate','experience','engage'].forEach(k => {
+    document.getElementById('tile-' + k).classList.toggle('picked', k === e);
+  });
+  document.getElementById('e-pick-btn').disabled = false;
+}
+
+/* ── INDIVIDUAL PHASE ── */
+function onEnterIndividual() {
+  const d = E_DATA[state.ePick];
+  const hdr = document.getElementById('ind-e-header');
+  hdr.className = 'e-header ' + state.ePick;
+  document.getElementById('ind-e-name').textContent = d.name;
+  document.getElementById('ind-e-hint').textContent = d.hint;
+  checkIndGate();
+}
+
+function onIndInput() {
+  const title   = document.getElementById('i-title').value.trim();
+  const media   = document.getElementById('i-media').value;
+  const channel = document.getElementById('i-channel').value;
+  const trust   = document.getElementById('i-trust').value.trim();
+
+  cc('trust-count', trust.length, 50);
+
+  const titleWords = title.split(/\s+/).filter(Boolean).length;
+  const allDone = titleWords >= 5 && media && channel && trust.length >= 50;
+
+  state.ind = { title, media, channel, trust };
+
+  // Show stop gate when all fields complete
+  const gate = document.getElementById('ind-gate');
+  if (allDone && !state.gateAcked) {
+    gate.style.display = 'block';
+  }
+  document.getElementById('ind-continue-btn').disabled = !(allDone && state.gateAcked);
+}
+
+function onGateFeedback() {
+  const val = document.getElementById('gate-feedback').value.trim();
+  const len = val.length;
+  const el = document.getElementById('gate-feedback-count');
+  el.textContent = len < 30 ? `${len} / 30 minimum` : `${len} characters ✓`;
+  el.classList.toggle('ok', len >= 30);
+  document.getElementById('gate-ack-btn').disabled = len < 30;
+}
+
+function ackGate() {
+  const val = document.getElementById('gate-feedback').value.trim();
+  if (val.length < 30) return;
+  state.gateAcked = true;
+  state.gateFeedback = val;
+  document.getElementById('gate-ack-btn').disabled = true;
+  document.getElementById('gate-ack-btn').textContent = '✓ Shared with group';
+  // re-check continue button
+  const title   = document.getElementById('i-title').value.trim();
+  const media   = document.getElementById('i-media').value;
+  const channel = document.getElementById('i-channel').value;
+  const trust   = document.getElementById('i-trust').value.trim();
+  const titleWords = title.split(/\s+/).filter(Boolean).length;
+  const allDone = titleWords >= 5 && media && channel && trust.length >= 50;
+  document.getElementById('ind-continue-btn').disabled = !allDone;
+}
+
+/* ── GROUP PHASE ── */
+function onEnterGroup() {
+  onGroupInput();
+}
+
+function onGroupInput() {
+  const et  = document.getElementById('g-excite-title').value.trim();
+  const em  = document.getElementById('g-excite-media').value;
+  const edt = document.getElementById('g-educate-title').value.trim();
+  const edm = document.getElementById('g-educate-media').value;
+  const ext = document.getElementById('g-experience-title').value.trim();
+  const exm = document.getElementById('g-experience-media').value;
+  const egt = document.getElementById('g-engage-title').value.trim();
+  const egm = document.getElementById('g-engage-media').value;
+  const cts = document.getElementById('g-trust').value.trim();
+
+  cc('cts-count', cts.length, 60);
+
+  state.group = {
+    exciteTitle: et, exciteMedia: em,
+    educateTitle: edt, educateMedia: edm,
+    experienceTitle: ext, experienceMedia: exm,
+    engageTitle: egt, engageMedia: egm,
+    trustStatement: cts
+  };
+
+  const mapFull = et && em && edt && edm && ext && exm && egt && egm;
+  document.getElementById('group-submit-btn').disabled = !(mapFull && cts.length >= 60);
+}
+
+/* ── SUBMIT ── */
+async function submitAll() {
+  const btn = document.getElementById('group-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  const payload = {
+    exercise: 'W14.2',
+    name: state.name,
+    email: state.email,
+    group: state.group,
+    individual: {
+      ePick: state.ePick,
+      title: state.ind.title,
+      media: state.ind.media,
+      channel: state.ind.channel,
+      trustRationale: state.ind.trust,
+      gateFeedback: state.gateFeedback
+    },
+    groupMap: {
+      excite:     { title: state.group.exciteTitle,     media: state.group.exciteMedia },
+      educate:    { title: state.group.educateTitle,    media: state.group.educateMedia },
+      experience: { title: state.group.experienceTitle, media: state.group.experienceMedia },
+      engage:     { title: state.group.engageTitle,     media: state.group.engageMedia }
+    },
+    contentTrustStatement: state.group.trustStatement,
+    timestamp: new Date().toISOString()
+  };
+
+  try {
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (e) {
+    console.warn('Webhook error (non-blocking):', e);
+  }
+
+  buildSummary();
+  show('summary-screen');
+}
+
+/* ── SUMMARY ── */
+const MEDIA_LABELS = {
+  blog: 'Blog / article', video: 'Short video', faq: 'FAQ / Q&A list',
+  social: 'Social post', email: 'Email', 'virtual-tour': 'Virtual tour',
+  guide: 'Guide / checklist', testimonial: 'Member story'
+};
+const CHANNEL_LABELS = {
+  owned: 'Owned media', earned: 'Earned media', paid: 'Paid media'
+};
+const E_COLORS = {
+  excite: 'excite', educate: 'educate', experience: 'experience', engage: 'engage'
+};
+
+function buildSummary() {
+  document.getElementById('student-tag').textContent =
+    state.name + ' · Group ' + state.group + ' · ' + state.email;
+
+  // Individual card
+  const eData = E_DATA[state.ePick];
+  document.getElementById('sum-individual').innerHTML = `
+    <div class="sum-card ${state.ePick}">
+      <div class="sum-card-header">${eData.name} — Your Content Piece</div>
+      <div class="sum-card-body">
+        <div class="sum-row"><div class="sum-row-label">Title</div><div class="sum-row-val">${state.ind.title}</div></div>
+        <div class="sum-row"><div class="sum-row-label">Format</div><div class="sum-row-val">${MEDIA_LABELS[state.ind.media] || state.ind.media}</div></div>
+        <div class="sum-row"><div class="sum-row-label">Channel</div><div class="sum-row-val">${CHANNEL_LABELS[state.ind.channel] || state.ind.channel}</div></div>
+        <div class="sum-row"><div class="sum-row-label">Trust Rationale</div><div class="sum-row-val">${state.ind.trust}</div></div>
+      </div>
+    </div>`;
+
+  // Group 4E map
+  const g = state.group;
+  const mapEs = [
+    { key: 'excite',     label: 'Excite',     title: g.exciteTitle,     media: g.exciteMedia },
+    { key: 'educate',    label: 'Educate',    title: g.educateTitle,    media: g.educateMedia },
+    { key: 'experience', label: 'Experience', title: g.experienceTitle, media: g.experienceMedia },
+    { key: 'engage',     label: 'Engage',     title: g.engageTitle,     media: g.engageMedia }
+  ];
+  document.getElementById('sum-group').innerHTML = mapEs.map(e => `
+    <div class="sum-card ${e.key}" style="margin-bottom:10px;">
+      <div class="sum-card-header">${e.label}</div>
+      <div class="sum-card-body">
+        <div class="sum-row"><div class="sum-row-label">Title</div><div class="sum-row-val">${e.title}</div></div>
+        <div class="sum-row"><div class="sum-row-label">Format</div><div class="sum-row-val">${MEDIA_LABELS[e.media] || e.media}</div></div>
+      </div>
+    </div>`).join('');
+
+  // Trust statement
+  document.getElementById('sum-trust').innerHTML = `
+    <div class="sum-card slate">
+      <div class="sum-card-header">Content Trust Statement</div>
+      <div class="sum-card-body">
+        <div class="sum-row-val" style="font-size:15px;font-style:italic;line-height:1.65;">"${g.trustStatement}"</div>
+      </div>
+    </div>`;
+}
+
+/* ── INIT ── */
+document.getElementById('j-name').addEventListener('input', onJoin);
+document.getElementById('j-email').addEventListener('input', onJoin);
+</script>
+</body>
+</html>
