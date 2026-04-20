@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W14.1 — What Would You Google?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #F5F6F8;
+  --surface:   #FFFFFF;
+  --border:    #E2E5EB;
+  --text:      #1A1D23;
+  --muted:     #6B7280;
+  --radius:    10px;
+  --shadow:    0 2px 12px rgba(0,0,0,0.07);
+
+  /* Week 14 / TAYA palette */
+  --taya-rust:    #B45309;
+  --taya-amber:   #F59E0B;
+  --taya-amber-lt:#FEF3C7;
+  --taya-slate:   #1E3A5F;
+  --taya-slate-lt:#E6EFF9;
+
+  /* 4E colors */
+  --excite:     #DC2626;
+  --excite-lt:  #FEE2E2;
+  --educate:    #1D4ED8;
+  --educate-lt: #DBEAFE;
+  --experience: #059669;
+  --experience-lt:#D1FAE5;
+  --engage:     #7C3AED;
+  --engage-lt:  #EDE9FE;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── PASSWORD ── CRITICAL: ID specificity */
+#pw-screen.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* ── LAYOUT ── */
+.page-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+/* ── WEEK TAG ── */
+.week-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--taya-rust);
+  margin-bottom: 8px;
+}
+
+.screen-title {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.screen-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+/* ── FORM ── */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--taya-amber);
+  background: white;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.55;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+}
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-dark { background: #1a1d23; color: white; }
+.btn-dark:hover:not(:disabled) { background: #2d3139; }
+.btn-amber { background: var(--taya-amber); color: #1a1d23; }
+.btn-amber:hover:not(:disabled) { background: var(--taya-rust); color: white; }
+
+/* ── PASSWORD BOX ── */
+.pw-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--taya-amber);
+}
+
+.pw-tagline {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.pw-input-wrap { display: flex; gap: 8px; margin: 20px 0 10px; }
+.pw-input-wrap input {
+  flex: 1;
+  padding: 12px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  text-align: center;
+  background: var(--bg);
+}
+.pw-input-wrap input:focus { border-color: var(--taya-amber); background: white; }
+.pw-err { color: #B03A2E; font-size: 13px; font-weight: 600; min-height: 20px; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px); }
+}
+.shake { animation: shake 0.4s ease; }
+
+/* ── TAYA BANNER ── */
+.taya-banner {
+  background: var(--taya-slate);
+  color: white;
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 16px;
+}
+.taya-banner .tb-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--taya-amber);
+  margin-bottom: 6px;
+}
+.taya-banner .tb-stat {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.taya-banner .tb-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.55;
+}
+
+/* ── 4E LEGEND ── */
+.four-e-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.e-card {
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.e-card.excite    { background: var(--excite-lt);    border-left: 3px solid var(--excite); }
+.e-card.educate   { background: var(--educate-lt);   border-left: 3px solid var(--educate); }
+.e-card.experience{ background: var(--experience-lt);border-left: 3px solid var(--experience); }
+.e-card.engage    { background: var(--engage-lt);    border-left: 3px solid var(--engage); }
+.e-name {
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+.e-card.excite    .e-name { color: var(--excite); }
+.e-card.educate   .e-name { color: var(--educate); }
+.e-card.experience .e-name { color: var(--experience); }
+.e-card.engage    .e-name { color: var(--engage); }
+.e-desc {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ── PROGRESS BAR ── */
+.q-progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 22px;
+}
+.q-pip {
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border);
+  transition: background 0.25s;
+}
+.q-pip.done    { background: var(--taya-slate); }
+.q-pip.current { background: var(--taya-amber); }
+
+/* ── QUESTION CARD ── */
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.q-card-header {
+  background: var(--taya-slate);
+  color: white;
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.q-num-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: rgba(255,255,255,0.2);
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.q-google-text {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.35;
+  flex: 1;
+}
+.q-google-icon {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+  margin-top: 4px;
+}
+.q-card-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── SELECT STYLED ── */
+.select-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.select-block {}
+.select-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.styled-select {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 7px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B7280' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.styled-select:focus { border-color: var(--taya-amber); background-color: white; }
+.styled-select.selected-excite    { border-color: var(--excite);    background-color: var(--excite-lt); }
+.styled-select.selected-educate   { border-color: var(--educate);   background-color: var(--educate-lt); }
+.styled-select.selected-experience{ border-color: var(--experience);background-color: var(--experience-lt); }
+.styled-select.selected-engage    { border-color: var(--engage);    background-color: var(--engage-lt); }
+
+/* ── TRUST FIELD ── */
+.trust-field-wrap {
+  background: #F0FDF4;
+  border: 1.5px solid #BBF7D0;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.trust-field-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #059669;
+  margin-bottom: 6px;
+}
+.trust-field-hint {
+  font-size: 12px;
+  color: #047857;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+.trust-field-wrap textarea {
+  width: 100%;
+  padding: 9px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: white;
+  border: 1.5px solid #BBF7D0;
+  border-radius: 6px;
+  outline: none;
+  resize: vertical;
+  min-height: 64px;
+  line-height: 1.55;
+}
+.trust-field-wrap textarea:focus { border-color: #059669; }
+.char-count { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+.char-count.ok { color: #059669; font-weight: 700; }
+
+/* ── Q NAV BUTTONS ── */
+.q-nav {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+.q-nav .btn { flex: 1; }
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-outline:hover { border-color: var(--taya-amber); color: var(--text); }
+
+/* ── STOP GATE ── */
+.stop-gate {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  display: none;
+}
+.stop-gate.visible { display: block; }
+.stop-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--taya-amber);
+  margin-bottom: 8px;
+}
+.stop-gate h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+.stop-gate p  { font-size: 13px; color: #bbb; line-height: 1.65; margin-bottom: 16px; }
+.btn-gate {
+  display: block;
+  width: 100%;
+  padding: 11px 20px;
+  background: var(--taya-amber);
+  color: #1a1d23;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+/* ── PRIORITY SECTION ── */
+.priority-header {
+  background: var(--taya-slate);
+  color: white;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 16px 20px;
+}
+.priority-header .ph-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--taya-amber);
+  margin-bottom: 4px;
+}
+.priority-header h3 { font-size: 17px; font-weight: 900; }
+.priority-header p  { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 4px; line-height: 1.5; }
+
+.priority-body {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.priority-pick {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.priority-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--taya-slate);
+  color: white;
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.priority-pick-body { flex: 1; }
+
+/* ── SUMMARY ── */
+.confirm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #E6F4EE;
+  border: 1px solid #1D6349;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1D6349;
+}
+.student-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+.sum-q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.sum-q-header {
+  padding: 10px 16px;
+  color: white;
+  background: var(--taya-slate);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sum-q-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+.sum-q-text { font-size: 13px; font-weight: 700; flex: 1; line-height: 1.3; }
+.sum-q-body { padding: 14px 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+.sum-pill {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 5px;
+}
+.sum-pill.excite     { background: var(--excite-lt);    color: var(--excite); }
+.sum-pill.educate    { background: var(--educate-lt);   color: var(--educate); }
+.sum-pill.experience { background: var(--experience-lt);color: var(--experience); }
+.sum-pill.engage     { background: var(--engage-lt);    color: var(--engage); }
+.sum-trust { font-size: 12px; color: #555; line-height: 1.6; margin-top: 6px; width: 100%; font-style: italic; }
+
+.debrief-box {
+  background: #1a1d23;
+  color: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 20px;
+}
+.debrief-box h3 {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--taya-amber);
+  margin-bottom: 12px;
+}
+.debrief-box p {
+  font-size: 13px;
+  color: #bbb;
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ PASSWORD ═══════════════════════════ -->
+<div id="pw-screen" class="screen active">
+  <div class="pw-box">
+    <div class="week-tag">Week 14 · Exercise 1</div>
+    <div class="screen-title" style="margin-top:4px;">What Would You Google?</div>
+    <p class="pw-tagline">10 questions. One framework. A roofing company that made $14M by answering what customers were afraid to ask.</p>
+    <div class="pw-input-wrap">
+      <input type="text" id="pw-input" maxlength="10" placeholder="CLASS PASSWORD" autocomplete="off"
+        onkeydown="if(event.key==='Enter') checkPw()">
+      <button class="btn btn-dark" style="width:auto;padding:12px 18px;" onclick="checkPw()">GO</button>
+    </div>
+    <div class="pw-err" id="pw-err"></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:10px;">Password given in class · Chapter 3</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JOIN ═══════════════════════════ -->
+<div id="join-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 14 · Exercise 1</div>
+    <div class="screen-title">Get set up</div>
+    <div class="screen-sub">You'll classify 10 pieces of content — some are questions homeowners Google, some are content the company built. Figure out which ones matter most and why.</div>
+    <div class="card">
+      <div class="field">
+        <label>Your First Name</label>
+        <input type="text" id="j-name" placeholder="First name only">
+      </div>
+      <div class="field">
+        <label>Your UC Email</label>
+        <input type="email" id="j-email" placeholder="m.lastname@mail.uc.edu">
+      </div>
+      <div class="field">
+        <label>Group Number</label>
+        <select id="j-group">
+          <option value="">— pick your group —</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </div>
+      <button class="btn btn-dark" id="join-btn" onclick="doJoin()" disabled>Let's go →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INSTRUCTIONS ═══════════════════════════ -->
+<div id="instructions-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 14 · Exercise 1</div>
+    <div class="screen-title">The Case</div>
+
+    <div class="taya-banner">
+      <div class="tb-label">The Story</div>
+      <div class="tb-stat">$14M in revenue. Zero cold calls.</div>
+      <div class="tb-sub">A roofing company in the mid-2000s was hemorrhaging customers during the financial crisis. Instead of cutting prices or hiring more salespeople, they did something their competitors refused to do: they answered every question their customers were afraid to ask.</div>
+    </div>
+
+    <div class="card">
+      <p class="section-label">What they did</p>
+      <p style="font-size:14px;line-height:1.75;color:#333;margin-bottom:12px;">They published blog posts answering the exact questions homeowners were Googling. Pricing. Timelines. Comparisons. Even "how to spot a bad contractor." Within three years, their website was the most-visited roofing site in the world. They closed $14 million in sales — mostly from people who found their content before ever talking to a salesperson.</p>
+      <p style="font-size:14px;line-height:1.75;color:#333;">Your job today: figure out which questions they had to answer, what content they built — and why it worked.</p>
+    </div>
+
+    <div class="card">
+      <p class="section-label">The 4E Framework — your classification tool</p>
+      <div class="four-e-grid">
+        <div class="e-card excite">
+          <div class="e-name">Excite</div>
+          <div class="e-desc">Create buzz. Make content relevant and attention-grabbing at the exact right moment.</div>
+        </div>
+        <div class="e-card educate">
+          <div class="e-name">Educate</div>
+          <div class="e-desc">Inform. Remove confusion and fear by giving customers the knowledge they need.</div>
+        </div>
+        <div class="e-card experience">
+          <div class="e-name">Experience</div>
+          <div class="e-desc">Let customers mentally rehearse what it's like to work with you — before they commit.</div>
+        </div>
+        <div class="e-card engage">
+          <div class="e-name">Engage</div>
+          <div class="e-desc">Build an ongoing relationship. Not just one article — a reason to keep coming back.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="section-label">How this works</p>
+      <p style="font-size:14px;line-height:1.75;color:#333;margin-bottom:10px;"><strong>Block 1 (~8 min):</strong> Classify 6 questions customers actually Google. For each: pick the E it maps to, pick the best content type, and write one sentence explaining why answering it builds trust.</p>
+      <p style="font-size:14px;line-height:1.75;color:#333;margin-bottom:10px;"><strong>Stop gate:</strong> Compare your E classifications with your group. You'll need to tell us what you disagreed on before you can continue.</p>
+      <p style="font-size:14px;line-height:1.75;color:#333;margin-bottom:10px;"><strong>Block 2 (~5 min):</strong> Classify 4 pieces of content the company built in response. Same process — E, content type, trust rationale.</p>
+      <p style="font-size:14px;line-height:1.75;color:#333;"><strong>Group decision (~5 min):</strong> Pick the 2 pieces of content the company should prioritize first — and write your shared rationale.</p>
+    </div>
+
+    <button class="btn btn-dark" onclick="startExercise()">Start — Question 1 of 10 →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ QUESTION SCREEN ═══════════════════════════ -->
+<div id="question-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 14 · Exercise 1</div>
+
+    <!-- Progress bar -->
+    <div class="q-progress" id="q-progress"></div>
+
+    <div class="q-card" id="q-card">
+      <div class="q-card-header">
+        <span class="q-num-badge" id="q-badge">Q1 of 10</span>
+        <div>
+          <div class="q-google-text" id="q-text"></div>
+          <div class="q-google-icon">— a real homeowner, Googling right now</div>
+        </div>
+      </div>
+      <div class="q-card-body">
+
+        <!-- Dropdowns -->
+        <div class="select-row">
+          <div class="select-block">
+            <div class="select-label">Which E does this map to?</div>
+            <select class="styled-select" id="q-e-select" onchange="onESelect()">
+              <option value="">— pick one —</option>
+              <option value="excite">Excite — creates attention/buzz</option>
+              <option value="educate">Educate — removes confusion/fear</option>
+              <option value="experience">Experience — lets them picture it</option>
+              <option value="engage">Engage — builds ongoing relationship</option>
+            </select>
+          </div>
+          <div class="select-block">
+            <div class="select-label">Best content type</div>
+            <select class="styled-select" id="q-content-select" onchange="onContentSelect()">
+              <option value="">— pick one —</option>
+              <option value="blog">Blog post</option>
+              <option value="faq">FAQ page</option>
+              <option value="comparison">Comparison guide</option>
+              <option value="video">Video</option>
+              <option value="checklist">Checklist / Download</option>
+              <option value="review">Review / Testimonial</option>
+              <option value="social">Social post</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Trust field -->
+        <div class="trust-field-wrap">
+          <div class="trust-field-label">Why does answering this build trust?</div>
+          <div class="trust-field-hint">What fear does this remove? What does the customer stop worrying about once they've read it?</div>
+          <textarea id="q-trust" rows="2" placeholder="Write one sentence — be specific about the mechanism, not just 'it helps people trust you'" oninput="onTrustInput()"></textarea>
+          <div class="char-count" id="trust-count">0 / 40 minimum</div>
+        </div>
+
+        <!-- Nav -->
+        <div class="q-nav" id="q-nav"></div>
+      </div>
+    </div>
+
+    <!-- Stop gate (appears after Q6 completion) -->
+    <div class="stop-gate" id="stop-gate-mid">
+      <div class="stop-tag">Stop · Group Discussion</div>
+      <h3>Compare your E classifications with your group</h3>
+      <p>Go around. Share which E you picked for each question — especially the ones where you weren't sure. Find the disagreements. The questions your group argues about most are the most interesting ones.</p>
+      <p style="margin-top:8px;">You've just classified 6 questions customers Google out of fear and confusion. The next 4 are different — they're content the company <em>chose</em> to create. Notice the shift.</p>
+      <div class="trust-field-wrap" style="margin-top:12px;background:#2a2d33;border-color:#444;">
+        <div class="trust-field-label" style="color:var(--taya-amber);">What's one question your group disagreed on? What was the debate?</div>
+        <textarea id="gate-response" rows="2" placeholder="Be specific — which question, and what did each side argue?" oninput="onGateInput()" style="background:#1a1d23;color:white;border-color:#444;"></textarea>
+        <div class="char-count" id="gate-count" style="color:#888;">0 / 30 minimum</div>
+      </div>
+      <button class="btn-gate" id="gate-btn" onclick="ackMidGate()" disabled style="margin-top:12px;">Continue to Block 2 →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════ PRIORITY SCREEN ═══════════════════════════ -->
+<div id="priority-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 14 · Exercise 1</div>
+    <div class="screen-title">Group Decision</div>
+    <div class="screen-sub">You've classified all 10. Now the hard part: if this roofing company could only publish 2 pieces of content first, which do they start with?</div>
+
+    <div class="taya-banner" style="margin-bottom:16px;">
+      <div class="tb-label">The Constraint</div>
+      <div class="tb-stat">2 questions. Maximum trust. Minimum time.</div>
+      <div class="tb-sub">Agree as a group. Both picks need a rationale — not just "it's important" but what specific fear it removes and why that fear matters most to a homeowner right now.</div>
+    </div>
+
+    <div class="priority-header">
+      <div class="ph-label">Your Group's Top 2</div>
+      <h3>Which 2 must they answer first?</h3>
+      <p>Discuss for 2 minutes, then lock your answer below.</p>
+    </div>
+    <div class="priority-body">
+
+      <div class="priority-pick">
+        <div class="priority-num">1</div>
+        <div class="priority-pick-body">
+          <div class="field" style="margin-bottom:10px;">
+            <label>First priority — which question?</label>
+            <select id="p1-q" class="styled-select" onchange="onPriorityInput()">
+              <option value="">— pick one —</option>
+            </select>
+          </div>
+          <div class="trust-field-wrap">
+            <div class="trust-field-label">Group rationale — why first? (50 char min)</div>
+            <div class="trust-field-hint">What fear does this remove, and why does that fear matter most to a homeowner?</div>
+            <textarea id="p1-why" rows="2" placeholder="Be specific — what's the customer afraid of, and how does this answer change that?" oninput="onPriorityInput()"></textarea>
+            <div class="char-count" id="p1-count">0 / 50 minimum</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-pick">
+        <div class="priority-num">2</div>
+        <div class="priority-pick-body">
+          <div class="field" style="margin-bottom:10px;">
+            <label>Second priority — which question?</label>
+            <select id="p2-q" class="styled-select" onchange="onPriorityInput()">
+              <option value="">— pick one —</option>
+            </select>
+          </div>
+          <div class="trust-field-wrap">
+            <div class="trust-field-label">Group rationale — why second? (50 char min)</div>
+            <div class="trust-field-hint">What does this answer unlock that the first one doesn't?</div>
+            <textarea id="p2-why" rows="2" placeholder="What does this unlock that your first pick didn't cover?" oninput="onPriorityInput()"></textarea>
+            <div class="char-count" id="p2-count">0 / 50 minimum</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:8px;">Submitting records your participation for today's class.</p>
+    <button class="btn btn-dark" id="submit-btn" onclick="submitAll()" disabled>Submit &amp; Record Participation →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SUMMARY ═══════════════════════════ -->
+<div id="summary-screen" class="screen">
+  <div class="page-wrap">
+    <div class="week-tag">Week 14 · Exercise 1 — Summary</div>
+    <div class="screen-title">Your Classifications</div>
+    <div class="confirm-pill">✓ Participation recorded — you're all set</div>
+    <div id="student-tag" class="student-tag"></div>
+
+    <p class="section-label">All 10 Questions</p>
+    <div id="sum-questions"></div>
+
+    <p class="section-label" style="margin-top:20px;">Your Group's Top 2</p>
+    <div id="sum-priorities"></div>
+
+    <div class="debrief-box">
+      <h3>Bring to the Debrief</h3>
+      <p>Be ready to share: (1) how Block 1 and Block 2 felt different and why, (2) whether your group agreed on Question 4 (bad contractor signs) and why, (3) the two pieces of content your group prioritized and your rationale.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ JAVASCRIPT ═══════════════════════════ -->
+<script>
+const PW = 'TAYA26';
+const WEBHOOK_URL = 'https://reciprocityaccounting.app.n8n.cloud/webhook/exercise-completion';
+
+/* ── QUESTION DATA ── */
+const QUESTIONS = [
+  { id: 1,  text: 'How much does a new roof cost?', block: 1 },
+  { id: 2,  text: 'Do I need a new roof or just repairs?', block: 1 },
+  { id: 3,  text: 'This roof failed 2 years after installation — here\'s what went wrong', block: 1 },
+  { id: 4,  text: 'What are the signs of a bad roofing contractor?', block: 1 },
+  { id: 5,  text: 'Will my homeowner\'s insurance cover a new roof?', block: 1 },
+  { id: 6,  text: 'Can I stay home during a roof replacement?', block: 1 },
+  { id: 7,  text: 'Watch: we replaced this roof in 8 hours — full time-lapse', block: 2 },
+  { id: 8,  text: 'This Cincinnati family saved $4,000 by catching their leak early', block: 2 },
+  { id: 9,  text: 'Get our free roof maintenance checklist — one email, we\'ll remind you every spring', block: 2 },
+  { id: 10, text: 'Every month we answer your top-voted roofing question — live on Facebook', block: 2 }
+];
+
+const E_LABELS = {
+  excite:     'Excite',
+  educate:    'Educate',
+  experience: 'Experience',
+  engage:     'Engage'
+};
+
+const CONTENT_LABELS = {
+  blog:       'Blog post',
+  faq:        'FAQ page',
+  comparison: 'Comparison guide',
+  video:      'Video',
+  checklist:  'Checklist / Download',
+  review:     'Review / Testimonial',
+  social:     'Social post'
+};
+
+/* ── STATE ── */
+const state = {
+  name: '', email: '', group: null,
+  current: 1,
+  midGateAcked: false,
+  gateResponse: '',
+  answers: {},  // keyed by question id: { e, content, trust }
+  priorities: { q1: '', why1: '', q2: '', why2: '' }
+};
+
+// Initialize answers
+QUESTIONS.forEach(q => {
+  state.answers[q.id] = { e: '', content: '', trust: '' };
+});
+
+/* ── SCREEN HELPERS ── */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+/* ── PASSWORD ── */
+function checkPw() {
+  const input = document.getElementById('pw-input');
+  const err   = document.getElementById('pw-err');
+  if (input.value.trim().toUpperCase() === PW) {
+    show('join-screen');
+  } else {
+    err.textContent = 'Not quite — ask your professor.';
+    input.classList.add('shake');
+    setTimeout(() => input.classList.remove('shake'), 400);
+  }
+}
+
+/* ── JOIN ── */
+document.addEventListener('DOMContentLoaded', () => {
+  ['j-name', 'j-email', 'j-group'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', validateJoin);
+    el.addEventListener('change', validateJoin);
+  });
+  populatePrioritySelects();
+});
+
+function validateJoin() {
+  const name  = document.getElementById('j-name').value.trim();
+  const email = document.getElementById('j-email').value.trim();
+  const group = document.getElementById('j-group').value;
+  const validEmail = email.endsWith('@mail.uc.edu') || email.endsWith('@uc.edu');
+  document.getElementById('join-btn').disabled = !(name && validEmail && group);
+}
+
+function doJoin() {
+  state.name  = document.getElementById('j-name').value.trim();
+  state.email = document.getElementById('j-email').value.trim();
+  state.group = parseInt(document.getElementById('j-group').value);
+  show('instructions-screen');
+}
+
+/* ── EXERCISE ── */
+function startExercise() {
+  state.current = 1;
+  renderQuestion(1);
+  show('question-screen');
+}
+
+function renderQuestion(n) {
+  const q  = QUESTIONS[n - 1];
+  const ans = state.answers[q.id];
+
+  // Badge + text
+  document.getElementById('q-badge').textContent = `Q${n} of 10`;
+  document.getElementById('q-text').textContent   = q.text;
+
+  // Progress bar
+  const bar = document.getElementById('q-progress');
+  bar.innerHTML = QUESTIONS.map((_, i) => {
+    let cls = 'q-pip';
+    if (i + 1 < n) cls += ' done';
+    else if (i + 1 === n) cls += ' current';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  // E select
+  const eSelect = document.getElementById('q-e-select');
+  eSelect.value = ans.e;
+  applyEColor(eSelect, ans.e);
+
+  // Content select
+  const cSelect = document.getElementById('q-content-select');
+  cSelect.value = ans.content;
+
+  // Trust textarea
+  const trustArea = document.getElementById('q-trust');
+  trustArea.value = ans.trust;
+  updateCount('q-trust', 'trust-count', 40);
+
+  // Mid gate — show on Q6 when all Block 1 done, if not yet acked
+  const gate = document.getElementById('stop-gate-mid');
+  if (n === 6 && !state.midGateAcked && allQ1to6Done()) {
+    gate.classList.add('visible');
+  } else {
+    gate.classList.remove('visible');
+  }
+
+  // Nav buttons
+  renderNav(n);
+}
+
+function allQ1to6Done() {
+  for (let i = 1; i <= 6; i++) {
+    const a = state.answers[i];
+    if (!a.e || !a.content || a.trust.trim().length < 40) return false;
+  }
+  return true;
+}
+
+function renderNav(n) {
+  const nav = document.getElementById('q-nav');
+  const ans = state.answers[QUESTIONS[n - 1].id];
+  const thisDone = ans.e && ans.content && ans.trust.trim().length >= 40;
+
+  let html = '';
+  if (n > 1) {
+    // Don't allow going back past the gate once acked
+    html += `<button class="btn-outline" onclick="goToQ(${n - 1})">← Back</button>`;
+  }
+
+  if (n < 10) {
+    // Block advancement to Q7 unless gate is acked
+    if (n === 6 && !state.midGateAcked) {
+      // No next button — gate handles the transition
+      html += `<button class="btn btn-dark" disabled>Complete group discussion below ↓</button>`;
+    } else {
+      // Must complete current question before advancing — no skipping
+      html += `<button class="btn btn-dark" ${thisDone ? '' : 'disabled'} onclick="advanceQ(${n})">Next →</button>`;
+    }
+  } else {
+    // Q10 → show priority button
+    const allDone = QUESTIONS.every(q => {
+      const a = state.answers[q.id];
+      return a.e && a.content && a.trust.trim().length >= 40;
+    });
+    html += `<button class="btn btn-amber" ${allDone ? '' : 'disabled'} onclick="goToPriority()">All done — Group Decision →</button>`;
+  }
+
+  nav.innerHTML = html;
+}
+
+function goToQ(n) {
+  state.current = n;
+  renderQuestion(n);
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function advanceQ(n) {
+  // Block at Q6 — gate handles transition to Q7
+  if (n === 6 && !state.midGateAcked) return;
+
+  state.current = n + 1;
+  renderQuestion(n + 1);
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function onGateInput() {
+  const val = document.getElementById('gate-response').value.trim();
+  const len = val.length;
+  const el = document.getElementById('gate-count');
+  el.textContent = len < 30 ? `${len} / 30 minimum` : `${len} characters ✓`;
+  el.className = 'char-count' + (len >= 30 ? ' ok' : '');
+  document.getElementById('gate-btn').disabled = len < 30;
+}
+
+function ackMidGate() {
+  const val = document.getElementById('gate-response').value.trim();
+  if (val.length < 30) return; // safety check
+  state.midGateAcked = true;
+  state.gateResponse = val;
+  document.getElementById('stop-gate-mid').classList.remove('visible');
+  // Advance to Q7
+  state.current = 7;
+  renderQuestion(7);
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function onESelect() {
+  const val = document.getElementById('q-e-select').value;
+  state.answers[QUESTIONS[state.current - 1].id].e = val;
+  applyEColor(document.getElementById('q-e-select'), val);
+  renderNav(state.current);
+}
+
+function applyEColor(el, val) {
+  el.className = 'styled-select';
+  if (val) el.classList.add(`selected-${val}`);
+}
+
+function onContentSelect() {
+  state.answers[QUESTIONS[state.current - 1].id].content = document.getElementById('q-content-select').value;
+  renderNav(state.current);
+}
+
+function onTrustInput() {
+  const val = document.getElementById('q-trust').value;
+  state.answers[QUESTIONS[state.current - 1].id].trust = val;
+  updateCount('q-trust', 'trust-count', 40);
+  renderNav(state.current);
+}
+
+function updateCount(id, countId, min) {
+  const len = document.getElementById(id).value.trim().length;
+  const el  = document.getElementById(countId);
+  el.textContent = len < min ? `${len} / ${min} minimum` : `${len} characters ✓`;
+  el.className   = 'char-count' + (len >= min ? ' ok' : '');
+}
+
+/* ── PRIORITY ── */
+function populatePrioritySelects() {
+  ['p1-q', 'p2-q'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— pick one —</option>';
+    QUESTIONS.forEach(q => {
+      sel.innerHTML += `<option value="${q.id}">${q.id}. ${q.text}</option>`;
+    });
+  });
+}
+
+function goToPriority() {
+  // Repopulate with answers for context
+  show('priority-screen');
+}
+
+function onPriorityInput() {
+  state.priorities.q1   = document.getElementById('p1-q').value;
+  state.priorities.why1 = document.getElementById('p1-why').value;
+  state.priorities.q2   = document.getElementById('p2-q').value;
+  state.priorities.why2 = document.getElementById('p2-why').value;
+
+  updateCount('p1-why', 'p1-count', 50);
+  updateCount('p2-why', 'p2-count', 50);
+
+  const ready =
+    state.priorities.q1 &&
+    state.priorities.why1.trim().length >= 50 &&
+    state.priorities.q2 &&
+    state.priorities.why2.trim().length >= 50 &&
+    state.priorities.q1 !== state.priorities.q2;
+
+  document.getElementById('submit-btn').disabled = !ready;
+}
+
+/* ── SUBMIT ── */
+function submitAll() {
+  const payload = {
+    exercise: 'W14.1',
+    name:  state.name,
+    email: state.email,
+    group: state.group,
+    answers: QUESTIONS.map(q => ({
+      question_id: q.id,
+      question:    q.text,
+      e_category:  state.answers[q.id].e,
+      content_type:state.answers[q.id].content,
+      trust_rationale: state.answers[q.id].trust
+    })),
+    gate_response: state.gateResponse,
+    priorities: {
+      first:  { question_id: state.priorities.q1, rationale: state.priorities.why1 },
+      second: { question_id: state.priorities.q2, rationale: state.priorities.why2 }
+    },
+    timestamp: new Date().toISOString()
+  };
+
+  /* dormant Firebase block — commented for future persistent data
+  // import { initializeApp } from 'firebase/app';
+  // const app = initializeApp({ ... });
+  */
+
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => console.log('Webhook attempt made'));
+
+  renderSummary();
+  show('summary-screen');
+}
+
+/* ── SUMMARY ── */
+function renderSummary() {
+  document.getElementById('student-tag').textContent = `${state.name} · Group ${state.group}`;
+
+  // Questions
+  let html = '';
+  QUESTIONS.forEach(q => {
+    const a = state.answers[q.id];
+    const eClass = a.e || 'educate';
+    html += `
+      <div class="sum-q-card">
+        <div class="sum-q-header">
+          <span class="sum-q-num">Q${q.id}</span>
+          <span class="sum-q-text">${q.text}</span>
+        </div>
+        <div class="sum-q-body">
+          <span class="sum-pill ${eClass}">${E_LABELS[a.e] || '—'}</span>
+          <span class="sum-pill" style="background:#F3F4F6;color:#374151;">${CONTENT_LABELS[a.content] || '—'}</span>
+          <div class="sum-trust">${escHtml(a.trust) || '—'}</div>
+        </div>
+      </div>`;
+  });
+  document.getElementById('sum-questions').innerHTML = html;
+
+  // Priorities
+  const q1 = QUESTIONS.find(q => q.id == state.priorities.q1);
+  const q2 = QUESTIONS.find(q => q.id == state.priorities.q2);
+  document.getElementById('sum-priorities').innerHTML = `
+    <div class="sum-q-card">
+      <div class="sum-q-header" style="background:#1a1d23;">
+        <span class="sum-q-num" style="background:rgba(245,158,11,0.3);color:#F59E0B;">#1</span>
+        <span class="sum-q-text">${q1 ? q1.text : '—'}</span>
+      </div>
+      <div class="sum-q-body">
+        <div class="sum-trust">${escHtml(state.priorities.why1) || '—'}</div>
+      </div>
+    </div>
+    <div class="sum-q-card">
+      <div class="sum-q-header" style="background:#374151;">
+        <span class="sum-q-num">#2</span>
+        <span class="sum-q-text">${q2 ? q2.text : '—'}</span>
+      </div>
+      <div class="sum-q-body">
+        <div class="sum-trust">${escHtml(state.priorities.why2) || '—'}</div>
+      </div>
+    </div>`;
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
