@@ -1034,11 +1034,9 @@ function renderQuestion(n) {
   trustArea.value = ans.trust;
   updateCount('q-trust', 'trust-count', 40);
 
-  // Mid gate — show on Q6 when all Block 1 done, if not yet acked
+  // Mid gate — hide if we're past it; showing is handled by showMidGate()
   const gate = document.getElementById('stop-gate-mid');
-  if (n === 6 && !state.midGateAcked && allQ1to6Done()) {
-    gate.classList.add('visible');
-  } else {
+  if (state.midGateAcked || n !== 6) {
     gate.classList.remove('visible');
   }
 
@@ -1068,8 +1066,8 @@ function renderNav(n) {
   if (n < 10) {
     // Block advancement to Q7 unless gate is acked
     if (n === 6 && !state.midGateAcked) {
-      // No next button — gate handles the transition
-      html += `<button class="btn btn-dark" disabled>Complete group discussion below ↓</button>`;
+      // Show Submit Block 1 when Q6 is done; disabled until then
+      html += `<button class="btn btn-amber" ${thisDone ? '' : 'disabled'} onclick="showMidGate()">Submit Block 1 →</button>`;
     } else {
       // Must complete current question before advancing — no skipping
       html += `<button class="btn btn-dark" ${thisDone ? '' : 'disabled'} onclick="advanceQ(${n})">Next →</button>`;
@@ -1108,6 +1106,14 @@ function onGateInput() {
   el.textContent = len < 30 ? `${len} / 30 minimum` : `${len} characters ✓`;
   el.className = 'char-count' + (len >= 30 ? ' ok' : '');
   document.getElementById('gate-btn').disabled = len < 30;
+}
+
+function showMidGate() {
+  // Only show if all Block 1 questions are complete
+  if (!allQ1to6Done()) return;
+  const gate = document.getElementById('stop-gate-mid');
+  gate.classList.add('visible');
+  gate.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function ackMidGate() {
