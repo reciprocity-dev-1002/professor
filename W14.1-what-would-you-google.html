@@ -287,17 +287,17 @@ body {
   line-height: 1.5;
 }
 
-/* ── 4E FLOATING REFERENCE ── */
+/* ── 4E FLOATING REFERENCE (2×2 grid) ── */
 .e-float {
   position: fixed;
   bottom: 18px;
   right: 18px;
   z-index: 900;
-  width: 220px;
+  width: 340px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 12px 8px;
+  border-radius: 12px;
+  padding: 10px 12px 10px;
   box-shadow: 0 4px 18px rgba(0,0,0,.35);
   transition: opacity .25s, transform .25s;
 }
@@ -307,33 +307,38 @@ body {
   text-transform: uppercase;
   letter-spacing: .8px;
   color: #888;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-weight: 700;
 }
-.e-float-row {
-  display: flex;
-  align-items: baseline;
+.e-float-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 6px;
-  margin-bottom: 5px;
 }
-.e-float-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 2px;
+.e-float-card {
+  border-radius: 8px;
+  padding: 8px 10px;
+  border-left: 3px solid transparent;
 }
-.e-float-label {
-  font-size: 11px;
-  font-weight: 800;
+.e-float-card.excite    { background: var(--excite-lt);    border-left-color: var(--excite); }
+.e-float-card.educate   { background: var(--educate-lt);   border-left-color: var(--educate); }
+.e-float-card.experience{ background: var(--experience-lt);border-left-color: var(--experience); }
+.e-float-card.engage    { background: var(--engage-lt);    border-left-color: var(--engage); }
+.e-float-card-name {
+  font-size: 10px;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: .4px;
-  width: 62px;
-  flex-shrink: 0;
+  letter-spacing: .7px;
+  margin-bottom: 2px;
 }
-.e-float-def {
+.e-float-card.excite    .e-float-card-name { color: var(--excite); }
+.e-float-card.educate   .e-float-card-name { color: var(--educate); }
+.e-float-card.experience .e-float-card-name { color: var(--experience); }
+.e-float-card.engage    .e-float-card-name { color: var(--engage); }
+.e-float-card-def {
   font-size: 11px;
-  color: #aaa;
-  line-height: 1.35;
+  color: var(--text);
+  line-height: 1.4;
 }
 .e-float-toggle {
   position: fixed;
@@ -348,7 +353,7 @@ body {
   font-size: 16px;
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(0,0,0,.3);
-  display: none;          /* only visible when panel is collapsed */
+  display: none;
   align-items: center;
   justify-content: center;
 }
@@ -361,7 +366,7 @@ body {
   padding: 2px 4px;
 }
 @media (max-width: 500px) {
-  .e-float { width: 180px; padding: 8px 10px 6px; bottom: 12px; right: 12px; }
+  .e-float { width: 260px; bottom: 12px; right: 12px; }
   .e-float-toggle { bottom: 12px; right: 12px; }
 }
 
@@ -818,25 +823,23 @@ body {
     <div class="e-float" id="e-float">
       <button class="e-float-close" onclick="toggleEFloat(false)" title="Collapse">✕</button>
       <div class="e-float-title">4E Reference</div>
-      <div class="e-float-row">
-        <div class="e-float-dot" style="background:var(--excite)"></div>
-        <div class="e-float-label" style="color:var(--excite)">Excite</div>
-        <div class="e-float-def">Grabs attention at the right moment</div>
-      </div>
-      <div class="e-float-row">
-        <div class="e-float-dot" style="background:var(--educate)"></div>
-        <div class="e-float-label" style="color:var(--educate)">Educate</div>
-        <div class="e-float-def">Removes confusion and fear</div>
-      </div>
-      <div class="e-float-row">
-        <div class="e-float-dot" style="background:var(--experience)"></div>
-        <div class="e-float-label" style="color:var(--experience)">Experience</div>
-        <div class="e-float-def">Lets them picture working with you</div>
-      </div>
-      <div class="e-float-row">
-        <div class="e-float-dot" style="background:var(--engage)"></div>
-        <div class="e-float-label" style="color:var(--engage)">Engage</div>
-        <div class="e-float-def">Builds an ongoing relationship</div>
+      <div class="e-float-grid">
+        <div class="e-float-card excite">
+          <div class="e-float-card-name">Excite</div>
+          <div class="e-float-card-def">Create buzz. Grab attention at the exact right moment.</div>
+        </div>
+        <div class="e-float-card educate">
+          <div class="e-float-card-name">Educate</div>
+          <div class="e-float-card-def">Inform. Remove confusion and fear with honest answers.</div>
+        </div>
+        <div class="e-float-card experience">
+          <div class="e-float-card-name">Experience</div>
+          <div class="e-float-card-def">Let them picture working with you — before they commit.</div>
+        </div>
+        <div class="e-float-card engage">
+          <div class="e-float-card-name">Engage</div>
+          <div class="e-float-card-def">Build an ongoing relationship. A reason to keep coming back.</div>
+        </div>
       </div>
     </div>
     <button class="e-float-toggle" id="e-float-toggle" onclick="toggleEFloat(true)" title="Show 4E reference">4E</button>
