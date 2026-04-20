@@ -287,22 +287,16 @@ body {
   line-height: 1.5;
 }
 
-/* ── 4E FLOATING REFERENCE (2×2 grid) ── */
-.e-float {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  z-index: 900;
-  width: 340px;
-  background: var(--surface);
+/* ── 4E STATIC REFERENCE (below question card, Block 1 only) ── */
+.e-ref {
+  margin-top: 18px;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 12px 10px;
-  box-shadow: 0 4px 18px rgba(0,0,0,.35);
-  transition: opacity .25s, transform .25s;
+  border-radius: 10px;
+  padding: 12px 14px 10px;
+  background: var(--surface);
 }
-.e-float.hidden { opacity: 0; pointer-events: none; transform: translateY(8px); }
-.e-float-title {
+.e-ref.hidden { display: none; }
+.e-ref-title {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: .8px;
@@ -310,64 +304,35 @@ body {
   margin-bottom: 8px;
   font-weight: 700;
 }
-.e-float-grid {
+.e-ref-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
 }
-.e-float-card {
+.e-ref-card {
   border-radius: 8px;
   padding: 8px 10px;
   border-left: 3px solid transparent;
 }
-.e-float-card.excite    { background: var(--excite-lt);    border-left-color: var(--excite); }
-.e-float-card.educate   { background: var(--educate-lt);   border-left-color: var(--educate); }
-.e-float-card.experience{ background: var(--experience-lt);border-left-color: var(--experience); }
-.e-float-card.engage    { background: var(--engage-lt);    border-left-color: var(--engage); }
-.e-float-card-name {
+.e-ref-card.excite    { background: var(--excite-lt);    border-left-color: var(--excite); }
+.e-ref-card.educate   { background: var(--educate-lt);   border-left-color: var(--educate); }
+.e-ref-card.experience{ background: var(--experience-lt);border-left-color: var(--experience); }
+.e-ref-card.engage    { background: var(--engage-lt);    border-left-color: var(--engage); }
+.e-ref-card-name {
   font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: .7px;
   margin-bottom: 2px;
 }
-.e-float-card.excite    .e-float-card-name { color: var(--excite); }
-.e-float-card.educate   .e-float-card-name { color: var(--educate); }
-.e-float-card.experience .e-float-card-name { color: var(--experience); }
-.e-float-card.engage    .e-float-card-name { color: var(--engage); }
-.e-float-card-def {
+.e-ref-card.excite    .e-ref-card-name { color: var(--excite); }
+.e-ref-card.educate   .e-ref-card-name { color: var(--educate); }
+.e-ref-card.experience .e-ref-card-name { color: var(--experience); }
+.e-ref-card.engage    .e-ref-card-name { color: var(--engage); }
+.e-ref-card-def {
   font-size: 11px;
   color: var(--text);
   line-height: 1.4;
-}
-.e-float-toggle {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  z-index: 901;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--taya-amber);
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0,0,0,.3);
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-.e-float-close {
-  position: absolute;
-  top: 4px; right: 6px;
-  background: none; border: none;
-  color: #666; font-size: 14px;
-  cursor: pointer;
-  padding: 2px 4px;
-}
-@media (max-width: 500px) {
-  .e-float { width: 260px; bottom: 12px; right: 12px; }
-  .e-float-toggle { bottom: 12px; right: 12px; }
 }
 
 /* ── PROGRESS BAR ── */
@@ -819,31 +784,6 @@ body {
     <!-- Progress bar -->
     <div class="q-progress" id="q-progress"></div>
 
-    <!-- 4E floating cheat-sheet (Block 1 only) -->
-    <div class="e-float" id="e-float">
-      <button class="e-float-close" onclick="toggleEFloat(false)" title="Collapse">✕</button>
-      <div class="e-float-title">4E Reference</div>
-      <div class="e-float-grid">
-        <div class="e-float-card excite">
-          <div class="e-float-card-name">Excite</div>
-          <div class="e-float-card-def">Create buzz. Grab attention at the exact right moment.</div>
-        </div>
-        <div class="e-float-card educate">
-          <div class="e-float-card-name">Educate</div>
-          <div class="e-float-card-def">Inform. Remove confusion and fear with honest answers.</div>
-        </div>
-        <div class="e-float-card experience">
-          <div class="e-float-card-name">Experience</div>
-          <div class="e-float-card-def">Let them picture working with you — before they commit.</div>
-        </div>
-        <div class="e-float-card engage">
-          <div class="e-float-card-name">Engage</div>
-          <div class="e-float-card-def">Build an ongoing relationship. A reason to keep coming back.</div>
-        </div>
-      </div>
-    </div>
-    <button class="e-float-toggle" id="e-float-toggle" onclick="toggleEFloat(true)" title="Show 4E reference">4E</button>
-
     <div class="q-card" id="q-card">
       <div class="q-card-header">
         <span class="q-num-badge" id="q-badge">Q1 of 10</span>
@@ -906,6 +846,29 @@ body {
         <div class="char-count" id="gate-count" style="color:#888;">0 / 30 minimum</div>
       </div>
       <button class="btn-gate" id="gate-btn" onclick="ackMidGate()" disabled style="margin-top:12px;">Continue to Block 2 →</button>
+    </div>
+
+    <!-- 4E static reference (Block 1 only) -->
+    <div class="e-ref" id="e-ref">
+      <div class="e-ref-title">4E Reference</div>
+      <div class="e-ref-grid">
+        <div class="e-ref-card excite">
+          <div class="e-ref-card-name">Excite</div>
+          <div class="e-ref-card-def">Create buzz. Grab attention at the exact right moment.</div>
+        </div>
+        <div class="e-ref-card educate">
+          <div class="e-ref-card-name">Educate</div>
+          <div class="e-ref-card-def">Inform. Remove confusion and fear with honest answers.</div>
+        </div>
+        <div class="e-ref-card experience">
+          <div class="e-ref-card-name">Experience</div>
+          <div class="e-ref-card-def">Let them picture working with you — before they commit.</div>
+        </div>
+        <div class="e-ref-card engage">
+          <div class="e-ref-card-name">Engage</div>
+          <div class="e-ref-card-def">Build an ongoing relationship. A reason to keep coming back.</div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -1142,15 +1105,12 @@ function renderQuestion(n) {
   trustArea.value = ans.trust;
   updateCount('q-trust', 'trust-count', 40);
 
-  // 4E floating reference — visible on Block 1 only
-  const eFloat = document.getElementById('e-float');
-  const eBtn   = document.getElementById('e-float-toggle');
+  // 4E static reference — visible on Block 1 (Q1-6) only
+  const eRef = document.getElementById('e-ref');
   if (n <= 6) {
-    eFloat.classList.remove('hidden');
-    eBtn.style.display = 'none';
+    eRef.classList.remove('hidden');
   } else {
-    eFloat.classList.add('hidden');
-    eBtn.style.display = 'none';   // hide both on Block 2
+    eRef.classList.add('hidden');
   }
 
   // Mid gate — hide if we're past it; showing is handled by showMidGate()
@@ -1225,18 +1185,6 @@ function onGateInput() {
   el.textContent = len < 30 ? `${len} / 30 minimum` : `${len} characters ✓`;
   el.className = 'char-count' + (len >= 30 ? ' ok' : '');
   document.getElementById('gate-btn').disabled = len < 30;
-}
-
-function toggleEFloat(show) {
-  const panel = document.getElementById('e-float');
-  const btn   = document.getElementById('e-float-toggle');
-  if (show) {
-    panel.classList.remove('hidden');
-    btn.style.display = 'none';
-  } else {
-    panel.classList.add('hidden');
-    btn.style.display = 'flex';
-  }
 }
 
 function showMidGate() {
