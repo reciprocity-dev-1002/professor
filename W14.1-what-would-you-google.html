@@ -88,6 +88,27 @@ body {
   margin-bottom: 24px;
 }
 
+/* ── BACK BUTTON ── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.15s;
+}
+.back-btn:hover { border-color: var(--taya-amber); color: var(--text); }
+
 /* ── CARD ── */
 .card {
   background: var(--surface);
@@ -656,6 +677,7 @@ body {
 <!-- ═══════════════════════════ INSTRUCTIONS ═══════════════════════════ -->
 <div id="instructions-screen" class="screen">
   <div class="page-wrap">
+    <button class="back-btn" onclick="show('join-screen')">← Back</button>
     <div class="week-tag">Week 14 · Exercise 1</div>
     <div class="screen-title">The Case</div>
 
@@ -708,6 +730,7 @@ body {
 <!-- ═══════════════════════════ QUESTION SCREEN ═══════════════════════════ -->
 <div id="question-screen" class="screen">
   <div class="page-wrap">
+    <button class="back-btn" onclick="backFromQuestions()">← Back to instructions</button>
     <div class="week-tag">Week 14 · Exercise 1</div>
 
     <!-- Progress bar -->
@@ -783,6 +806,7 @@ body {
 <!-- ═══════════════════════════ PRIORITY SCREEN ═══════════════════════════ -->
 <div id="priority-screen" class="screen">
   <div class="page-wrap">
+    <button class="back-btn" onclick="backToPreviousQ()">← Back to questions</button>
     <div class="week-tag">Week 14 · Exercise 1</div>
     <div class="screen-title">Group Decision</div>
     <div class="screen-sub">You've classified all 10. Now the hard part: if this roofing company could only publish 2 pieces of content first, which do they start with?</div>
@@ -959,6 +983,17 @@ function doJoin() {
   state.email = document.getElementById('j-email').value.trim();
   state.group = parseInt(document.getElementById('j-group').value);
   show('instructions-screen');
+}
+
+/* ── BACK NAV ── */
+function backFromQuestions() {
+  show('instructions-screen');
+}
+
+function backToPreviousQ() {
+  state.current = 10;
+  renderQuestion(10);
+  show('question-screen');
 }
 
 /* ── EXERCISE ── */
